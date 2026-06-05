@@ -1,0 +1,136 @@
+@import url("https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500&family=Inter:wght@400;500;600;700;800&family=Montserrat:wght@400;600;700&display=swap");
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+html,
+body {
+  height: 100%;
+  font-size: 16px;
+  font-family: "Inter", "Montserrat", system-ui, sans-serif;
+  color: #111111;
+  background-color: #ffffff;
+}
+
+/* Headings tuned for a more editorial serif display */
+h1, h2, h3 {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  letter-spacing: 0.02em;
+  color: #111;
+}
+
+h1 {
+  font-size: clamp(1.8rem, 5.5vw, 3.6rem);
+  line-height: 1.08;
+  font-weight: 700;
+}
+
+h2 {
+  font-size: clamp(1.25rem, 3.5vw, 2rem);
+  font-weight: 600;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+::selection {
+  background: rgba(90, 109, 87, 0.2);
+  color: #111;
+}
+
+/* Swiper — consistent pagination across home sections */
+.bustaniya-swiper {
+  --swiper-pagination-bullet-size: 6px;
+  --swiper-pagination-bullet-horizontal-gap: 5px;
+  --swiper-pagination-color: #c8c8c8;
+  --swiper-pagination-bullet-inactive-color: #d8d8d8;
+  --swiper-pagination-bullet-inactive-opacity: 1;
+  padding-bottom: 3rem !important;
+}
+
+.bustaniya-swiper .swiper-pagination {
+  bottom: 0 !important;
+}
+
+.bustaniya-swiper .swiper-pagination-bullet {
+  border-radius: 3px;
+  transition: width 0.3s ease, background-color 0.3s ease;
+}
+
+.bustaniya-swiper .swiper-pagination-bullet-active {
+  width: 22px;
+  border-radius: 3px;
+  background-color: #5a6d57;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #c5cec4;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #748c70;
+}
+
+::-webkit-scrollbar-track {
+  background: #f5f5f5;
+}
+
+/* Scroll reveal — sections animate in when scrolled into view */
+.scroll-reveal {
+  opacity: 0;
+  will-change: opacity, transform;
+  transition:
+    opacity var(--scroll-reveal-duration, 0.75s) cubic-bezier(0.22, 1, 0.36, 1),
+    transform var(--scroll-reveal-duration, 0.75s) cubic-bezier(0.22, 1, 0.36, 1);
+  transition-delay: var(--scroll-reveal-delay, 0ms);
+}
+
+.scroll-reveal--fade-up {
+  transform: translateY(56px);
+}
+
+.scroll-reveal--fade-down {
+  transform: translateY(-56px);
+}
+
+.scroll-reveal--fade-left {
+  transform: translateX(56px);
+}
+
+.scroll-reveal--fade-right {
+  transform: translateX(-56px);
+}
+
+.scroll-reveal--fade-in {
+  transform: none;
+}
+
+.scroll-reveal--visible {
+  opacity: 1;
+  transform: translate(0, 0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scroll-reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}

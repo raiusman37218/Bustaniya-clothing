@@ -1,0 +1,8 @@
+# Supabase CLI — project rjkdjbcmyexcbawxgjrd
+project_id = "rjkdjbcmyexcbawxgjrd"
+
+[api]
+enabled = true
+
+[db]
+major_version = 15
