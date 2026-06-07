@@ -25,18 +25,58 @@ function parseSizes(raw: unknown): string[] {
   return raw.map((s) => String(s).trim()).filter(Boolean);
 }
 
-export function mapDbProduct(row: Tables<'product'>): Product {
+export function mapDbProduct(row: any): Product {
+  if (!row) {
+    return {
+      id: '',
+      procuct_price: '0',
+      product_bestsellere: false,
+      product_category: '',
+      product_color: [],
+      product_description: '',
+      product_img: [],
+      product_instock: false,
+      product_name: '',
+      product_new: false,
+      product_size: [],
+    };
+  }
+
+  const name = row.product_name ?? row.name ?? '';
+  const price = row.procuct_price ?? String(row.price ?? '0');
+  const category = row.product_category ?? row.category ?? '';
+  const description = row.product_description ?? row.description ?? '';
+  const instock = row.product_instock ?? row.instock ?? false;
+  const bestsellere = row.product_bestsellere ?? row.bestsellere ?? false;
+  const productNew = row.product_new ?? row.new ?? false;
+
+  const parseJsonField = (field: any) => {
+    if (!field) return [];
+    if (typeof field === 'string') {
+      try {
+        return JSON.parse(field);
+      } catch {
+        return [];
+      }
+    }
+    return Array.isArray(field) ? field : [];
+  };
+
+  const rawColors = parseJsonField(row.product_color ?? row.color);
+  const rawSizes = parseJsonField(row.product_size ?? row.size);
+  const rawImgs = parseJsonField(row.product_img ?? row.img);
+
   return {
     id: String(row.id),
-    procuct_price: row.procuct_price ?? '0',
-    product_bestsellere: row.product_bestsellere,
-    product_category: row.product_category ?? '',
-    product_color: parseColors(row.product_color),
-    product_description: row.product_description ?? '',
-    product_img: parseProductImageList(row.product_img),
-    product_instock: row.product_instock,
-    product_name: row.product_name,
-    product_new: row.product_new,
-    product_size: parseSizes(row.product_size),
+    procuct_price: price,
+    product_bestsellere: bestsellere,
+    product_category: category,
+    product_color: parseColors(rawColors),
+    product_description: description,
+    product_img: parseProductImageList(rawImgs),
+    product_instock: instock,
+    product_name: name,
+    product_new: productNew,
+    product_size: parseSizes(rawSizes),
   };
 }

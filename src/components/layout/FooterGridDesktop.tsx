@@ -1,27 +1,25 @@
-import { Box, Grid, Typography, TextField } from "@mui/material";
+import { Box, Grid, Typography, TextField, FormControlLabel, Checkbox } from "@mui/material";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import InputAdornment from "@mui/material/InputAdornment";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Checkbox from "@mui/material/Checkbox";
 import InstagramIcon from "@mui/icons-material/Instagram";
 import FacebookOutlinedIcon from "@mui/icons-material/FacebookOutlined";
 import PinterestIcon from "@mui/icons-material/Pinterest";
 import TwitterIcon from "@mui/icons-material/Twitter";
 import CopyrightIcon from "@mui/icons-material/Copyright";
-import FooterGridMobile from "./FooterGridMobile";
 import Link from "next/link";
+import { brand, fonts } from "@/src/lib/designTokens";
 
 function FooterGridDesktop() {
   return (
-    <Grid container spacing={3}>
-      <Grid item xs={12} sm={8} md={6}>
+    <Grid container spacing={4} justifyContent="space-between">
+      <Grid item xs={12} md={5}>
         <Box
           sx={{
             height: "100%",
             display: "flex",
             flexDirection: "column",
             justifyContent: "space-between",
-            gap: "14px",
+            gap: "24px",
           }}
         >
           <Box
@@ -31,35 +29,79 @@ function FooterGridDesktop() {
               gap: "20px",
             }}
           >
-            <Typography variant="h6" sx={{ fontWeight: "600" }}>
+            <Typography
+              variant="h5"
+              sx={{
+                fontWeight: "600",
+                fontFamily: fonts.display,
+                color: "#FFFFFF",
+              }}
+            >
               Join our club, get 15% off for your Birthday
             </Typography>
-            <form>
+            <form onSubmit={(e) => e.preventDefault()}>
               <TextField
-                placeholder="Enter your name"
+                placeholder="Enter your email"
+                variant="outlined"
                 sx={{
                   width: "100%",
-                  "& fieldset": {
-                    borderColor: "#ffff",
+                  maxHeight: "56px",
+                  "& .MuiOutlinedInput-root": {
+                    color: "#FFFFFF",
+                    fontFamily: fonts.sans,
+                    borderRadius: "2px",
+                    "& fieldset": {
+                      borderColor: "rgba(255, 255, 255, 0.3)",
+                      transition: "border-color 0.3s ease",
+                    },
+                    "&:hover fieldset": {
+                      borderColor: brand.sageLight,
+                    },
+                    "&.Mui-focused fieldset": {
+                      borderColor: brand.sage,
+                    },
+                  },
+                  "& .MuiInputBase-input::placeholder": {
+                    color: "rgba(255, 255, 255, 0.5)",
+                    opacity: 1,
                   },
                 }}
                 InputProps={{
                   endAdornment: (
                     <InputAdornment position="end">
-                      <ArrowForwardIcon sx={{ color: "#ffff" }} />
+                      <ArrowForwardIcon 
+                        sx={{ 
+                          color: "#FFFFFF", 
+                          cursor: "pointer", 
+                          transition: "color 0.2s",
+                          "&:hover": { color: brand.sageLight } 
+                        }} 
+                      />
                     </InputAdornment>
                   ),
                 }}
               />
             </form>
             <FormControlLabel
-              control={<Checkbox />}
-              label="By Submittng your email, you agree to receive advertising emails from Bustaniya."
+              control={
+                <Checkbox
+                  sx={{
+                    color: "rgba(255, 255, 255, 0.6)",
+                    "&.Mui-checked": { color: brand.sageLight },
+                  }}
+                />
+              }
+              label="By submitting your email, you agree to receive advertising emails from Bustaniya."
               sx={{
+                color: "rgba(255, 255, 255, 0.7)",
+                alignItems: "flex-start",
+                mt: -0.5,
                 "& .MuiFormControlLabel-label": {
-                  fontWeight: "600",
+                  fontWeight: "400",
                   width: "100%",
-                  fontSize: "15px",
+                  fontSize: "13px",
+                  lineHeight: 1.4,
+                  fontFamily: fonts.sans,
                 },
               }}
             />
@@ -69,85 +111,264 @@ function FooterGridDesktop() {
             sx={{
               display: "flex",
               flexDirection: "column",
-              gap: "30px",
+              gap: "20px",
+              mt: { md: 4 },
             }}
           >
-            <Box sx={{ display: "flex", gap: "10px" }}>
-              <InstagramIcon sx={{ fontSize: "30px" }} />
-              <FacebookOutlinedIcon sx={{ fontSize: "30px" }} />
-              <PinterestIcon sx={{ fontSize: "30px" }} />
-              <TwitterIcon sx={{ fontSize: "30px" }} />
+            <Box sx={{ display: "flex", gap: "16px" }}>
+              <InstagramIcon sx={{ fontSize: "28px", color: "rgba(255, 255, 255, 0.7)", cursor: "pointer", transition: "color 0.2s", "&:hover": { color: brand.sageLight } }} />
+              <FacebookOutlinedIcon sx={{ fontSize: "28px", color: "rgba(255, 255, 255, 0.7)", cursor: "pointer", transition: "color 0.2s", "&:hover": { color: brand.sageLight } }} />
+              <PinterestIcon sx={{ fontSize: "28px", color: "rgba(255, 255, 255, 0.7)", cursor: "pointer", transition: "color 0.2s", "&:hover": { color: brand.sageLight } }} />
+              <TwitterIcon sx={{ fontSize: "28px", color: "rgba(255, 255, 255, 0.7)", cursor: "pointer", transition: "color 0.2s", "&:hover": { color: brand.sageLight } }} />
             </Box>
 
-            <Box sx={{ display: "flex", gap: "10px" }}>
-              <CopyrightIcon />
-              <Typography>2026 Bustaniya. All Rights Reserved.</Typography>
+            <Box sx={{ display: "flex", gap: "8px", alignItems: "center" }}>
+              <CopyrightIcon sx={{ fontSize: "16px", color: "rgba(255, 255, 255, 0.5)" }} />
+              <Typography sx={{ fontSize: "13px", color: "rgba(255, 255, 255, 0.5)", fontFamily: fonts.sans }}>
+                2026 Bustaniya. All Rights Reserved.
+              </Typography>
             </Box>
           </Box>
         </Box>
       </Grid>
+
       <Grid item xs={6} sm={4} md={2}>
         <Box
           sx={{
-            height: "400px",
             display: "flex",
             flexDirection: "column",
-            gap: "14px",
+            gap: "16px",
             padding: "4px",
           }}
         >
-          <Typography variant="h6" sx={{ fontWeight: "600" }}>
-            Help & Support
+          <Typography
+            variant="h6"
+            sx={{
+              fontWeight: "600",
+              fontSize: "14px",
+              textTransform: "uppercase",
+              letterSpacing: "0.1em",
+              color: "#FFFFFF",
+              fontFamily: fonts.sans,
+              mb: 1,
+            }}
+          >
+            Shop & Explore
           </Typography>
 
-          <Typography>Collection</Typography>
-          <Typography>Sustainability</Typography>
-          <Typography>Privacy Policy</Typography>
-          <Typography>Support System</Typography>
-          <Typography>Terms & Condition</Typography>
-          <Typography>Copyright Notice</Typography>
+          <Link href="/shop" passHref style={{ textDecoration: 'none' }}>
+            <Typography
+              sx={{
+                color: "rgba(255, 255, 255, 0.7)",
+                fontSize: "14px",
+                fontFamily: fonts.sans,
+                transition: "all 0.2s ease",
+                cursor: "pointer",
+                "&:hover": {
+                  color: brand.sageLight,
+                  transform: "translateX(4px)",
+                },
+              }}
+            >
+              Shop Catalog
+            </Typography>
+          </Link>
+
+          <Link href="/wishlist" passHref style={{ textDecoration: 'none' }}>
+            <Typography
+              sx={{
+                color: "rgba(255, 255, 255, 0.7)",
+                fontSize: "14px",
+                fontFamily: fonts.sans,
+                transition: "all 0.2s ease",
+                cursor: "pointer",
+                "&:hover": {
+                  color: brand.sageLight,
+                  transform: "translateX(4px)",
+                },
+              }}
+            >
+              My Wishlist
+            </Typography>
+          </Link>
+
+          <Link href="/cart" passHref style={{ textDecoration: 'none' }}>
+            <Typography
+              sx={{
+                color: "rgba(255, 255, 255, 0.7)",
+                fontSize: "14px",
+                fontFamily: fonts.sans,
+                transition: "all 0.2s ease",
+                cursor: "pointer",
+                "&:hover": {
+                  color: brand.sageLight,
+                  transform: "translateX(4px)",
+                },
+              }}
+            >
+              Shopping Cart
+            </Typography>
+          </Link>
         </Box>
       </Grid>
-      <Grid item xs={12} sm={4} md={2}>
+
+      <Grid item xs={6} sm={4} md={2}>
         <Box
           sx={{
-            height: "400px",
             display: "flex",
             flexDirection: "column",
-            gap: "14px",
+            gap: "16px",
             padding: "4px",
           }}
         >
-          <Typography variant="h6" sx={{ fontWeight: "600" }}>
-            Help & Support
+          <Typography
+            variant="h6"
+            sx={{
+              fontWeight: "600",
+              fontSize: "14px",
+              textTransform: "uppercase",
+              letterSpacing: "0.1em",
+              color: "#FFFFFF",
+              fontFamily: fonts.sans,
+              mb: 1,
+            }}
+          >
+            Customer Care
           </Typography>
 
-          <Typography>Orders & Shipping</Typography>
-          <Typography>Returns & Refunds</Typography>
-          <Link href="/shop">
-            <Typography sx={{ color: "#ffff" }}>Shop</Typography>
+          <Link href="/faq" passHref style={{ textDecoration: 'none' }}>
+            <Typography
+              sx={{
+                color: "rgba(255, 255, 255, 0.7)",
+                fontSize: "14px",
+                fontFamily: fonts.sans,
+                transition: "all 0.2s ease",
+                cursor: "pointer",
+                "&:hover": {
+                  color: brand.sageLight,
+                  transform: "translateX(4px)",
+                },
+              }}
+            >
+              FAQs & Help
+            </Typography>
           </Link>
-          <Link href="mailto:support@bustaniya.com">
-            <Typography sx={{ color: "#ffff" }}>Email us</Typography>
+
+          <Link href="/order-track" passHref style={{ textDecoration: 'none' }}>
+            <Typography
+              sx={{
+                color: "rgba(255, 255, 255, 0.7)",
+                fontSize: "14px",
+                fontFamily: fonts.sans,
+                transition: "all 0.2s ease",
+                cursor: "pointer",
+                "&:hover": {
+                  color: brand.sageLight,
+                  transform: "translateX(4px)",
+                },
+              }}
+            >
+              Track My Order
+            </Typography>
+          </Link>
+
+          <Link href="/contact-us" passHref style={{ textDecoration: 'none' }}>
+            <Typography
+              sx={{
+                color: "rgba(255, 255, 255, 0.7)",
+                fontSize: "14px",
+                fontFamily: fonts.sans,
+                transition: "all 0.2s ease",
+                cursor: "pointer",
+                "&:hover": {
+                  color: brand.sageLight,
+                  transform: "translateX(4px)",
+                },
+              }}
+            >
+              Contact Us
+            </Typography>
+          </Link>
+
+          <Link href="mailto:support@bustaniya.com" passHref style={{ textDecoration: 'none' }}>
+            <Typography
+              sx={{
+                color: "rgba(255, 255, 255, 0.7)",
+                fontSize: "14px",
+                fontFamily: fonts.sans,
+                transition: "all 0.2s ease",
+                cursor: "pointer",
+                "&:hover": {
+                  color: brand.sageLight,
+                  transform: "translateX(4px)",
+                },
+              }}
+            >
+              Email Support
+            </Typography>
           </Link>
         </Box>
       </Grid>
-      <Grid item xs={12} sm={4} md={2}>
+
+      <Grid item xs={6} sm={4} md={2}>
         <Box
           sx={{
-            height: "400px",
             display: "flex",
             flexDirection: "column",
-            gap: "14px",
+            gap: "16px",
             padding: "4px",
           }}
         >
-          <Typography variant="h6" sx={{ fontWeight: "600" }}>
-            Bustaniya Club
+          <Typography
+            variant="h6"
+            sx={{
+              fontWeight: "600",
+              fontSize: "14px",
+              textTransform: "uppercase",
+              letterSpacing: "0.1em",
+              color: "#FFFFFF",
+              fontFamily: fonts.sans,
+              mb: 1,
+            }}
+          >
+            My Account
           </Typography>
 
-          <Typography>Careers</Typography>
-          <Typography>Visit Us</Typography>
+          <Link href="/login" passHref style={{ textDecoration: 'none' }}>
+            <Typography
+              sx={{
+                color: "rgba(255, 255, 255, 0.7)",
+                fontSize: "14px",
+                fontFamily: fonts.sans,
+                transition: "all 0.2s ease",
+                cursor: "pointer",
+                "&:hover": {
+                  color: brand.sageLight,
+                  transform: "translateX(4px)",
+                },
+              }}
+            >
+              Sign In
+            </Typography>
+          </Link>
+
+          <Link href="/register" passHref style={{ textDecoration: 'none' }}>
+            <Typography
+              sx={{
+                color: "rgba(255, 255, 255, 0.7)",
+                fontSize: "14px",
+                fontFamily: fonts.sans,
+                transition: "all 0.2s ease",
+                cursor: "pointer",
+                "&:hover": {
+                  color: brand.sageLight,
+                  transform: "translateX(4px)",
+                },
+              }}
+            >
+              Create Account
+            </Typography>
+          </Link>
         </Box>
       </Grid>
     </Grid>

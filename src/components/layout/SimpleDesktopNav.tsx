@@ -55,6 +55,11 @@ const navLinks: NavLink[] = [
     label: 'Accessories',
     category: 'accessories',
   },
+  {
+    href: '/order-track',
+    label: 'Track Order',
+    category: 'order-track',
+  },
 ];
 
 type SimpleDesktopNavProps = {

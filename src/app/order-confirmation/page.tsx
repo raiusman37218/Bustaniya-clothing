@@ -254,12 +254,31 @@ function OrderConfirmationContent() {
         <Box sx={{ display: 'flex', flexDirection: { xs: 'column', sm: 'row' }, gap: 2 }}>
           <Button
             component={Link}
+            href={`/order-track?order=${encodeURIComponent(order.orderNumber)}&email=${encodeURIComponent(order.customer.email)}`}
+            fullWidth
+            variant="contained"
+            disableElevation
+            sx={{
+              bgcolor: '#5A6D57',
+              color: '#fff',
+              textTransform: 'none',
+              fontWeight: 600,
+              py: 1.5,
+              borderRadius: '8px',
+              '&:hover': { bgcolor: '#4a5a48' },
+            }}
+          >
+            Track order
+          </Button>
+          <Button
+            component={Link}
             href="/shop"
             fullWidth
             variant="contained"
             disableElevation
             sx={{
               bgcolor: '#121212',
+              color: '#fff',
               textTransform: 'none',
               fontWeight: 600,
               py: 1.5,
@@ -281,6 +300,7 @@ function OrderConfirmationContent() {
               borderRadius: '8px',
               borderColor: '#d9d9d9',
               color: '#121212',
+              '&:hover': { borderColor: '#121212', bgcolor: '#f5f5f5' },
             }}
           >
             Back to home

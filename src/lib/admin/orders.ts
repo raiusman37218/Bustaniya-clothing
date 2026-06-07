@@ -8,7 +8,7 @@ import {
 
 type DbOrderItem = {
   id: number;
-  product_id: number | null;
+  product_id: string | null;
   title: string;
   unit_price_pkr: number | string;
   quantity: number;

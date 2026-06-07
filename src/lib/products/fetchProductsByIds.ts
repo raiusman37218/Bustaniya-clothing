@@ -8,17 +8,13 @@ export async function fetchProductsByIds(ids: string[]): Promise<Map<string, Pro
   const map = new Map<string, Product>();
   if (!ids.length) return map;
 
-  const numericIds = ids
-    .map((id) => Number.parseInt(id, 10))
-    .filter((n) => Number.isFinite(n));
-
-  if (numericIds.length && process.env.NEXT_PUBLIC_SUPABASE_URL) {
+  if (ids.length && process.env.NEXT_PUBLIC_SUPABASE_URL) {
     try {
       const supabase = createCatalogSupabase();
       const { data, error } = await supabase
-        .from('product')
+        .from('products')
         .select('*')
-        .in('id', numericIds);
+        .in('id', ids);
 
       if (!error && data?.length) {
         for (const row of data) {

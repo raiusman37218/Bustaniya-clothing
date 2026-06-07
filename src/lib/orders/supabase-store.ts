@@ -11,7 +11,10 @@ import type { AdminOrder } from '@/src/types/adminOrder';
 import { OrderStatus } from '@/src/types/adminOrder';
 
 function useServiceRoleForAdmin(): boolean {
-  return Boolean(process.env.SUPABASE_SERVICE_ROLE_KEY?.trim());
+  return Boolean(
+    process.env.SUPABASE_SERVICE_ROLE_KEY?.trim() ||
+      process.env.NEXT_PUBLIC_SUPABASE_SERVICE_ROLE_KEY?.trim()
+  );
 }
 
 function mapRpcOrders(payload: unknown): AdminOrder[] {
@@ -91,7 +94,7 @@ export type CreateSupabaseOrderInput = {
   payment_method: string;
   notes: string | null;
   items: {
-    product_id: number | null;
+    product_id: string | null;
     title: string;
     unit_price_pkr: number;
     quantity: number;
@@ -223,4 +226,34 @@ export async function updateSupabaseOrderStatus(
   return updateOrderStatusViaRpc(id, status);
 }
 
+export async function trackSupabaseOrder(
+  orderNumber: string,
+  email: string,
+): Promise<AdminOrder | null> {
+  const emailClean = email.trim().toLowerCase();
+  const orderNumClean = orderNumber.trim();
+
+  if (useServiceRoleForAdmin()) {
+    const supabase = createAdminDataSupabase();
+    const { data, error } = await supabase
+      .from('orders')
+      .select(ORDER_SELECT)
+      .eq('order_number', orderNumClean)
+      .or(`guest_email.ilike.${emailClean},customer_email.ilike.${emailClean}`)
+      .maybeSingle();
+
+    if (error) throw error;
+    if (!data) return null;
+    return mapDbOrder(data as unknown as DbOrder);
+  }
+
+  const allOrders = await listOrdersViaRpc();
+  return allOrders.find(
+    (o) =>
+      o.orderNumber === orderNumClean &&
+      (o.guestEmail?.toLowerCase() === emailClean || o.customerEmail?.toLowerCase() === emailClean)
+  ) || null;
+}
+
 export { AdminSupabaseConfigError };
+

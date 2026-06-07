@@ -181,7 +181,7 @@ export default function AdminOrderDetailPage() {
     return (
       <AdminShell title="Order details">
         <Typography color="#707070">Order not found.</Typography>
-        <Link href="/admin" style={{ color: '#1773b0', marginTop: 16, display: 'inline-block' }}>
+        <Link href="/admin/orders" style={{ color: '#1773b0', marginTop: 16, display: 'inline-block' }}>
           ← Back to orders
         </Link>
       </AdminShell>
@@ -193,7 +193,7 @@ export default function AdminOrderDetailPage() {
   return (
     <AdminShell title={`Order ${order.orderNumber}`}>
       <Link
-        href="/admin"
+        href="/admin/orders"
         style={{
           display: 'inline-flex',
           alignItems: 'center',

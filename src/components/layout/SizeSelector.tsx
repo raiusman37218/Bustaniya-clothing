@@ -1,51 +1,88 @@
 import React, { PropsWithChildren } from 'react';
-import { FormControl, SelectChangeEvent } from '@mui/material';
-import { MenuItem } from '@mui/material';
-import { Select } from '@mui/material';
-import { Typography } from '@mui/material';
+import { Box, Button, Typography } from '@mui/material';
+import { brand, fonts, radius } from '@/src/lib/designTokens';
 
-interface Types {
-  handleChange: (event: SelectChangeEvent) => void;
-  size: string;
+interface SizeSelectorProps {
+  onSizeSelect: (size: string) => void;
+  selectedSize: string;
   productSize: string[];
 }
 
-export default function SizeSelector(props: PropsWithChildren<Types>) {
-  const { productSize, size, handleChange } = props;
+export default function SizeSelector(props: PropsWithChildren<SizeSelectorProps>) {
+  const { productSize, selectedSize, onSizeSelect } = props;
+
   return (
-    <FormControl
-      sx={{ m: 1, width: { xs: '100%', md: '550px' }, marginLeft: 0 }}
-    >
-      <Select
-        defaultValue=""
+    <Box sx={{ my: 2, width: '100%' }}>
+      <Typography
         sx={{
-          marginBottom: 0,
-          width: { xs: '100%', md: '550px' },
-          height: 50,
-        }}
-        onChange={handleChange}
-        value={size}
-        displayEmpty
-        MenuProps={{
-          PaperProps: {},
-        }}
-        renderValue={(selectedSize) => {
-          if (!selectedSize) {
-            return (
-              <Typography sx={{ fontWeight: '600 !important' }}>
-                Size
-              </Typography>
-            );
-          }
-          return selectedSize;
+          fontFamily: fonts.sans,
+          fontSize: '0.85rem',
+          fontWeight: 600,
+          textTransform: 'uppercase',
+          letterSpacing: '0.08em',
+          color: brand.charcoal,
+          mb: 1.5,
+          display: 'flex',
+          alignItems: 'center',
+          gap: '8px',
         }}
       >
-        {productSize.map((size) => (
-          <MenuItem key={size} value={size}>
-            {size}
-          </MenuItem>
-        ))}
-      </Select>
-    </FormControl>
+        <span>Size:</span>
+        {selectedSize ? (
+          <Box
+            component="span"
+            sx={{
+              fontWeight: 700,
+              color: brand.sage,
+              backgroundColor: 'rgba(90, 109, 87, 0.08)',
+              px: 1.2,
+              py: 0.2,
+              fontSize: '0.8rem',
+              borderRadius: '2px',
+            }}
+          >
+            {selectedSize}
+          </Box>
+        ) : (
+          <Box component="span" sx={{ fontWeight: 400, color: brand.muted, fontSize: '0.8rem' }}>
+            Not selected
+          </Box>
+        )}
+      </Typography>
+
+      <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: '10px' }}>
+        {productSize.map((s) => {
+          const isSelected = selectedSize === s;
+          return (
+            <Button
+              key={s}
+              onClick={() => onSizeSelect(s)}
+              variant={isSelected ? 'contained' : 'outlined'}
+              disableElevation
+              sx={{
+                minWidth: '50px',
+                height: '46px',
+                padding: '0 12px',
+                borderRadius: radius.button,
+                fontFamily: fonts.sans,
+                fontSize: '0.875rem',
+                fontWeight: isSelected ? 600 : 500,
+                border: isSelected ? `1px solid ${brand.sage}` : `1px solid ${brand.border}`,
+                backgroundColor: isSelected ? brand.sage : 'transparent',
+                color: isSelected ? brand.white : brand.charcoal,
+                transition: 'all 0.15s ease-in-out',
+                textTransform: 'none',
+                '&:hover': {
+                  backgroundColor: isSelected ? brand.sageLight : 'rgba(90, 109, 87, 0.05)',
+                  borderColor: brand.sage,
+                },
+              }}
+            >
+              {s}
+            </Button>
+          );
+        })}
+      </Box>
+    </Box>
   );
 }

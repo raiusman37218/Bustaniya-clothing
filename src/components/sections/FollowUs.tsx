@@ -4,7 +4,8 @@ import { Box, IconButton, Typography, Avatar } from '@mui/material';
 import { useTheme, useMediaQuery } from '@mui/material';
 import { ImageData } from '@/src/lib/utilits/FollowUSDataImage';
 import Image from 'next/image';
-import { useState, useRef } from 'react';
+import Link from 'next/link';
+import { useState, useEffect, useRef } from 'react';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
@@ -24,15 +25,51 @@ import { brand, fonts, radius, shadows } from '@/src/lib/designTokens';
 function FollowUs() {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
-  const [likedItems, setLikedItems] = useState<Record<number, boolean>>(
-    ImageData.reduce(
-      (acc, item) => ({ ...acc, [item.id]: item.liked }),
-      {} as Record<number, boolean>,
-    ),
-  );
+  const [items, setItems] = useState<any[]>(ImageData);
+  const [likedItems, setLikedItems] = useState<Record<string | number, boolean>>({});
+
+  useEffect(() => {
+    setLikedItems(
+      items.reduce(
+        (acc, item) => ({ ...acc, [item.id]: !!item.liked }),
+        {} as Record<string | number, boolean>,
+      )
+    );
+  }, [items]);
+
+  useEffect(() => {
+    async function loadFollowImages() {
+      try {
+        const res = await fetch('/api/homepage');
+        const data = await res.json();
+        if (data && data.images) {
+          const followImages = data.images.filter((img: any) => img.section === 'follow_us');
+          if (followImages.length > 0) {
+            const usernames = ['sarah.styles', 'emma.chic', 'olivia.fashion', 'mia.trends', 'zara.daily', 'nina.look'];
+            const categories = ['Eid Lawn', 'Festive Wear', 'Bridal Edit', 'Embroidered', 'Everyday Lawn', 'Classic Suit'];
+            setItems(
+              followImages.map((img: any, idx: number) => ({
+                id: img.id,
+                image: img.image_url,
+                height: 315,
+                username: img.alt_text || usernames[idx % usernames.length],
+                category: categories[idx % categories.length],
+                liked: idx % 2 === 0,
+                link: img.link_url || '/shop',
+              }))
+            );
+          }
+        }
+      } catch (err) {
+        console.error('Failed to load follow us images, using fallbacks:', err);
+      }
+    }
+    loadFollowImages();
+  }, []);
+
   const scrollRef = useRef<HTMLDivElement>(null);
 
-  const toggleLike = (id: number) => {
+  const toggleLike = (id: string | number) => {
     setLikedItems((prev) => ({ ...prev, [id]: !prev[id] }));
   };
 
@@ -94,7 +131,7 @@ function FollowUs() {
           scrollbarWidth: 'none',
         }}
       >
-        {ImageData.map((item) => (
+        {items.map((item) => (
           <Box
             key={item.id}
             sx={{
@@ -128,7 +165,7 @@ function FollowUs() {
                   height: 36,
                   fontSize: 14,
                   fontWeight: 700,
-                  backgroundColor: getAvatarColor(item.id),
+                  backgroundColor: typeof item.id === 'number' ? getAvatarColor(item.id) : '#5A6D57',
                   color: brand.white,
                   border: `2px solid ${brand.white}`,
                 }}
@@ -164,21 +201,23 @@ function FollowUs() {
               </Box>
             </Box>
 
-            <MediaFrame
-              aspectRatio="3/4"
-              borderRadius="0"
-              hoverScale
-              sx={{ borderRadius: 0 }}
-            >
-              <Image
-                src={item.image}
-                alt={`${item.username}'s post`}
-                fill
-                className={mediaFrameImageClass}
-                style={mediaFrameImageStyle}
-                sizes="(max-width: 600px) 260px, (max-width: 900px) 280px, 290px"
-              />
-            </MediaFrame>
+            <Link href={item.link || '/shop'} style={{ textDecoration: 'none', display: 'block' }}>
+              <MediaFrame
+                aspectRatio="3/4"
+                borderRadius="0"
+                hoverScale
+                sx={{ borderRadius: 0 }}
+              >
+                <Image
+                  src={item.image}
+                  alt={`${item.username}'s post`}
+                  fill
+                  className={mediaFrameImageClass}
+                  style={mediaFrameImageStyle}
+                  sizes="(max-width: 600px) 260px, (max-width: 900px) 280px, 290px"
+                />
+              </MediaFrame>
+            </Link>
 
             <Box
               sx={{
@@ -225,40 +264,42 @@ function FollowUs() {
               </Box>
 
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.75 }}>
-                <Typography
-                  sx={{
-                    fontSize: '12px',
-                    fontWeight: 600,
-                    color: brand.ink,
-                    fontFamily: fonts.sans,
-                    letterSpacing: '0.02em',
-                    px: 1.5,
-                    py: 0.5,
-                    borderRadius: radius.button,
-                    border: `1px solid ${brand.border}`,
-                    transition: 'all 0.25s ease',
-                    '&:hover': {
-                      backgroundColor: brand.ink,
-                      color: brand.white,
-                      borderColor: brand.ink,
-                    },
-                  }}
-                >
-                  Shop now
-                </Typography>
-                <IconButton
-                  size="small"
-                  sx={{
-                    bgcolor: brand.surface,
-                    transition: 'all 0.25s ease',
-                    '&:hover': {
-                      bgcolor: brand.ink,
-                      color: brand.white,
-                    },
-                  }}
-                >
-                  <ShoppingBagOutlinedIcon sx={{ fontSize: 18 }} />
-                </IconButton>
+                <Link href={item.link || '/shop'} style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                  <Typography
+                    sx={{
+                      fontSize: '12px',
+                      fontWeight: 600,
+                      color: brand.ink,
+                      fontFamily: fonts.sans,
+                      letterSpacing: '0.02em',
+                      px: 1.5,
+                      py: 0.5,
+                      borderRadius: radius.button,
+                      border: `1px solid ${brand.border}`,
+                      transition: 'all 0.25s ease',
+                      '&:hover': {
+                        backgroundColor: brand.ink,
+                        color: brand.white,
+                        borderColor: brand.ink,
+                      },
+                    }}
+                  >
+                    Shop now
+                  </Typography>
+                  <IconButton
+                    size="small"
+                    sx={{
+                      bgcolor: brand.surface,
+                      transition: 'all 0.25s ease',
+                      '&:hover': {
+                        bgcolor: brand.ink,
+                        color: brand.white,
+                      },
+                    }}
+                  >
+                    <ShoppingBagOutlinedIcon sx={{ fontSize: 18 }} />
+                  </IconButton>
+                </Link>
               </Box>
             </Box>
           </Box>

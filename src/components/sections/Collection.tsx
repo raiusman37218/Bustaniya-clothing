@@ -1,5 +1,6 @@
 'use client';
 
+import { useState, useEffect } from 'react';
 import { Box, Typography } from '@mui/material';
 import Masonry from '@mui/lab/Masonry';
 import Image from 'next/image';
@@ -14,6 +15,34 @@ import MediaFrame, {
 import { brand, fonts, radius } from '@/src/lib/designTokens';
 
 function Collection() {
+  const [items, setItems] = useState<any[]>(ImagesMansory);
+
+  useEffect(() => {
+    async function loadCollectionImages() {
+      try {
+        const res = await fetch('/api/homepage');
+        const data = await res.json();
+        if (data && data.images) {
+          const collectionImages = data.images.filter((img: any) => img.section === 'collection');
+          if (collectionImages.length > 0) {
+            setItems(
+              collectionImages.map((img: any, idx: number) => ({
+                src: img.image_url,
+                height: [400, 520, 480, 360][idx % 4] ?? 400,
+                name: img.alt_text || 'Shop',
+                id: img.id,
+                link: img.link_url || '/shop',
+              }))
+            );
+          }
+        }
+      } catch (err) {
+        console.error('Failed to load collection images, using fallbacks:', err);
+      }
+    }
+    loadCollectionImages();
+  }, []);
+
   return (
     <SectionContainer>
       <SectionHeading
@@ -32,8 +61,8 @@ function Collection() {
           '& .MuiBox-root': { breakInside: 'avoid' },
         }}
       >
-        {ImagesMansory.map((item) => (
-          <Link key={item.id} href="/shop" style={{ textDecoration: 'none' }}>
+        {items.map((item) => (
+          <Link key={item.id} href={item.link || '/shop'} style={{ textDecoration: 'none' }}>
             <Box
               sx={{
                 '&:hover .coll-cta': {

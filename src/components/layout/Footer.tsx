@@ -8,7 +8,7 @@ function Footer() {
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
   return (
-    <Box sx={{ color: '#FFFFFF', backgroundColor: '#111111', pb: 6 }}>
+    <Box sx={{ color: '#FFFFFF', backgroundColor: '#111111', pt: { xs: 6, md: 10 }, pb: { xs: 8, md: 10 } }}>
       <Container>
         {isMobile ? <FooterGridMobile /> : <FooterGridDesktop />}
       </Container>

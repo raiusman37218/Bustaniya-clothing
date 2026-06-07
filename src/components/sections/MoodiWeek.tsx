@@ -1,5 +1,6 @@
 'use client';
 
+import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { Box, Typography } from '@mui/material';
 import { Swiper, SwiperSlide } from 'swiper/react';
@@ -25,6 +26,32 @@ const ImageWeek = [
 ];
 
 function MoodiWeek() {
+  const [items, setItems] = useState(ImageWeek);
+
+  useEffect(() => {
+    async function loadMoodImages() {
+      try {
+        const res = await fetch('/api/homepage');
+        const data = await res.json();
+        if (data && data.images) {
+          const moodImages = data.images.filter((img: any) => img.section === 'mood_week');
+          if (moodImages.length > 0) {
+            const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+            setItems(
+              moodImages.map((img: any, idx: number) => ({
+                imageSrc: img.image_url,
+                imageWeek: img.alt_text || days[idx % 7],
+              }))
+            );
+          }
+        }
+      } catch (err) {
+        console.error('Failed to load mood of the week images, using fallbacks:', err);
+      }
+    }
+    loadMoodImages();
+  }, []);
+
   return (
     <SectionContainer>
       <SectionHeading
@@ -49,7 +76,7 @@ function MoodiWeek() {
         pagination={{ clickable: true }}
         modules={[Pagination, Autoplay]}
       >
-        {ImageWeek.map((items) => (
+        {items.map((items) => (
           <SwiperSlide key={items.imageWeek}>
             <MediaFrame aspectRatio="3/4">
               <Image

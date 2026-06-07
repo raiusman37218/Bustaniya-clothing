@@ -20,6 +20,7 @@ import {
   FormControlLabel,
   InputLabel,
   MenuItem,
+  Paper,
   Radio,
   RadioGroup,
   Select,
@@ -41,35 +42,35 @@ import { brand, fonts } from '@/src/lib/designTokens';
 
 const fieldSx = {
   '& .MuiOutlinedInput-root': {
-    borderRadius: '4px',
+    borderRadius: '6px',
     bgcolor: '#fff',
     fontSize: '0.875rem',
     fontFamily: fonts.sans,
-    '& fieldset': { borderColor: '#e5e5e5' },
-    '&:hover fieldset': { borderColor: '#b5b5b5' },
-    '&.Mui-focused fieldset': { borderColor: '#111111', borderWidth: '1px' },
+    '& fieldset': { borderColor: '#e2e8f0' },
+    '&:hover fieldset': { borderColor: '#cbd5e1' },
+    '&.Mui-focused fieldset': { borderColor: '#5A6D57', borderWidth: '1px' },
   },
   '& .MuiInputLabel-root': {
     fontFamily: fonts.sans,
     fontSize: '0.875rem',
-    color: '#777777',
-    '&.Mui-focused': { color: '#111111' },
+    color: '#64748b',
+    '&.Mui-focused': { color: '#5A6D57' },
   },
   '& .MuiFormHelperText-root': {
     fontFamily: fonts.sans,
     fontSize: '11px',
-    color: '#888',
+    color: '#64748b',
   }
 };
 
 const sectionTitleSx = {
   fontFamily: fonts.sans,
-  fontSize: '1.05rem',
+  fontSize: '0.975rem',
   fontWeight: 700,
-  letterSpacing: '0.04em',
+  letterSpacing: '0.05em',
   textTransform: 'uppercase',
-  color: '#111111',
-  mb: 1.5,
+  color: '#0f172a',
+  mb: 2,
 };
 
 const selectionBoxSx = {
@@ -78,12 +79,21 @@ const selectionBoxSx = {
   justifyContent: 'space-between',
   px: 2,
   py: 1.5,
-  border: '1px solid #e5e5e5',
-  borderRadius: '4px',
-  bgcolor: '#fafafa',
+  border: '1px solid #e2e8f0',
+  borderRadius: '6px',
+  bgcolor: '#f8fafc',
   fontFamily: fonts.sans,
   fontSize: '0.9rem',
-  color: '#333',
+  color: '#334155',
+};
+
+const formCardSx = {
+  p: { xs: 2.5, sm: 4 },
+  border: `1px solid ${brand.border}`,
+  borderRadius: '8px',
+  bgcolor: '#ffffff',
+  mb: 3,
+  boxShadow: '0 2px 16px rgba(0,0,0,0.01)',
 };
 
 const COUNTRY_OPTIONS = [
@@ -192,31 +202,114 @@ export default function CheckoutPage() {
       router.push('/shop');
       return;
     }
-    if (
-      !email.trim() ||
-      !firstName.trim() ||
-      !lastName.trim() ||
-      !address.trim() ||
-      !city.trim() ||
-      !phone.trim()
-    ) {
-      toast.error('Please fill in all required fields.');
+    if (!email.trim()) {
+      toast.error('Please enter your email address.');
+      const el = document.getElementById('email');
+      if (el) {
+        el.focus();
+        el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
       return;
     }
     if (!isValidEmail(email)) {
-      toast.error('Please enter a valid email address for order confirmation.');
+      toast.error('Please enter a valid email address.');
+      const el = document.getElementById('email');
+      if (el) {
+        el.focus();
+        el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+      return;
+    }
+    if (!firstName.trim()) {
+      toast.error('Please enter your first name.');
+      const el = document.getElementById('firstName');
+      if (el) {
+        el.focus();
+        el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+      return;
+    }
+    if (!lastName.trim()) {
+      toast.error('Please enter your last name.');
+      const el = document.getElementById('lastName');
+      if (el) {
+        el.focus();
+        el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+      return;
+    }
+    if (!address.trim()) {
+      toast.error('Please enter your address.');
+      const el = document.getElementById('address');
+      if (el) {
+        el.focus();
+        el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+      return;
+    }
+    if (!city.trim()) {
+      toast.error('Please enter your city.');
+      const el = document.getElementById('city');
+      if (el) {
+        el.focus();
+        el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+      return;
+    }
+    if (!phone.trim()) {
+      toast.error('Please enter your phone number.');
+      const el = document.getElementById('phone');
+      if (el) {
+        el.focus();
+        el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
       return;
     }
 
     if (billingSame === 'different') {
-      if (
-        !billingFirstName.trim() ||
-        !billingLastName.trim() ||
-        !billingAddress.trim() ||
-        !billingCity.trim() ||
-        !billingPhone.trim()
-      ) {
-        toast.error('Please fill in all required billing address fields.');
+      if (!billingFirstName.trim()) {
+        toast.error('Please enter your billing first name.');
+        const el = document.getElementById('billingFirstName');
+        if (el) {
+          el.focus();
+          el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+        return;
+      }
+      if (!billingLastName.trim()) {
+        toast.error('Please enter your billing last name.');
+        const el = document.getElementById('billingLastName');
+        if (el) {
+          el.focus();
+          el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+        return;
+      }
+      if (!billingAddress.trim()) {
+        toast.error('Please enter your billing address.');
+        const el = document.getElementById('billingAddress');
+        if (el) {
+          el.focus();
+          el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+        return;
+      }
+      if (!billingCity.trim()) {
+        toast.error('Please enter your billing city.');
+        const el = document.getElementById('billingCity');
+        if (el) {
+          el.focus();
+          el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+        return;
+      }
+      if (!billingPhone.trim()) {
+        toast.error('Please enter your billing phone number.');
+        const el = document.getElementById('billingPhone');
+        if (el) {
+          el.focus();
+          el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
         return;
       }
     }
@@ -319,7 +412,6 @@ export default function CheckoutPage() {
       </>
     );
   }
-
   return (
     <>
       <ToastContainer position="top-center" />
@@ -338,7 +430,7 @@ export default function CheckoutPage() {
           onSubmit={handleSubmit}
           sx={{
             flex: 1,
-            bgcolor: '#fff',
+            bgcolor: '#f8fafc',
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
@@ -347,7 +439,7 @@ export default function CheckoutPage() {
           }}
         >
           <Box sx={{ width: '100%', maxWidth: 580 }}>
-            <Box sx={{ mb: 5 }}>
+            <Box sx={{ mb: 4, display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 1 }}>
               <Link href="/">
                 <Image
                   unoptimized
@@ -364,25 +456,59 @@ export default function CheckoutPage() {
                   }}
                 />
               </Link>
+              <Button
+                component={Link}
+                href="/shop"
+                startIcon={<ArrowBackIosIcon sx={{ fontSize: '10px !important' }} />}
+                sx={{
+                  textTransform: 'none',
+                  fontSize: '0.8rem',
+                  fontWeight: 600,
+                  color: brand.charcoal,
+                  fontFamily: fonts.sans,
+                  '&:hover': { color: brand.sage, bgcolor: 'transparent' }
+                }}
+              >
+                Back to shop
+              </Button>
             </Box>
 
-            {/* Contact */}
-            <Box sx={{ mb: 4.5 }}>
+            {/* Step Breadcrumbs */}
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 4, flexWrap: 'wrap' }}>
+              <Typography sx={{ fontSize: '0.725rem', fontWeight: 600, color: brand.muted, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                Cart
+              </Typography>
+              <Typography sx={{ fontSize: '0.725rem', color: brand.muted }}>/</Typography>
+              <Typography sx={{ fontSize: '0.725rem', fontWeight: 700, color: brand.sage, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                Information
+              </Typography>
+              <Typography sx={{ fontSize: '0.725rem', color: brand.muted }}>/</Typography>
+              <Typography sx={{ fontSize: '0.725rem', fontWeight: 600, color: brand.muted, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                Shipping
+              </Typography>
+              <Typography sx={{ fontSize: '0.725rem', color: brand.muted }}>/</Typography>
+              <Typography sx={{ fontSize: '0.725rem', fontWeight: 600, color: brand.muted, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                Payment
+              </Typography>
+            </Box>
+
+            {/* Contact Information Card */}
+            <Paper sx={formCardSx} elevation={0}>
               <Box
                 sx={{
                   display: 'flex',
                   alignItems: 'baseline',
                   justifyContent: 'space-between',
-                  mb: 1.5,
+                  mb: 2,
                 }}
               >
-                <SectionTitle>Contact Information</SectionTitle>
+                <Typography sx={{ ...sectionTitleSx, mb: 0 }}>Contact Information</Typography>
                 <Link
                   href="/login"
                   style={{
                     fontSize: '0.825rem',
-                    color: '#555555',
-                    textDecoration: 'underline',
+                    color: brand.sage,
+                    textDecoration: 'none',
                     fontWeight: 600,
                   }}
                 >
@@ -390,6 +516,7 @@ export default function CheckoutPage() {
                 </Link>
               </Box>
               <TextField
+                id="email"
                 fullWidth
                 required
                 type="email"
@@ -409,38 +536,44 @@ export default function CheckoutPage() {
                     onChange={(e) => setEmailOffers(e.target.checked)}
                     size="small"
                     sx={{
-                      color: '#d9d9d9',
-                      '&.Mui-checked': { color: '#111' },
+                      color: '#cbd5e1',
+                      '&.Mui-checked': { color: brand.sage },
                     }}
                   />
                 }
                 label={
-                  <Typography sx={{ fontSize: '0.85rem', color: '#555', fontWeight: 500 }}>
+                  <Typography sx={{ fontSize: '0.85rem', color: '#475569', fontWeight: 500 }}>
                     Keep me updated on news and exclusive offers
                   </Typography>
                 }
-                sx={{ mt: 1, ml: 0 }}
+                sx={{ mt: 1.5, ml: 0 }}
               />
-            </Box>
+            </Paper>
 
-            {/* Delivery */}
-            <Box sx={{ mb: 4.5 }}>
-              <SectionTitle>Shipping Address</SectionTitle>
+            {/* Shipping Address Card */}
+            <Paper sx={formCardSx} elevation={0}>
+              <Typography sx={sectionTitleSx}>Shipping Address</Typography>
               <CountrySelect
                 value={country}
                 onChange={setCountry}
-                sx={{ mb: 1.5 }}
+                sx={{ mb: 2 }}
               />
-              <Box sx={{ display: 'flex', gap: 1.5, mb: 1.5 }}>
+              <Box sx={{ display: 'flex', gap: 2, mb: 2 }}>
                 <TextField
+                  id="firstName"
                   fullWidth
+                  required
+                  label="First Name"
                   placeholder="First Name"
                   value={firstName}
                   onChange={(e) => setFirstName(e.target.value)}
                   sx={fieldSx}
                 />
                 <TextField
+                  id="lastName"
                   fullWidth
+                  required
+                  label="Last Name"
                   placeholder="Last Name"
                   value={lastName}
                   onChange={(e) => setLastName(e.target.value)}
@@ -448,22 +581,30 @@ export default function CheckoutPage() {
                 />
               </Box>
               <TextField
+                id="address"
                 fullWidth
+                required
+                label="Address"
                 placeholder="Address"
                 value={address}
                 onChange={(e) => setAddress(e.target.value)}
-                sx={{ ...fieldSx, mb: 1.5 }}
+                sx={{ ...fieldSx, mb: 2 }}
               />
-              <Box sx={{ display: 'flex', gap: 1.5, mb: 1.5 }}>
+              <Box sx={{ display: 'flex', gap: 2, mb: 2 }}>
                 <TextField
+                  id="city"
                   fullWidth
+                  required
+                  label="City"
                   placeholder="City"
                   value={city}
                   onChange={(e) => setCity(e.target.value)}
                   sx={fieldSx}
                 />
                 <TextField
+                  id="postalCode"
                   fullWidth
+                  label="Postal Code (optional)"
                   placeholder="Postal Code (optional)"
                   value={postalCode}
                   onChange={(e) => setPostalCode(e.target.value)}
@@ -471,7 +612,10 @@ export default function CheckoutPage() {
                 />
               </Box>
               <TextField
+                id="phone"
                 fullWidth
+                required
+                label="Phone Number"
                 placeholder="Phone Number"
                 value={phone}
                 onChange={(e) => setPhone(e.target.value)}
@@ -484,49 +628,46 @@ export default function CheckoutPage() {
                     onChange={(e) => setSaveInfo(e.target.checked)}
                     size="small"
                     sx={{
-                      color: '#d9d9d9',
-                      '&.Mui-checked': { color: '#111' },
+                      color: '#cbd5e1',
+                      '&.Mui-checked': { color: brand.sage },
                     }}
                   />
                 }
                 label={
-                  <Typography sx={{ fontSize: '0.85rem', color: '#555', fontWeight: 500 }}>
+                  <Typography sx={{ fontSize: '0.85rem', color: '#475569', fontWeight: 500 }}>
                     Save this information for next checkout
                   </Typography>
                 }
-                sx={{ mt: 1, ml: 0 }}
+                sx={{ mt: 1.5, ml: 0 }}
               />
-            </Box>
+            </Paper>
 
-            {/* Shipping method */}
-            <Box sx={{ mb: 4.5 }}>
-              <SectionTitle>Shipping Method</SectionTitle>
-              <Box sx={selectionBoxSx}>
+            {/* Methods Card */}
+            <Paper sx={formCardSx} elevation={0}>
+              <Typography sx={sectionTitleSx}>Shipping Method</Typography>
+              <Box sx={{ ...selectionBoxSx, mb: 3.5 }}>
                 <Typography sx={{ fontSize: '0.875rem', fontWeight: 600 }}>Standard Home Delivery</Typography>
-                <Typography sx={{ fontWeight: 700, fontSize: '0.875rem' }}>FREE</Typography>
+                <Typography sx={{ fontWeight: 700, fontSize: '0.875rem', color: brand.sage }}>FREE</Typography>
               </Box>
-            </Box>
 
-            {/* Payment */}
-            <Box sx={{ mb: 4.5 }}>
-              <SectionTitle>Payment Method</SectionTitle>
+              <Typography sx={sectionTitleSx}>Payment Method</Typography>
               <Typography
-                sx={{ fontSize: '0.8rem', color: '#777', mb: 1.5, fontFamily: fonts.sans }}
+                sx={{ fontSize: '0.8rem', color: '#64748b', mb: 1.5, fontFamily: fonts.sans }}
               >
                 All transactions are secure and encrypted.
               </Typography>
               <Box sx={selectionBoxSx}>
                 <Typography sx={{ fontSize: '0.875rem', fontWeight: 600 }}>Cash on Delivery (COD)</Typography>
               </Box>
-            </Box>
+            </Paper>
 
-            {/* Billing address */}
-            <Box sx={{ mb: 5 }}>
-              <SectionTitle>Billing Address</SectionTitle>
+            {/* Billing Address Card */}
+            <Paper sx={formCardSx} elevation={0}>
+              <Typography sx={sectionTitleSx}>Billing Address</Typography>
               <Box
                 sx={{
-                  border: '1px solid #e5e5e5',
-                  borderRadius: '4px',
+                  border: '1px solid #e2e8f0',
+                  borderRadius: '6px',
                   overflow: 'hidden',
                   bgcolor: '#fff',
                 }}
@@ -541,13 +682,13 @@ export default function CheckoutPage() {
                       <Radio
                         size="small"
                         sx={{
-                          color: '#d9d9d9',
-                          '&.Mui-checked': { color: '#111' },
+                          color: '#cbd5e1',
+                          '&.Mui-checked': { color: brand.sage },
                         }}
                       />
                     }
                     label={
-                      <Typography sx={{ fontSize: '0.875rem', color: '#222', fontWeight: 500 }}>
+                      <Typography sx={{ fontSize: '0.875rem', color: '#1e293b', fontWeight: 500 }}>
                         Same as shipping address
                       </Typography>
                     }
@@ -556,10 +697,10 @@ export default function CheckoutPage() {
                       px: 2,
                       py: 1.5,
                       width: '100%',
-                      bgcolor: billingSame === 'same' ? '#fafafa' : '#fff',
-                      borderBottom: '1px solid #e5e5e5',
+                      bgcolor: billingSame === 'same' ? '#f8fafc' : '#fff',
+                      borderBottom: '1px solid #e2e8f0',
                       transition: 'background-color 0.2s ease',
-                      '&:hover': { bgcolor: '#fafafa' },
+                      '&:hover': { bgcolor: '#f8fafc' },
                     }}
                   />
                   <FormControlLabel
@@ -568,13 +709,13 @@ export default function CheckoutPage() {
                       <Radio
                         size="small"
                         sx={{
-                          color: '#d9d9d9',
-                          '&.Mui-checked': { color: '#111' },
+                          color: '#cbd5e1',
+                          '&.Mui-checked': { color: brand.sage },
                         }}
                       />
                     }
                     label={
-                      <Typography sx={{ fontSize: '0.875rem', color: '#222', fontWeight: 500 }}>
+                      <Typography sx={{ fontSize: '0.875rem', color: '#1e293b', fontWeight: 500 }}>
                         Use a different billing address
                       </Typography>
                     }
@@ -583,9 +724,9 @@ export default function CheckoutPage() {
                       px: 2,
                       py: 1.5,
                       width: '100%',
-                      bgcolor: billingSame === 'different' ? '#fafafa' : '#fff',
+                      bgcolor: billingSame === 'different' ? '#f8fafc' : '#fff',
                       transition: 'background-color 0.2s ease',
-                      '&:hover': { bgcolor: '#fafafa' },
+                      '&:hover': { bgcolor: '#f8fafc' },
                     }}
                   />
                 </RadioGroup>
@@ -596,14 +737,14 @@ export default function CheckoutPage() {
                       px: 2,
                       pt: 2.5,
                       pb: 3,
-                      borderTop: '1px solid #e5e5e5',
-                      bgcolor: '#fafafa',
+                      borderTop: '1px solid #e2e8f0',
+                      bgcolor: '#f8fafc',
                     }}
                   >
                     <Typography
                       sx={{
                         fontSize: '0.8rem',
-                        color: '#777',
+                        color: '#64748b',
                         mb: 2,
                         fontFamily: fonts.sans,
                       }}
@@ -617,18 +758,22 @@ export default function CheckoutPage() {
                     />
                     <Box sx={{ display: 'flex', gap: 1.5, mb: 1.5 }}>
                       <TextField
+                        id="billingFirstName"
                         fullWidth
                         required={billingSame === 'different'}
                         disabled={billingSame !== 'different'}
+                        label="First Name"
                         placeholder="First Name"
                         value={billingFirstName}
                         onChange={(e) => setBillingFirstName(e.target.value)}
                         sx={fieldSx}
                       />
                       <TextField
+                        id="billingLastName"
                         fullWidth
                         required={billingSame === 'different'}
                         disabled={billingSame !== 'different'}
+                        label="Last Name"
                         placeholder="Last Name"
                         value={billingLastName}
                         onChange={(e) => setBillingLastName(e.target.value)}
@@ -636,9 +781,11 @@ export default function CheckoutPage() {
                       />
                     </Box>
                     <TextField
+                      id="billingAddress"
                       fullWidth
                       required={billingSame === 'different'}
                       disabled={billingSame !== 'different'}
+                      label="Address"
                       placeholder="Address"
                       value={billingAddress}
                       onChange={(e) => setBillingAddress(e.target.value)}
@@ -646,17 +793,21 @@ export default function CheckoutPage() {
                     />
                     <Box sx={{ display: 'flex', gap: 1.5, mb: 1.5 }}>
                       <TextField
+                        id="billingCity"
                         fullWidth
                         required={billingSame === 'different'}
                         disabled={billingSame !== 'different'}
+                        label="City"
                         placeholder="City"
                         value={billingCity}
                         onChange={(e) => setBillingCity(e.target.value)}
                         sx={fieldSx}
                       />
                       <TextField
+                        id="billingPostalCode"
                         fullWidth
                         disabled={billingSame !== 'different'}
+                        label="Postal Code (optional)"
                         placeholder="Postal Code (optional)"
                         value={billingPostalCode}
                         onChange={(e) => setBillingPostalCode(e.target.value)}
@@ -664,9 +815,11 @@ export default function CheckoutPage() {
                       />
                     </Box>
                     <TextField
+                      id="billingPhone"
                       fullWidth
                       required={billingSame === 'different'}
                       disabled={billingSame !== 'different'}
+                      label="Phone Number"
                       placeholder="Phone Number"
                       value={billingPhone}
                       onChange={(e) => setBillingPhone(e.target.value)}
@@ -675,7 +828,7 @@ export default function CheckoutPage() {
                   </Box>
                 </Collapse>
               </Box>
-            </Box>
+            </Paper>
 
             <Button
               type="submit"
@@ -684,16 +837,18 @@ export default function CheckoutPage() {
               disableElevation
               disabled={isSubmitting}
               sx={{
-                bgcolor: '#111111',
+                bgcolor: brand.sage,
                 color: '#fff',
                 textTransform: 'uppercase',
                 fontWeight: 700,
                 fontSize: '13px',
                 letterSpacing: '0.12em',
-                py: 1.75,
-                borderRadius: '4px',
+                py: 2,
+                borderRadius: '8px',
                 fontFamily: fonts.sans,
-                '&:hover': { bgcolor: '#2a2a2a' },
+                boxShadow: '0 4px 12px rgba(90, 109, 87, 0.15)',
+                transition: 'all 0.2s',
+                '&:hover': { bgcolor: brand.sageLight, transform: 'translateY(-1px)' },
                 '&.Mui-disabled': { bgcolor: '#cccccc' }
               }}
             >
@@ -710,9 +865,9 @@ export default function CheckoutPage() {
                   fontSize: '11px',
                   fontWeight: 700,
                   letterSpacing: '0.08em',
-                  color: '#555',
+                  color: brand.charcoal,
                   fontFamily: fonts.sans,
-                  '&:hover': { color: '#111', bgcolor: 'transparent' }
+                  '&:hover': { color: brand.sage, bgcolor: 'transparent' }
                 }}
               >
                 Return to cart
@@ -726,9 +881,9 @@ export default function CheckoutPage() {
           sx={{
             width: { xs: '100%', md: '42%' },
             maxWidth: { md: 520 },
-            bgcolor: '#fafafa',
-            borderLeft: { md: '1px solid #eaeaea' },
-            borderBottom: { xs: '1px solid #eaeaea', md: 'none' },
+            bgcolor: '#F5F1EB',
+            borderLeft: { md: `1px solid ${brand.border}` },
+            borderBottom: { xs: `1px solid ${brand.border}`, md: 'none' },
             px: { xs: 2.5, sm: 4.5 },
             py: { xs: 4, md: 6 },
           }}
@@ -748,11 +903,11 @@ export default function CheckoutPage() {
                   <Box
                     sx={{
                       width: 64,
-                      height: 80, // Aspect 3:4 matching Limelight
-                      border: '1px solid #e5e5e5',
+                      height: 80,
+                      border: `1px solid ${brand.border}`,
                       overflow: 'hidden',
                       bgcolor: '#fff',
-                      borderRadius: 0, // 0px border-radius
+                      borderRadius: 0,
                     }}
                   >
                     <Image
@@ -772,7 +927,7 @@ export default function CheckoutPage() {
                       height: 20,
                       px: 0.5,
                       borderRadius: '50%',
-                      bgcolor: '#111',
+                      bgcolor: brand.sage,
                       color: '#fff',
                       fontSize: '0.7rem',
                       fontWeight: 700,
@@ -789,7 +944,7 @@ export default function CheckoutPage() {
                     sx={{
                       fontSize: '0.85rem',
                       fontWeight: 600,
-                      color: '#111111',
+                      color: brand.ink,
                       lineHeight: 1.3,
                       fontFamily: fonts.sans,
                     }}
@@ -800,7 +955,7 @@ export default function CheckoutPage() {
                     <Typography
                       sx={{
                         fontSize: '0.75rem',
-                        color: '#666',
+                        color: brand.muted,
                         mt: 0.5,
                         fontFamily: fonts.sans,
                       }}
@@ -813,7 +968,7 @@ export default function CheckoutPage() {
                   sx={{
                     fontSize: '0.875rem',
                     fontWeight: 700,
-                    color: '#111111',
+                    color: brand.ink,
                     flexShrink: 0,
                     fontFamily: fonts.sans,
                   }}
@@ -849,20 +1004,20 @@ export default function CheckoutPage() {
                   fontWeight: 700,
                   fontSize: '11px',
                   letterSpacing: '0.08em',
-                  borderRadius: '4px',
-                  borderColor: '#e0e0e0',
-                  color: '#111111',
+                  borderRadius: '6px',
+                  borderColor: '#cbd5e1',
+                  color: brand.ink,
                   bgcolor: '#ffffff',
                   px: 3,
                   '&:hover': {
-                    borderColor: '#111111',
-                    bgcolor: '#111111',
+                    borderColor: brand.sage,
+                    bgcolor: brand.sage,
                     color: '#ffffff',
                   },
                   '&.Mui-disabled': {
-                    bgcolor: '#f5f5f5',
-                    color: '#999',
-                    borderColor: '#e0e0e0',
+                    bgcolor: '#f1f5f9',
+                    color: '#94a3b8',
+                    borderColor: '#cbd5e1',
                   },
                 }}
               >
@@ -870,33 +1025,33 @@ export default function CheckoutPage() {
               </Button>
             </Box>
 
-            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.5, borderTop: '1px solid #eaeaea', pt: 2.5 }}>
+            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.5, borderTop: `1px solid ${brand.border}`, pt: 2.5 }}>
               <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                <Typography sx={{ fontSize: '0.875rem', color: '#555', fontFamily: fonts.sans }}>
+                <Typography sx={{ fontSize: '0.875rem', color: brand.charcoal, fontFamily: fonts.sans }}>
                   Subtotal
                 </Typography>
-                <Typography sx={{ fontSize: '0.875rem', fontWeight: 600, color: '#111', fontFamily: fonts.sans }}>
+                <Typography sx={{ fontSize: '0.875rem', fontWeight: 600, color: brand.ink, fontFamily: fonts.sans }}>
                   {formatPkr(subtotal)}
                 </Typography>
               </Box>
               {discountAmount > 0 && (
                 <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                  <Typography sx={{ fontSize: '0.875rem', color: '#555', fontFamily: fonts.sans }}>
+                  <Typography sx={{ fontSize: '0.875rem', color: brand.charcoal, fontFamily: fonts.sans }}>
                     Discount ({appliedCode})
                   </Typography>
-                  <Typography sx={{ fontSize: '0.875rem', fontWeight: 600, color: '#d9534f', fontFamily: fonts.sans }}>
+                  <Typography sx={{ fontSize: '0.875rem', fontWeight: 600, color: '#ef4444', fontFamily: fonts.sans }}>
                     −{formatPkr(discountAmount)}
                   </Typography>
                 </Box>
               )}
               <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-                  <Typography sx={{ fontSize: '0.875rem', color: '#555', fontFamily: fonts.sans }}>
+                  <Typography sx={{ fontSize: '0.875rem', color: brand.charcoal, fontFamily: fonts.sans }}>
                     Shipping
                   </Typography>
-                  <HelpOutlineIcon sx={{ fontSize: 15, color: '#777' }} />
+                  <HelpOutlineIcon sx={{ fontSize: 15, color: brand.muted }} />
                 </Box>
-                <Typography sx={{ fontSize: '0.875rem', fontWeight: 700, color: '#354531', fontFamily: fonts.sans }}>
+                <Typography sx={{ fontSize: '0.875rem', fontWeight: 700, color: brand.sage, fontFamily: fonts.sans }}>
                   FREE
                 </Typography>
               </Box>
@@ -907,23 +1062,23 @@ export default function CheckoutPage() {
                   alignItems: 'baseline',
                   pt: 2.5,
                   mt: 0.75,
-                  borderTop: '1px solid #eaeaea',
+                  borderTop: `1px solid ${brand.border}`,
                 }}
               >
                 <Typography
-                  sx={{ fontSize: '1.05rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.04em', color: '#111', fontFamily: fonts.sans }}
+                  sx={{ fontSize: '1.05rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.04em', color: brand.ink, fontFamily: fonts.sans }}
                 >
                   Total
                 </Typography>
                 <Box sx={{ display: 'flex', alignItems: 'baseline', gap: 0.75 }}>
                   <Typography
                     component="span"
-                    sx={{ fontSize: '0.75rem', fontWeight: 600, color: '#777', fontFamily: fonts.sans }}
+                    sx={{ fontSize: '0.75rem', fontWeight: 600, color: brand.muted, fontFamily: fonts.sans }}
                   >
                     PKR
                   </Typography>
                   <Typography
-                    sx={{ fontSize: '1.35rem', fontWeight: 700, color: '#111', fontFamily: fonts.sans }}
+                    sx={{ fontSize: '1.35rem', fontWeight: 700, color: brand.ink, fontFamily: fonts.sans }}
                   >
                     {formatPkr(total)}
                   </Typography>

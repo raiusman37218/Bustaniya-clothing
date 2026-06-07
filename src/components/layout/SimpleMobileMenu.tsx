@@ -57,6 +57,11 @@ const menuItems: MenuItem[] = [
     category: 'accessories',
     href: '/shop?category=accessories',
   },
+  {
+    label: 'Track Order',
+    category: 'order-track',
+    href: '/order-track',
+  },
 ];
 
 export default function SimpleMobileMenu({

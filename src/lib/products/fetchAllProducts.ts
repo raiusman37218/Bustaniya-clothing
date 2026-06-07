@@ -17,7 +17,7 @@ export async function fetchAllProductsFromSupabase(): Promise<Product[]> {
   try {
     const supabase = createCatalogSupabase();
     const { data, error } = await supabase
-      .from('product')
+      .from('products')
       .select('*')
       .order('created_at', { ascending: false });
 

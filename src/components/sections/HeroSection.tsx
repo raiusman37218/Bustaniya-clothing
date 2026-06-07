@@ -189,7 +189,8 @@ const DividerWithDiamond = () => (
 
 function HeroSection() {
   const [index, setIndex] = useState(0);
-  const slideCount = HERO_SLIDES.length;
+  const [slides, setSlides] = useState(HERO_SLIDES);
+  const slideCount = slides.length;
 
   const go = useCallback(
     (direction: 'prev' | 'next') => {
@@ -203,14 +204,46 @@ function HeroSection() {
     [slideCount],
   );
 
+  // Fetch dynamic hero images from database
+  useEffect(() => {
+    async function loadHeroImages() {
+      try {
+        const res = await fetch('/api/homepage');
+        const data = await res.json();
+        if (data && data.images) {
+          const heroImages = data.images.filter((img: any) => img.section === 'hero');
+          if (heroImages.length > 0) {
+            setSlides(
+              heroImages.map((img: any) => ({
+                src: img.image_url,
+                alt: img.alt_text || 'Bustaniya Collection',
+              }))
+            );
+          }
+        }
+      } catch (err) {
+        console.error('Failed to load hero images, using fallbacks:', err);
+      }
+    }
+    loadHeroImages();
+  }, []);
+
+  // Ensure index remains in bounds if slide length changes
+  useEffect(() => {
+    if (index >= slideCount && slideCount > 0) {
+      setIndex(0);
+    }
+  }, [slideCount, index]);
+
   // Autoplay functionality
   useEffect(() => {
+    if (slideCount <= 1) return;
     const timer = setInterval(() => {
       go('next');
     }, AUTO_PLAY_INTERVAL);
 
     return () => clearInterval(timer);
-  }, [go]);
+  }, [go, slideCount]);
 
   return (
     <Box
@@ -263,7 +296,7 @@ function HeroSection() {
           }}
         >
           {/* Slides */}
-          {HERO_SLIDES.map((slide, i) => (
+          {slides.map((slide, i) => (
             <Box
               key={slide.src}
               sx={{
@@ -361,7 +394,7 @@ function HeroSection() {
               zIndex: 3,
             }}
           >
-            {HERO_SLIDES.map((_, i) => (
+            {slides.map((_, i) => (
               <Box
                 key={i}
                 onClick={() => setIndex(i)}

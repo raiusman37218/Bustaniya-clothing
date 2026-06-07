@@ -33,7 +33,7 @@ export interface AdminBillingAddress {
 
 export interface AdminOrderItem {
   id: number;
-  productId: number | null;
+  productId: string | null;
   title: string;
   unitPricePkr: number;
   quantity: number;

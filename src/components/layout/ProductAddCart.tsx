@@ -1,6 +1,6 @@
 import { Alert, Box, Button, Snackbar } from '@mui/material';
-import React, { PropsWithChildren, useState } from 'react';
-import { ToastContainer } from 'react-toastify';
+import React, { PropsWithChildren } from 'react';
+import { brand, fonts, radius } from '@/src/lib/designTokens';
 
 interface Types {
   handle: (event: React.MouseEvent<HTMLButtonElement>) => void;
@@ -13,43 +13,45 @@ export default function ProductAddCart(props: PropsWithChildren<Types>) {
   const { handle, price, openToaster, close } = props;
 
   return (
-    <div>
-      <Box
+    <Box sx={{ width: '100%', mt: 1 }}>
+      <Button
+        onClick={handle}
+        fullWidth
+        variant="contained"
+        disableElevation
         sx={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          backgroundColor: '#5A6D57',
-          width: { xs: '100%', md: '550px' },
+          backgroundColor: brand.sage,
+          color: brand.white,
+          fontFamily: fonts.sans,
+          fontSize: '0.95rem',
+          fontWeight: 600,
+          textTransform: 'uppercase',
+          letterSpacing: '0.1em',
+          py: 1.8,
+          borderRadius: radius.button,
+          transition: 'all 0.2s ease-in-out',
+          '&:hover': {
+            backgroundColor: brand.sageLight,
+          },
         }}
       >
-        <Button
-          onClick={handle}
-          sx={{
-            color: '#fff',
-            padding: '0.5rem',
-            textAlign: 'center',
-          }}
-        >
-          Add to cart ${price}
-        </Button>
-      </Box>
+        Add to cart — ${price}
+      </Button>
 
       {/* toaster */}
-
       <Snackbar
         open={openToaster}
-        autoHideDuration={1000}
+        autoHideDuration={2000}
         anchorOrigin={{
           vertical: 'top',
           horizontal: 'center',
         }}
         onClose={() => close(false)}
       >
-        <Alert severity="error" variant="filled" sx={{ width: '100%' }}>
+        <Alert severity="error" variant="filled" sx={{ width: '100%', borderRadius: radius.button }}>
           You must be logged in!
         </Alert>
       </Snackbar>
-    </div>
+    </Box>
   );
 }

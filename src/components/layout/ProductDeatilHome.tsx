@@ -5,7 +5,6 @@ import { Product } from '@/src/types/productTypes';
 import { Box } from '@mui/material';
 import { Container } from '@mui/material';
 import { Grid } from '@mui/material';
-import { SelectChangeEvent } from '@mui/material';
 import React, { PropsWithChildren, useEffect, useState } from 'react';
 import SizeGuidModal from './SizeGuidModal';
 import Breadcrumb from '../headers/Breadcrumb';
@@ -38,14 +37,6 @@ interface Types {
 
 export default function ProductDeatilHome(props: PropsWithChildren<Types>) {
   const { product } = props;
-  const [size, setSize] = useState('');
-  const [openToaster, setOpenToaster] = useState(false);
-  const { isLoggedIn } = useAuth();
-
-  const handleChange = (event: SelectChangeEvent) => {
-    setSize(event.target.value as string);
-  };
-
   const {
     id,
     product_color,
@@ -56,6 +47,16 @@ export default function ProductDeatilHome(props: PropsWithChildren<Types>) {
     product_size,
     product_category,
   } = product;
+
+  const [size, setSize] = useState(() => {
+    return product_size.includes('M') ? 'M' : (product_size[0] || '');
+  });
+  const [openToaster, setOpenToaster] = useState(false);
+  const { isLoggedIn } = useAuth();
+
+  useEffect(() => {
+    setSize(product_size.includes('M') ? 'M' : (product_size[0] || ''));
+  }, [product_size]);
 
   const {
     open,
@@ -83,7 +84,7 @@ export default function ProductDeatilHome(props: PropsWithChildren<Types>) {
   };
 
   const handle = () => {
-    if (size === 'Size') {
+    if (!size) {
       toast.error('Please select a size.');
       return;
     }
@@ -109,49 +110,54 @@ export default function ProductDeatilHome(props: PropsWithChildren<Types>) {
         >
           <Grid
             container
-            spacing={3}
+            spacing={4}
             sx={{ mt: 4, display: { xs: 'none', md: 'flex' } }}
           >
-            <Grid item xs={2}>
-              <ProductImageGallery
-                SelectItem={itemS}
-                options={product_img}
-                onSelect={handleImageSelect}
-              />
-
-              <AccordionProduct />
+            {/* Left Column: Image Gallery + Main Image */}
+            <Grid item xs={12} md={7.5} sx={{ display: 'flex', gap: '20px' }}>
+              <Box sx={{ width: '120px', flexShrink: 0 }}>
+                <ProductImageGallery
+                  SelectItem={itemS}
+                  options={product_img}
+                  onSelect={handleImageSelect}
+                />
+              </Box>
+              <Box sx={{ flexGrow: 1 }}>
+                <ProductImage
+                  Images={product_img[0]}
+                  isHovered={isHovered}
+                  isSelected={isSelected}
+                />
+              </Box>
             </Grid>
 
-            <Grid item xs={12} sm={12} md={4}>
-              <ProductImage
-                Images={product_img[0]}
-                isHovered={isHovered}
-                isSelected={isSelected}
-              />
-            </Grid>
-            <Grid item xs={12} md={4}>
+            {/* Right Column: Title, Info, Selector, Buttons */}
+            <Grid item xs={12} md={4.5} sx={{ pl: { md: 2 } }}>
               <ProductInformation
                 name={product_name}
                 description={product_description}
               />
               <Box
                 sx={{
-                  mt: 7,
+                  mt: 4,
                   display: 'flex',
                   flexDirection: 'column',
-                  gap: '10px',
+                  gap: '16px',
                 }}
               >
-                <SizeGuidModal
-                  handleOpen={handleOpen}
-                  handleClose={handleClose}
-                  open={open}
-                />
                 <SizeSelector
-                  handleChange={handleChange}
-                  size={size}
+                  selectedSize={size}
+                  onSizeSelect={setSize}
                   productSize={product_size}
                 />
+                
+                <Box sx={{ display: 'flex', justifyContent: 'flex-start', mt: -1 }}>
+                  <SizeGuidModal
+                    handleOpen={handleOpen}
+                    handleClose={handleClose}
+                    open={open}
+                  />
+                </Box>
 
                 <ProductAddCart
                   openToaster={openToaster}
@@ -161,14 +167,16 @@ export default function ProductDeatilHome(props: PropsWithChildren<Types>) {
                 />
               </Box>
               <ProductUtilityIcons />
-
               <ProductMaterialDescription />
+              <AccordionProduct />
             </Grid>
           </Grid>
+          
           <Box sx={{ mt: 4, display: { xs: 'flex', md: 'none' } }}>
             <Swiper
               style={{ paddingBottom: '4rem' }}
               modules={[Pagination, Autoplay]}
+              loop={true}
               slidesPerView={1}
               pagination={{ clickable: true }}
             >
@@ -185,6 +193,7 @@ export default function ProductDeatilHome(props: PropsWithChildren<Types>) {
               ))}
             </Swiper>
           </Box>
+          
           <Container sx={{ display: { xs: 'block', md: 'none' } }}>
             <ProductInformation
               name={product_name}
@@ -192,30 +201,33 @@ export default function ProductDeatilHome(props: PropsWithChildren<Types>) {
             />
             <Box
               sx={{
-                mt: 7,
+                mt: 4,
                 display: 'flex',
                 flexDirection: 'column',
-                gap: '10px',
+                gap: '16px',
               }}
             >
-              <SizeGuidModal
-                handleOpen={handleOpen}
-                handleClose={handleClose}
-                open={open}
-              />
               <SizeSelector
-                handleChange={handleChange}
-                size={size}
+                selectedSize={size}
+                onSizeSelect={setSize}
                 productSize={product_size}
               />
+
+              <Box sx={{ display: 'flex', justifyContent: 'flex-start', mt: -1 }}>
+                <SizeGuidModal
+                  handleOpen={handleOpen}
+                  handleClose={handleClose}
+                  open={open}
+                />
+              </Box>
               <Toaster />
+
               <ProductAddCart
                 openToaster={openToaster}
                 handle={handle}
                 price={procuct_price}
                 close={setOpenToaster}
               />
-
             </Box>
             <ProductUtilityIcons />
             <ProductMaterialDescription />

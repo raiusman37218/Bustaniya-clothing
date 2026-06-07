@@ -1,7 +1,7 @@
 import React, { PropsWithChildren } from 'react';
-import { Avatar, Box, Button, Chip } from '@mui/material';
+import { Box, Button } from '@mui/material';
 import Image from 'next/image';
-import AccordionProduct from './AccordionProduct';
+import { brand } from '@/src/lib/designTokens';
 
 interface Types {
   options: string[];
@@ -11,37 +11,73 @@ interface Types {
 
 export default function ProductImageGallery(props: PropsWithChildren<Types>) {
   const { options, onSelect, SelectItem } = props;
+  
   return (
-    <>
-      <Box
-        sx={{
-          overflowY: 'scroll',
-          height: '500px',
-        }}
-      >
-        {options.map((image, index) => (
+    <Box
+      sx={{
+        overflowY: 'auto',
+        maxHeight: '600px',
+        pr: 1,
+        display: 'flex',
+        flexDirection: 'column',
+        gap: '12px',
+        // Hide scrollbar for Chrome, Safari and Opera
+        '&::-webkit-scrollbar': {
+          width: '4px',
+        },
+        '&::-webkit-scrollbar-track': {
+          background: '#f1f1f1',
+        },
+        '&::-webkit-scrollbar-thumb': {
+          background: brand.sageMuted,
+          borderRadius: '4px',
+        },
+        '&::-webkit-scrollbar-thumb:hover': {
+          background: brand.sage,
+        },
+      }}
+    >
+      {options.map((image, index) => {
+        const isSelected = SelectItem === index.toString() || (SelectItem === null && index === 0);
+        return (
           <Button
-            sx={{}}
             key={index}
             onClick={() => {
               onSelect(image, index);
             }}
+            sx={{
+              padding: 0,
+              minWidth: 0,
+              borderRadius: '4px',
+              overflow: 'hidden',
+              border: isSelected 
+                ? `2px solid ${brand.sage}` 
+                : `1px solid ${brand.border}`,
+              backgroundColor: 'transparent',
+              transition: 'all 0.2s ease-in-out',
+              opacity: isSelected ? 1 : 0.75,
+              '&:hover': {
+                opacity: 1,
+                borderColor: brand.sageLight,
+                backgroundColor: 'transparent',
+              },
+            }}
           >
             <Image
-              key={image}
               src={image}
-              width={120}
-              height={120}
+              width={100}
+              height={125}
               style={{
                 objectFit: 'cover',
-                border:
-                  SelectItem === index.toString() ? '3px solid #5A6D57' : '',
+                width: '100%',
+                height: 'auto',
+                display: 'block',
               }}
-              alt="image for detail product"
+              alt={`thumbnail gallery image ${index + 1}`}
             />
           </Button>
-        ))}
-      </Box>
-    </>
+        );
+      })}
+    </Box>
   );
 }

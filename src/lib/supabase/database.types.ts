@@ -9,6 +9,36 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      homepage_images: {
+        Row: {
+          alt_text: string | null;
+          created_at: string;
+          id: string;
+          image_url: string;
+          link_url: string | null;
+          section: string;
+          sort_order: number;
+        };
+        Insert: {
+          alt_text?: string | null;
+          created_at?: string;
+          id?: string;
+          image_url: string;
+          link_url?: string | null;
+          section: string;
+          sort_order?: number;
+        };
+        Update: {
+          alt_text?: string | null;
+          created_at?: string;
+          id?: string;
+          image_url?: string;
+          link_url?: string | null;
+          section?: string;
+          sort_order?: number;
+        };
+        Relationships: [];
+      };
       order_items: {
         Row: {
           color: string | null;
@@ -192,6 +222,44 @@ export type Database = {
         };
         Relationships: [];
       };
+      inventory: {
+        Row: {
+          id: number;
+          product_id: number;
+          stock_quantity: number;
+          low_stock_threshold: number;
+          sku: string | null;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: number;
+          product_id: number;
+          stock_quantity?: number;
+          low_stock_threshold?: number;
+          sku?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: number;
+          product_id?: number;
+          stock_quantity?: number;
+          low_stock_threshold?: number;
+          sku?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "inventory_product_id_fkey";
+            columns: ["product_id"];
+            isOneToOne: true;
+            referencedRelation: "product";
+            referencedColumns: ["id"];
+          }
+        ];
+      };
     };
     Views: Record<string, never>;
     Functions: {
@@ -206,6 +274,63 @@ export type Database = {
       admin_update_order_status_rpc: {
         Args: { access_key: string; p_order_id: string; p_status: string };
         Returns: Json;
+      };
+      admin_insert_product_rpc: {
+        Args: {
+          access_key: string;
+          p_name: string;
+          p_price: string;
+          p_category: string;
+          p_description: string;
+          p_color: Json;
+          p_size: Json;
+          p_img: Json;
+          p_instock: boolean;
+          p_bestsellere: boolean;
+          p_new: boolean;
+        };
+        Returns: Json;
+      };
+      admin_update_product_rpc: {
+        Args: {
+          access_key: string;
+          p_id: number;
+          p_updates: Json;
+        };
+        Returns: Json;
+      };
+      admin_delete_product_rpc: {
+        Args: {
+          access_key: string;
+          p_id: number;
+        };
+        Returns: boolean;
+      };
+      admin_insert_homepage_image_rpc: {
+        Args: {
+          access_key: string;
+          p_section: string;
+          p_image_url: string;
+          p_alt_text: string;
+          p_link_url: string;
+          p_sort_order: number;
+        };
+        Returns: Json;
+      };
+      admin_update_homepage_image_rpc: {
+        Args: {
+          access_key: string;
+          p_id: string;
+          p_updates: Json;
+        };
+        Returns: Json;
+      };
+      admin_delete_homepage_image_rpc: {
+        Args: {
+          access_key: string;
+          p_id: string;
+        };
+        Returns: boolean;
       };
     };
     Enums: Record<string, never>;
