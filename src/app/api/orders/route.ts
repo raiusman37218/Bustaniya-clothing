@@ -13,10 +13,7 @@ import {
 } from '@/src/types/order';
 import { isValidEmail } from '@/src/lib/validation/email';
 
-function parseProductId(id: string): number | null {
-  const n = Number.parseInt(id, 10);
-  return Number.isFinite(n) ? n : null;
-}
+
 
 export async function POST(req: NextRequest) {
   try {
@@ -96,7 +93,7 @@ export async function POST(req: NextRequest) {
       items: calculated.lineItems.map((item) => {
         const unitPkr = Number.parseInt(item.price, 10);
         return {
-          product_id: parseProductId(item.id),
+          product_id: item.id,
           title: item.name,
           unit_price_pkr: unitPkr,
           quantity: item.quantity,

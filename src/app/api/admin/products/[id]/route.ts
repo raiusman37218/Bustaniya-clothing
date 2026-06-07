@@ -46,7 +46,7 @@ export async function PUT(
     if (useServiceRoleForAdmin()) {
       const supabase = createAdminDataSupabase();
       
-      const dbUpdates: Record<string, any> = {};
+      const dbUpdates: any = {};
       if (product_name !== undefined) dbUpdates.name = product_name;
       if (procuct_price !== undefined) dbUpdates.price = Number(procuct_price) || 0;
       if (product_category !== undefined) dbUpdates.category = product_category;

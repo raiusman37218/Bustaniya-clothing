@@ -47,7 +47,7 @@ export type Database = {
           image_url: string | null;
           line_total_pkr: number;
           order_id: string;
-          product_id: number | null;
+          product_id: string | null;
           quantity: number;
           size: string | null;
           title: string;
@@ -59,7 +59,7 @@ export type Database = {
           image_url?: string | null;
           line_total_pkr: number;
           order_id: string;
-          product_id?: number | null;
+          product_id?: string | null;
           quantity?: number;
           size?: string | null;
           title: string;
@@ -71,7 +71,7 @@ export type Database = {
           image_url?: string | null;
           line_total_pkr?: number;
           order_id?: string;
-          product_id?: number | null;
+          product_id?: string | null;
           quantity?: number;
           size?: string | null;
           title?: string;
@@ -179,53 +179,55 @@ export type Database = {
           },
         ];
       };
-      product: {
+      products: {
         Row: {
+          id: string;
           created_at: string;
-          id: number;
-          procuct_price: string | null;
-          product_bestsellere: boolean;
-          product_category: string | null;
-          product_color: Json;
-          product_description: string | null;
-          product_img: Json;
-          product_instock: boolean;
-          product_name: string;
-          product_new: boolean;
-          product_size: Json;
+          name: string;
+          description: string | null;
+          price: number;
+          category: string | null;
+          color: string | null;
+          size: string | null;
+          img: string | null;
+          instock: boolean;
+          new: boolean;
+          bestsellere: boolean;
         };
         Insert: {
+          id?: string;
           created_at?: string;
-          procuct_price?: string | null;
-          product_bestsellere?: boolean;
-          product_category?: string | null;
-          product_color?: Json;
-          product_description?: string | null;
-          product_img?: Json;
-          product_instock?: boolean;
-          product_name: string;
-          product_new?: boolean;
-          product_size?: Json;
+          name: string;
+          description?: string | null;
+          price?: number;
+          category?: string | null;
+          color?: string | null;
+          size?: string | null;
+          img?: string | null;
+          instock?: boolean;
+          new?: boolean;
+          bestsellere?: boolean;
         };
         Update: {
+          id?: string;
           created_at?: string;
-          procuct_price?: string | null;
-          product_bestsellere?: boolean;
-          product_category?: string | null;
-          product_color?: Json;
-          product_description?: string | null;
-          product_img?: Json;
-          product_instock?: boolean;
-          product_name?: string;
-          product_new?: boolean;
-          product_size?: Json;
+          name?: string;
+          description?: string | null;
+          price?: number;
+          category?: string | null;
+          color?: string | null;
+          size?: string | null;
+          img?: string | null;
+          instock?: boolean;
+          new?: boolean;
+          bestsellere?: boolean;
         };
         Relationships: [];
       };
       inventory: {
         Row: {
           id: number;
-          product_id: number;
+          product_id: string;
           stock_quantity: number;
           low_stock_threshold: number;
           sku: string | null;
@@ -234,7 +236,7 @@ export type Database = {
         };
         Insert: {
           id?: number;
-          product_id: number;
+          product_id: string;
           stock_quantity?: number;
           low_stock_threshold?: number;
           sku?: string | null;
@@ -243,7 +245,7 @@ export type Database = {
         };
         Update: {
           id?: number;
-          product_id?: number;
+          product_id?: string;
           stock_quantity?: number;
           low_stock_threshold?: number;
           sku?: string | null;
@@ -255,7 +257,7 @@ export type Database = {
             foreignKeyName: "inventory_product_id_fkey";
             columns: ["product_id"];
             isOneToOne: true;
-            referencedRelation: "product";
+            referencedRelation: "products";
             referencedColumns: ["id"];
           }
         ];
@@ -294,7 +296,7 @@ export type Database = {
       admin_update_product_rpc: {
         Args: {
           access_key: string;
-          p_id: number;
+          p_id: string;
           p_updates: Json;
         };
         Returns: Json;
@@ -302,7 +304,7 @@ export type Database = {
       admin_delete_product_rpc: {
         Args: {
           access_key: string;
-          p_id: number;
+          p_id: string;
         };
         Returns: boolean;
       };
