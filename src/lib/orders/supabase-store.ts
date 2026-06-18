@@ -171,6 +171,67 @@ export async function createSupabaseOrder(
   };
 }
 
+export async function createAdminSupabaseOrder(
+  input: CreateSupabaseOrderInput,
+): Promise<SavedSupabaseOrder> {
+  const orderId = randomUUID();
+  const supabase = createAdminDataSupabase();
+
+  const { error: orderError } = await supabase.from('orders').insert({
+    id: orderId,
+    user_id: input.user_id,
+    order_number: input.order_number,
+    guest_email: input.guest_email,
+    customer_email: input.customer_email,
+    guest_name: input.guest_name,
+    guest_phone: input.guest_phone,
+    shipping_full_name: input.shipping_full_name,
+    shipping_phone: input.shipping_phone,
+    shipping_line1: input.shipping_line1,
+    shipping_line2: input.shipping_line2,
+    shipping_city: input.shipping_city,
+    shipping_region: input.shipping_region,
+    shipping_country: input.shipping_country,
+    shipping_postal_code: input.shipping_postal_code,
+    subtotal_pkr: input.subtotal_pkr,
+    shipping_fee_pkr: input.shipping_fee_pkr,
+    total_pkr: input.total_pkr,
+    discount_amount_pkr: input.discount_amount_pkr ?? 0,
+    discount_code: input.discount_code ?? null,
+    billing_address: input.billing_address ?? null,
+    payment_method: input.payment_method,
+    notes: input.notes,
+    status: 'pending',
+  });
+
+  if (orderError) {
+    throw new Error(orderError.message);
+  }
+
+  const { error: itemsError } = await supabase.from('order_items').insert(
+    input.items.map((item) => ({
+      order_id: orderId,
+      product_id: item.product_id,
+      title: item.title,
+      unit_price_pkr: item.unit_price_pkr,
+      quantity: item.quantity,
+      line_total_pkr: item.line_total_pkr,
+      size: item.size ?? null,
+      color: item.color ?? null,
+      image_url: item.image_url ?? null,
+    })),
+  );
+
+  if (itemsError) {
+    throw new Error(itemsError.message);
+  }
+
+  return {
+    id: orderId,
+    created_at: new Date().toISOString(),
+  };
+}
+
 export async function listSupabaseOrders(): Promise<AdminOrder[]> {
   if (useServiceRoleForAdmin()) {
     const supabase = createAdminDataSupabase();

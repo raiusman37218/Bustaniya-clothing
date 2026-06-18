@@ -6,7 +6,7 @@ function BestSellerHeader() {
     <SectionHeading
       eyebrow="Customer favourites"
       title="Best sellers"
-      subtitle="Pieces our community returns to — refined staples and standout silhouettes."
+      align="center"
       action={<ViewAllLink href="/shop" />}
       sx={{ mt: { xs: 0, md: 0 }, mb: { xs: 2, md: 3 } }}
     />

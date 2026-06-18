@@ -39,6 +39,8 @@ export async function PUT(
       stock_quantity,
       low_stock_threshold,
       sku,
+      article_number,
+      stock_id,
     } = body;
 
     let rawProduct: any = null;
@@ -57,6 +59,8 @@ export async function PUT(
       if (stock_quantity !== undefined) dbUpdates.instock = Number(stock_quantity) > 0;
       if (product_bestsellere !== undefined) dbUpdates.bestsellere = Boolean(product_bestsellere);
       if (product_new !== undefined) dbUpdates.new = Boolean(product_new);
+      if (article_number !== undefined) dbUpdates.article_number = article_number;
+      if (stock_id !== undefined) dbUpdates.stock_id = stock_id || null;
 
       const { data, error: productError } = await supabase
         .from('products')
@@ -83,6 +87,8 @@ export async function PUT(
       if (stock_quantity !== undefined) updates.product_instock = Number(stock_quantity) > 0;
       if (product_bestsellere !== undefined) updates.product_bestsellere = product_bestsellere;
       if (product_new !== undefined) updates.product_new = product_new;
+      if (article_number !== undefined) updates.article_number = article_number;
+      if (stock_id !== undefined) updates.stock_id = stock_id || null;
 
       const { data, error: rpcError } = await supabase.rpc('admin_update_product_rpc', {
         access_key: accessKey,
@@ -107,6 +113,8 @@ export async function PUT(
       product_instock: Boolean(rawProduct.instock),
       product_bestsellere: Boolean(rawProduct.bestsellere),
       product_new: Boolean(rawProduct.new),
+      article_number: rawProduct.article_number || '',
+      stock_id: rawProduct.stock_id || '',
     };
 
     // 2. Update inventory if provided (using UUID product_id)

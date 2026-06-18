@@ -78,5 +78,7 @@ export function mapDbProduct(row: any): Product {
     product_name: name,
     product_new: productNew,
     product_size: parseSizes(rawSizes),
+    article_number: row.article_number || '',
+    stock_id: row.stock_id || '',
   };
 }

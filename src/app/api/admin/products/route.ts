@@ -53,6 +53,8 @@ export async function GET() {
       product_instock: Boolean(p.instock),
       product_bestsellere: Boolean(p.bestsellere),
       product_new: Boolean(p.new),
+      article_number: p.article_number || '',
+      stock_id: p.stock_id || '',
     }));
 
     // Combine products with inventory
@@ -98,6 +100,8 @@ export async function POST(req: NextRequest) {
       stock_quantity = 0,
       low_stock_threshold = 5,
       sku,
+      article_number,
+      stock_id,
     } = body;
 
     if (!product_name) {
@@ -122,6 +126,8 @@ export async function POST(req: NextRequest) {
           instock: stock_quantity > 0,
           bestsellere: Boolean(product_bestsellere),
           new: Boolean(product_new),
+          article_number: article_number || undefined,
+          stock_id: stock_id || null,
         })
         .select()
         .single();
@@ -145,6 +151,8 @@ export async function POST(req: NextRequest) {
         p_instock: stock_quantity > 0,
         p_bestsellere: Boolean(product_bestsellere),
         p_new: Boolean(product_new),
+        p_article_number: article_number || null,
+        p_stock_id: stock_id || null,
       });
 
       if (rpcError) throw rpcError;
@@ -164,6 +172,8 @@ export async function POST(req: NextRequest) {
       product_instock: Boolean(rawProduct.instock),
       product_bestsellere: Boolean(rawProduct.bestsellere),
       product_new: Boolean(rawProduct.new),
+      article_number: rawProduct.article_number || '',
+      stock_id: rawProduct.stock_id || '',
     };
 
     const finalSku = sku || `SKU-${product.id}`;

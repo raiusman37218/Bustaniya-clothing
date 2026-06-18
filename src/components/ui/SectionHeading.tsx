@@ -27,12 +27,10 @@ export default function SectionHeading({
     <Box
       sx={{
         display: 'flex',
-        flexDirection: { xs: 'column', sm: 'row' },
-        alignItems: centered
-          ? 'center'
-          : { xs: 'flex-start', sm: 'center' },
-        justifyContent: 'space-between',
-        gap: 2,
+        flexDirection: centered ? 'column' : { xs: 'column', sm: 'row' },
+        alignItems: centered ? 'center' : { xs: 'flex-start', sm: 'center' },
+        justifyContent: centered ? 'center' : 'space-between',
+        gap: centered ? 1 : 2,
         mb: { xs: 3, md: 4 },
         textAlign: centered ? 'center' : 'left',
         ...sx,
@@ -44,10 +42,10 @@ export default function SectionHeading({
             component="p"
             sx={{
               fontSize: { xs: '11px', md: '12px' },
-              letterSpacing: '0.14em',
+              letterSpacing: '0.2em',
               textTransform: 'uppercase',
               color: brand.muted,
-              fontWeight: 600,
+              fontWeight: 500,
               fontFamily: fonts.sans,
               mb: 1,
             }}
@@ -59,9 +57,9 @@ export default function SectionHeading({
           component="h2"
           sx={{
             fontSize: { xs: '1.75rem', sm: '2rem', md: '2.35rem' },
-            fontWeight: 700,
-            letterSpacing: '-0.03em',
-            lineHeight: 1.1,
+            fontWeight: 400,
+            letterSpacing: '0.03em',
+            lineHeight: 1.2,
             color: brand.ink,
             fontFamily: fonts.display,
             fontStyle: 'normal',

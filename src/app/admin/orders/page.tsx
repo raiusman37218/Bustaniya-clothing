@@ -4,6 +4,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import {
   Box,
+  Button,
   CircularProgress,
   Paper,
   Table,
@@ -14,10 +15,12 @@ import {
   TableRow,
   Typography,
 } from '@mui/material';
+import AddIcon from '@mui/icons-material/Add';
 import AdminShell from '@/src/components/admin/AdminShell';
 import StatusChip from '@/src/components/admin/StatusChip';
 import { formatDate, formatPkr } from '@/src/components/admin/formatPkr';
 import { AdminOrder } from '@/src/types/adminOrder';
+import { brand, radius } from '@/src/lib/designTokens';
 
 export default function AdminOrdersPage() {
   const router = useRouter();
@@ -65,14 +68,34 @@ export default function AdminOrdersPage() {
             py: 2,
             borderBottom: '1px solid #e5e5e5',
             bgcolor: '#fff',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
           }}
         >
-          <Typography variant="h6" sx={{ fontWeight: 600 }}>
-            All orders
-          </Typography>
-          <Typography variant="body2" sx={{ color: '#707070' }}>
-            {orders.length} order{orders.length === 1 ? '' : 's'} total
-          </Typography>
+          <Box>
+            <Typography variant="h6" sx={{ fontWeight: 600 }}>
+              All orders
+            </Typography>
+            <Typography variant="body2" sx={{ color: '#707070' }}>
+              {orders.length} order{orders.length === 1 ? '' : 's'} total
+            </Typography>
+          </Box>
+          <Button
+            variant="contained"
+            startIcon={<AddIcon />}
+            onClick={() => router.push('/admin/orders/add')}
+            sx={{
+              textTransform: 'none',
+              bgcolor: brand.sage,
+              fontWeight: 600,
+              fontSize: '0.875rem',
+              borderRadius: radius.button || 1.5,
+              '&:hover': { bgcolor: brand.sageLight || '#465544' },
+            }}
+          >
+            Add Custom Order
+          </Button>
         </Box>
 
         {loading ? (

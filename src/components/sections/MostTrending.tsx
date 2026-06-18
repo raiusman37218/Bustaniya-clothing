@@ -10,35 +10,52 @@ import ViewAllLink from '@/src/components/ui/ViewAllLink';
 import { brand, fonts } from '@/src/lib/designTokens';
 
 const TABS = [
-  { label: 'NEW ARRIVALS', filter: (p: Product) => p.product_new },
-  { label: 'BEST SELLERS', filter: (p: Product) => p.product_bestsellere },
   {
-    label: 'UNSTITCHED',
-    filter: (p: Product) => p.product_category?.toLowerCase().includes('unstitch'),
-  },
-  {
-    label: 'READY TO WEAR',
+    label: 'KURTI',
     filter: (p: Product) => {
       const cat = p.product_category?.toLowerCase() ?? '';
-      return cat.includes('ready to wear') || cat.includes('ready-to-wear') || (!cat.includes('unstitch') && !cat.includes('accessories'));
+      const name = p.product_name?.toLowerCase() ?? '';
+      return cat.includes('kurti') || name.includes('kurti');
     },
   },
   {
-    label: 'BOTTOMS',
+    label: 'FULL DRESS',
     filter: (p: Product) => {
       const cat = p.product_category?.toLowerCase() ?? '';
-      return cat.includes('pants') || cat.includes('bottom') || cat.includes('trouser') || cat.includes('shalwar');
+      const name = p.product_name?.toLowerCase() ?? '';
+      return cat.includes('full dress') || cat.includes('dress') || name.includes('full dress') || name.includes('dress');
     },
   },
   {
-    label: 'ACCESSORIES',
+    label: 'CUSTOMIZED DRESS',
     filter: (p: Product) => {
       const cat = p.product_category?.toLowerCase() ?? '';
-      const desc = p.product_description?.toLowerCase() ?? '';
-      return cat.includes('accessories') || desc.includes('accessories');
+      const name = p.product_name?.toLowerCase() ?? '';
+      return (
+        cat.includes('custom') ||
+        cat.includes('custm') ||
+        cat.includes('cutom') ||
+        name.includes('custom') ||
+        name.includes('custm') ||
+        name.includes('cutom')
+      );
     },
   },
-  { label: 'ALL', filter: (_p: Product) => true },
+  {
+    label: 'FERSHI SHALWAR',
+    filter: (p: Product) => {
+      const cat = p.product_category?.toLowerCase() ?? '';
+      const name = p.product_name?.toLowerCase() ?? '';
+      return (
+        cat.includes('fershi') ||
+        cat.includes('freshi') ||
+        cat.includes('shalwar') ||
+        name.includes('fershi') ||
+        name.includes('freshi') ||
+        name.includes('shalwar')
+      );
+    },
+  },
 ];
 
 const marqueeKeyframes = {
@@ -74,7 +91,7 @@ export default function MostTrending() {
         <SectionHeading
           eyebrow="Shop the moment"
           title="Most trending"
-          subtitle="Filter by category or browse what’s moving fastest right now."
+          align="center"
           action={<ViewAllLink />}
           sx={{ mb: 2 }}
         />
@@ -83,7 +100,7 @@ export default function MostTrending() {
           sx={{
             display: 'flex',
             alignItems: 'center',
-            justifyContent: 'space-between',
+            justifyContent: 'center',
             flexWrap: 'wrap',
             gap: 1,
             mb: 3,
@@ -94,8 +111,9 @@ export default function MostTrending() {
           <Box
             sx={{
               display: 'flex',
-              gap: { xs: 1, md: 2 },
+              gap: { xs: 1.5, md: 2.5 },
               flexWrap: 'wrap',
+              justifyContent: 'center',
               overflowX: 'auto',
               '&::-webkit-scrollbar': { display: 'none' },
             }}
@@ -109,8 +127,8 @@ export default function MostTrending() {
                   pb: 1.5,
                   borderBottom:
                     activeTab === i
-                      ? `2px solid ${brand.ink}`
-                      : '2px solid transparent',
+                      ? `1px solid ${brand.ink}`
+                      : '1px solid transparent',
                   whiteSpace: 'nowrap',
                   transition: 'border-color 0.25s ease',
                 }}
@@ -118,9 +136,9 @@ export default function MostTrending() {
                 <Typography
                   sx={{
                     fontSize: { xs: '10px', sm: '11px', md: '12px' },
-                    fontWeight: activeTab === i ? 700 : 500,
+                    fontWeight: activeTab === i ? 600 : 500,
                     color: activeTab === i ? brand.ink : brand.muted,
-                    letterSpacing: '0.08em',
+                    letterSpacing: '0.15em',
                     fontFamily: fonts.sans,
                     transition: 'color 0.25s ease',
                     '&:hover': { color: brand.ink },

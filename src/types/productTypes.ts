@@ -16,4 +16,6 @@ export interface Product {
   product_name: string;
   product_new: boolean;
   product_size: string[];
+  article_number?: string;
+  stock_id?: string;
 }

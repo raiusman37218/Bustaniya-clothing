@@ -186,9 +186,9 @@ export default function ProductCard({
             component="div"
             sx={{
               fontFamily: fonts.sans,
-              fontSize: '10px',
-              fontWeight: 600,
-              letterSpacing: '0.1em',
+              fontSize: '9px',
+              fontWeight: 500,
+              letterSpacing: '0.15em',
               textTransform: 'uppercase',
               color: brand.muted,
               mb: 0.5,
@@ -203,9 +203,9 @@ export default function ProductCard({
             sx={{
               fontFamily: fonts.sans,
               fontSize: { xs: '13px', md: '13.5px' },
-              fontWeight: 500,
-              lineHeight: 1.3,
-              color: '#111111',
+              fontWeight: 400,
+              lineHeight: 1.4,
+              color: '#121212',
               letterSpacing: '0.01em',
               display: '-webkit-box',
               WebkitLineClamp: 2,
@@ -226,8 +226,8 @@ export default function ProductCard({
             sx={{
               fontFamily: fonts.sans,
               fontSize: { xs: '13.5px', md: '14px' },
-              fontWeight: 700,
-              color: '#111111',
+              fontWeight: 500,
+              color: '#121212',
               mt: 0,
               mb: 1,
             }}

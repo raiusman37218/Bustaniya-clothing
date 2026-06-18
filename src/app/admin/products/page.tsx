@@ -73,6 +73,8 @@ const DEFAULT_FORM_STATE = {
   stock_quantity: 10,
   low_stock_threshold: 5,
   sku: '',
+  article_number: '',
+  stock_id: '',
 };
 
 function ProductsPageContent() {
@@ -83,6 +85,22 @@ function ProductsPageContent() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [configError, setConfigError] = useState('');
+  const [stocks, setStocks] = useState<Array<{ id: string; description: string | null }>>([]);
+
+  useEffect(() => {
+    async function fetchStocks() {
+      try {
+        const res = await fetch('/api/admin/expenses');
+        const data = await res.json();
+        if (res.ok) {
+          setStocks(data.stockEntries || []);
+        }
+      } catch (err) {
+        console.error('Failed to fetch stocks:', err);
+      }
+    }
+    fetchStocks();
+  }, []);
   
   // Search & Filter State
   const [searchTerm, setSearchTerm] = useState('');
@@ -187,6 +205,8 @@ function ProductsPageContent() {
       stock_quantity: product.inventory?.stock_quantity ?? 10,
       low_stock_threshold: product.inventory?.low_stock_threshold ?? 5,
       sku: product.inventory?.sku || '',
+      article_number: product.article_number || '',
+      stock_id: product.stock_id || '',
     });
     setIsEditMode(true);
     setIsDrawerOpen(true);
@@ -523,6 +543,7 @@ function ProductsPageContent() {
                     <TableRow sx={{ bgcolor: '#fafafa' }}>
                       <TableCell sx={{ fontWeight: 600, width: 80 }}>Image</TableCell>
                       <TableCell sx={{ fontWeight: 600 }}>Product Name</TableCell>
+                      <TableCell sx={{ fontWeight: 600 }}>Article #</TableCell>
                       <TableCell sx={{ fontWeight: 600 }}>SKU</TableCell>
                       <TableCell sx={{ fontWeight: 600 }}>Category</TableCell>
                       <TableCell sx={{ fontWeight: 600 }}>Price</TableCell>
@@ -580,6 +601,27 @@ function ProductsPageContent() {
                             <Typography variant="caption" sx={{ color: brand.muted }}>
                               ID: {p.id}
                             </Typography>
+                          </TableCell>
+
+                          {/* Article # */}
+                          <TableCell>
+                            <Typography sx={{ fontFamily: 'monospace', fontSize: '0.85rem', fontWeight: 600, color: brand.sage }}>
+                              {p.article_number || '—'}
+                            </Typography>
+                            {p.stock_id && (
+                              <Chip
+                                label={p.stock_id}
+                                size="small"
+                                sx={{
+                                  mt: 0.5,
+                                  height: 18,
+                                  fontSize: '0.6rem',
+                                  fontWeight: 600,
+                                  bgcolor: '#e0f2f1',
+                                  color: '#004d40',
+                                }}
+                              />
+                            )}
                           </TableCell>
 
                           {/* SKU */}
@@ -746,6 +788,41 @@ function ProductsPageContent() {
                   size="small"
                   InputLabelProps={{ shrink: true }}
                 />
+              </Grid>
+
+              {/* Article Number */}
+              <Grid item xs={12}>
+                <TextField
+                  label="Article Number"
+                  fullWidth
+                  placeholder="e.g. bu-p#001 (leave empty to auto-generate)"
+                  value={formData.article_number}
+                  onChange={(e) => setFormData((prev) => ({ ...prev, article_number: e.target.value }))}
+                  size="small"
+                  InputLabelProps={{ shrink: true }}
+                />
+              </Grid>
+
+              {/* Link to Stock ID */}
+              <Grid item xs={12}>
+                <FormControl fullWidth size="small">
+                  <InputLabel id="stock-select-label">Link to Stock ID (Optional)</InputLabel>
+                  <Select
+                    labelId="stock-select-label"
+                    label="Link to Stock ID (Optional)"
+                    value={formData.stock_id || ''}
+                    onChange={(e) => setFormData((prev) => ({ ...prev, stock_id: e.target.value as string }))}
+                  >
+                    <MenuItem value="">
+                      <em>None - Do not link to any Stock batch</em>
+                    </MenuItem>
+                    {stocks.map((stk) => (
+                      <MenuItem key={stk.id} value={stk.id}>
+                        {stk.id} {stk.description ? `(${stk.description})` : ''}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
               </Grid>
 
               {/* Price & SKU */}

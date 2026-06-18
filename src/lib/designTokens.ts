@@ -19,15 +19,15 @@ export const fonts = {
 } as const;
 
 export const radius = {
-  button: '2px',
-  product: '8px',
-  editorial: '12px',
+  button: '0px',
+  product: '0px',
+  editorial: '0px',
 } as const;
 
 export const shadows = {
-  card: '0 2px 20px rgba(0,0,0,0.06)',
-  cardHover: '0 10px 36px rgba(0,0,0,0.1)',
-  section: '0 20px 64px rgba(0,0,0,0.06)',
+  card: 'none',
+  cardHover: 'none',
+  section: 'none',
 } as const;
 
 export const sectionSpacing = {

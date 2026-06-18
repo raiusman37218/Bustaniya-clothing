@@ -21,6 +21,7 @@ import LogoutOutlinedIcon from '@mui/icons-material/LogoutOutlined';
 import ShoppingCartOutlinedIcon from '@mui/icons-material/ShoppingCartOutlined';
 import InventoryOutlinedIcon from '@mui/icons-material/InventoryOutlined';
 import ImageOutlinedIcon from '@mui/icons-material/ImageOutlined';
+import ReceiptLongOutlinedIcon from '@mui/icons-material/ReceiptLongOutlined';
 import { brand, fonts } from '@/src/lib/designTokens';
 
 export default function AdminShell({
@@ -43,6 +44,7 @@ export default function AdminShell({
     { label: 'Overview', href: '/admin', icon: DashboardOutlinedIcon },
     { label: 'Orders', href: '/admin/orders', icon: ShoppingCartOutlinedIcon },
     { label: 'Products', href: '/admin/products', icon: StorefrontOutlinedIcon },
+    { label: 'Expenses', href: '/admin/expenses', icon: ReceiptLongOutlinedIcon },
     { label: 'Section Images', href: '/admin/sections', icon: ImageOutlinedIcon },
   ];
 

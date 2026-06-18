@@ -54,10 +54,11 @@ export default function EditorialTriptych() {
                     <Typography
                       sx={{
                         color: brand.white,
-                        fontWeight: 700,
-                        fontSize: { xs: '1.15rem', md: '1.35rem' },
-                        letterSpacing: '-0.01em',
+                        fontWeight: 400,
+                        fontSize: { xs: '1.1rem', md: '1.25rem' },
+                        letterSpacing: '0.05em',
                         fontFamily: fonts.display,
+                        textTransform: 'uppercase',
                       }}
                     >
                       {item.title}
@@ -67,7 +68,7 @@ export default function EditorialTriptych() {
                         color: 'rgba(255,255,255,0.9)',
                         fontSize: '13px',
                         mt: 0.5,
-                        lineHeight: 1.5,
+                        lineHeight: 1.6,
                         fontFamily: fonts.sans,
                       }}
                     >

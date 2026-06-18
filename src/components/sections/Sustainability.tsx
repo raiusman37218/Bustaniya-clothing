@@ -48,9 +48,9 @@ function Sustainability() {
           <Typography
             sx={{
               fontSize: '11px',
-              letterSpacing: '0.14em',
+              letterSpacing: '0.2em',
               textTransform: 'uppercase',
-              fontWeight: 600,
+              fontWeight: 500,
               fontFamily: fonts.sans,
               opacity: 0.92,
               mb: 1.5,
@@ -64,9 +64,10 @@ function Sustainability() {
             sx={{
               fontFamily: fonts.display,
               fontSize: { xs: '2rem', md: '2.75rem' },
-              fontWeight: 600,
-              lineHeight: 1.15,
-              letterSpacing: '-0.02em',
+              fontWeight: 400,
+              lineHeight: 1.2,
+              letterSpacing: '0.02em',
+              textTransform: 'uppercase',
               mb: 2,
             }}
           >
@@ -92,16 +93,23 @@ function Sustainability() {
             variant="contained"
             disableElevation
             sx={{
-              textTransform: 'none',
+              textTransform: 'uppercase',
               color: brand.ink,
               bgcolor: brand.white,
               fontWeight: 600,
-              fontSize: '14px',
-              px: 3,
-              py: 1.25,
-              borderRadius: radius.button,
+              fontSize: '12px',
+              px: 4,
+              py: 1.5,
+              borderRadius: 0,
               fontFamily: fonts.sans,
-              '&:hover': { bgcolor: brand.surface },
+              letterSpacing: '0.15em',
+              transition: 'all 0.3s ease',
+              '&:hover': {
+                bgcolor: 'transparent',
+                color: brand.white,
+                border: `1px solid ${brand.white}`,
+                boxShadow: 'none',
+              },
             }}
           >
             Discover more

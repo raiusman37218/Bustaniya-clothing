@@ -193,6 +193,8 @@ export type Database = {
           instock: boolean;
           new: boolean;
           bestsellere: boolean;
+          article_number: string | null;
+          stock_id: string | null;
         };
         Insert: {
           id?: string;
@@ -207,6 +209,8 @@ export type Database = {
           instock?: boolean;
           new?: boolean;
           bestsellere?: boolean;
+          article_number?: string | null;
+          stock_id?: string | null;
         };
         Update: {
           id?: string;
@@ -221,6 +225,29 @@ export type Database = {
           instock?: boolean;
           new?: boolean;
           bestsellere?: boolean;
+          article_number?: string | null;
+          stock_id?: string | null;
+        };
+        Relationships: [];
+      };
+      stock_entries: {
+        Row: {
+          id: string;
+          created_at: string;
+          description: string | null;
+          expenses: Json;
+        };
+        Insert: {
+          id: string;
+          created_at?: string;
+          description?: string | null;
+          expenses?: Json;
+        };
+        Update: {
+          id?: string;
+          created_at?: string;
+          description?: string | null;
+          expenses?: Json;
         };
         Relationships: [];
       };
@@ -290,6 +317,8 @@ export type Database = {
           p_instock: boolean;
           p_bestsellere: boolean;
           p_new: boolean;
+          p_article_number?: string | null;
+          p_stock_id?: string | null;
         };
         Returns: Json;
       };
@@ -328,6 +357,31 @@ export type Database = {
         Returns: Json;
       };
       admin_delete_homepage_image_rpc: {
+        Args: {
+          access_key: string;
+          p_id: string;
+        };
+        Returns: boolean;
+      };
+      admin_insert_stock_entry_rpc: {
+        Args: {
+          access_key: string;
+          p_id: string;
+          p_description: string | null;
+          p_expenses: Json;
+        };
+        Returns: Json;
+      };
+      admin_update_stock_entry_rpc: {
+        Args: {
+          access_key: string;
+          p_id: string;
+          p_description: string | null;
+          p_expenses: Json;
+        };
+        Returns: Json;
+      };
+      admin_delete_stock_entry_rpc: {
         Args: {
           access_key: string;
           p_id: string;

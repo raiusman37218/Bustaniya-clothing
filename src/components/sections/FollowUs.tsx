@@ -1,41 +1,27 @@
 'use client';
 
-import { Box, IconButton, Typography, Avatar } from '@mui/material';
-import { useTheme, useMediaQuery } from '@mui/material';
+import { Box, useTheme, useMediaQuery } from '@mui/material';
 import { ImageData } from '@/src/lib/utilits/FollowUSDataImage';
 import Image from 'next/image';
-import Link from 'next/link';
 import { useState, useEffect, useRef } from 'react';
-import FavoriteIcon from '@mui/icons-material/Favorite';
-import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
-import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
-import SendIcon from '@mui/icons-material/Send';
-import ShoppingBagOutlinedIcon from '@mui/icons-material/ShoppingBagOutlined';
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
+import InstagramIcon from '@mui/icons-material/Instagram';
 import SectionHeading from '@/src/components/ui/SectionHeading';
 import SectionContainer from '@/src/components/ui/SectionContainer';
 import CarouselNavButton from '@/src/components/ui/CarouselNavButton';
-import MediaFrame, {
-  mediaFrameImageClass,
-  mediaFrameImageStyle,
-} from '@/src/components/ui/MediaFrame';
-import { brand, fonts, radius, shadows } from '@/src/lib/designTokens';
+import { brand } from '@/src/lib/designTokens';
 
 function FollowUs() {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
-  const [items, setItems] = useState<any[]>(ImageData);
-  const [likedItems, setLikedItems] = useState<Record<string | number, boolean>>({});
-
-  useEffect(() => {
-    setLikedItems(
-      items.reduce(
-        (acc, item) => ({ ...acc, [item.id]: !!item.liked }),
-        {} as Record<string | number, boolean>,
-      )
-    );
-  }, [items]);
+  const [items, setItems] = useState<any[]>(() =>
+    ImageData.map((item) => ({
+      id: item.id,
+      image: item.image,
+      link: 'https://www.instagram.com/wear.aroha',
+    }))
+  );
 
   useEffect(() => {
     async function loadFollowImages() {
@@ -45,17 +31,11 @@ function FollowUs() {
         if (data && data.images) {
           const followImages = data.images.filter((img: any) => img.section === 'follow_us');
           if (followImages.length > 0) {
-            const usernames = ['sarah.styles', 'emma.chic', 'olivia.fashion', 'mia.trends', 'zara.daily', 'nina.look'];
-            const categories = ['Eid Lawn', 'Festive Wear', 'Bridal Edit', 'Embroidered', 'Everyday Lawn', 'Classic Suit'];
             setItems(
-              followImages.map((img: any, idx: number) => ({
+              followImages.map((img: any) => ({
                 id: img.id,
                 image: img.image_url,
-                height: 315,
-                username: img.alt_text || usernames[idx % usernames.length],
-                category: categories[idx % categories.length],
-                liked: idx % 2 === 0,
-                link: img.link_url || '/shop',
+                link: img.link_url || 'https://www.instagram.com/wear.aroha',
               }))
             );
           }
@@ -69,32 +49,20 @@ function FollowUs() {
 
   const scrollRef = useRef<HTMLDivElement>(null);
 
-  const toggleLike = (id: string | number) => {
-    setLikedItems((prev) => ({ ...prev, [id]: !prev[id] }));
-  };
-
   const scroll = (direction: 'left' | 'right') => {
     if (scrollRef.current) {
       scrollRef.current.scrollBy({
-        left: direction === 'left' ? -320 : 320,
+        left: direction === 'left' ? -300 : 300,
         behavior: 'smooth',
       });
     }
   };
 
-  const getInitials = (username: string) => username.charAt(0).toUpperCase();
-
-  const getAvatarColor = (id: number) => {
-    const colors = ['#E8B4B8', '#B8D4E3', '#D4C5A9', '#A9C5B7', '#C5B8D4', '#D4B8A9'];
-    return colors[(id - 1) % colors.length];
-  };
-
   return (
-    <SectionContainer sx={{ pb: { xs: 2, md: 0 } }}>
+    <SectionContainer sx={{ pb: { xs: 4, md: 6 } }}>
       <SectionHeading
-        eyebrow="Community"
-        title="Follow @bustaniya"
-        subtitle="Style inspiration, behind-the-scenes, and shoppable moments from our feed."
+        eyebrow="Follow us on social media"
+        title="Follow @wear.aroha"
         action={
           !isMobile ? (
             <Box sx={{ display: 'flex', gap: 1 }}>
@@ -119,11 +87,11 @@ function FollowUs() {
         ref={scrollRef}
         sx={{
           display: 'flex',
-          gap: { xs: '14px', sm: '18px', md: '20px' },
+          gap: { xs: '8px', sm: '12px', md: '16px' },
           overflowX: 'auto',
           scrollSnapType: 'x mandatory',
           scrollBehavior: 'smooth',
-          pb: 2,
+          pb: 1,
           mx: -0.5,
           px: 0.5,
           '&::-webkit-scrollbar': { display: 'none' },
@@ -134,173 +102,55 @@ function FollowUs() {
         {items.map((item) => (
           <Box
             key={item.id}
+            component="a"
+            href={item.link}
+            target="_blank"
+            rel="noopener noreferrer"
             sx={{
-              minWidth: { xs: '260px', sm: '280px', md: '290px' },
-              maxWidth: { xs: '260px', sm: '280px', md: '290px' },
+              minWidth: { xs: '150px', sm: '200px', md: '250px' },
+              maxWidth: { xs: '150px', sm: '200px', md: '250px' },
               scrollSnapAlign: 'start',
-              borderRadius: radius.editorial,
+              position: 'relative',
               overflow: 'hidden',
-              backgroundColor: brand.white,
-              border: `1px solid ${brand.border}`,
-              boxShadow: shadows.card,
-              transition: 'box-shadow 0.35s ease, transform 0.35s ease',
-              '&:hover': {
-                transform: 'translateY(-4px)',
-                boxShadow: shadows.cardHover,
+              borderRadius: 0,
+              bgcolor: brand.imageBg,
+              aspectRatio: '1/1',
+              display: 'block',
+              '&:hover .instagram-overlay': {
+                opacity: 1,
+              },
+              '&:hover img': {
+                transform: 'scale(1.05)',
               },
             }}
           >
+            <Image
+              src={item.image}
+              alt="Instagram post"
+              fill
+              sizes="(max-width: 600px) 150px, (max-width: 900px) 200px, 250px"
+              style={{
+                objectFit: 'cover',
+                transition: 'transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
+              }}
+            />
+            
+            {/* Instagram Overlay */}
             <Box
+              className="instagram-overlay"
               sx={{
+                position: 'absolute',
+                inset: 0,
+                bgcolor: 'rgba(0, 0, 0, 0.4)',
                 display: 'flex',
                 alignItems: 'center',
-                gap: 1.2,
-                px: 2,
-                py: 1.5,
+                justifyContent: 'center',
+                opacity: 0,
+                transition: 'opacity 0.3s ease',
+                zIndex: 2,
               }}
             >
-              <Avatar
-                sx={{
-                  width: 36,
-                  height: 36,
-                  fontSize: 14,
-                  fontWeight: 700,
-                  backgroundColor: typeof item.id === 'number' ? getAvatarColor(item.id) : '#5A6D57',
-                  color: brand.white,
-                  border: `2px solid ${brand.white}`,
-                }}
-              >
-                {getInitials(item.username)}
-              </Avatar>
-              <Box sx={{ flex: 1, minWidth: 0 }}>
-                <Typography
-                  sx={{
-                    fontSize: '13px',
-                    fontWeight: 600,
-                    color: brand.ink,
-                    lineHeight: 1.3,
-                    fontFamily: fonts.sans,
-                    whiteSpace: 'nowrap',
-                    overflow: 'hidden',
-                    textOverflow: 'ellipsis',
-                  }}
-                >
-                  {item.username}
-                </Typography>
-                <Typography
-                  sx={{
-                    fontSize: '11px',
-                    color: brand.muted,
-                    lineHeight: 1.3,
-                    fontFamily: fonts.sans,
-                    fontWeight: 500,
-                  }}
-                >
-                  {item.category}
-                </Typography>
-              </Box>
-            </Box>
-
-            <Link href={item.link || '/shop'} style={{ textDecoration: 'none', display: 'block' }}>
-              <MediaFrame
-                aspectRatio="3/4"
-                borderRadius="0"
-                hoverScale
-                sx={{ borderRadius: 0 }}
-              >
-                <Image
-                  src={item.image}
-                  alt={`${item.username}'s post`}
-                  fill
-                  className={mediaFrameImageClass}
-                  style={mediaFrameImageStyle}
-                  sizes="(max-width: 600px) 260px, (max-width: 900px) 280px, 290px"
-                />
-              </MediaFrame>
-            </Link>
-
-            <Box
-              sx={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-                px: 1.5,
-                py: 1.2,
-              }}
-            >
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.25 }}>
-                <IconButton
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    toggleLike(item.id);
-                  }}
-                  size="small"
-                  sx={{
-                    '&:hover': { backgroundColor: 'transparent' },
-                  }}
-                >
-                  {likedItems[item.id] ? (
-                    <FavoriteIcon sx={{ fontSize: 22, color: '#c45c5c' }} />
-                  ) : (
-                    <FavoriteBorderIcon
-                      sx={{ fontSize: 22, color: brand.muted }}
-                    />
-                  )}
-                </IconButton>
-                <IconButton size="small">
-                  <ChatBubbleOutlineIcon
-                    sx={{ fontSize: 20, color: brand.muted }}
-                  />
-                </IconButton>
-                <IconButton size="small">
-                  <SendIcon
-                    sx={{
-                      fontSize: 20,
-                      color: brand.muted,
-                      transform: 'rotate(-30deg) translateY(-2px)',
-                    }}
-                  />
-                </IconButton>
-              </Box>
-
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.75 }}>
-                <Link href={item.link || '/shop'} style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '6px' }}>
-                  <Typography
-                    sx={{
-                      fontSize: '12px',
-                      fontWeight: 600,
-                      color: brand.ink,
-                      fontFamily: fonts.sans,
-                      letterSpacing: '0.02em',
-                      px: 1.5,
-                      py: 0.5,
-                      borderRadius: radius.button,
-                      border: `1px solid ${brand.border}`,
-                      transition: 'all 0.25s ease',
-                      '&:hover': {
-                        backgroundColor: brand.ink,
-                        color: brand.white,
-                        borderColor: brand.ink,
-                      },
-                    }}
-                  >
-                    Shop now
-                  </Typography>
-                  <IconButton
-                    size="small"
-                    sx={{
-                      bgcolor: brand.surface,
-                      transition: 'all 0.25s ease',
-                      '&:hover': {
-                        bgcolor: brand.ink,
-                        color: brand.white,
-                      },
-                    }}
-                  >
-                    <ShoppingBagOutlinedIcon sx={{ fontSize: 18 }} />
-                  </IconButton>
-                </Link>
-              </Box>
+              <InstagramIcon sx={{ color: '#ffffff', fontSize: 32 }} />
             </Box>
           </Box>
         ))}

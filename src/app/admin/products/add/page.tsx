@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import {
   Box,
@@ -16,6 +16,10 @@ import {
   Divider,
   Chip,
   Tooltip,
+  Select,
+  MenuItem,
+  FormControl,
+  InputLabel,
 } from '@mui/material';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import AddIcon from '@mui/icons-material/Add';
@@ -42,12 +46,30 @@ const DEFAULT_FORM_STATE = {
   stock_quantity: 10,
   low_stock_threshold: 5,
   sku: '',
+  article_number: '',
+  stock_id: '',
 };
 
 export default function AddProductPage() {
   const router = useRouter();
   const [formData, setFormData] = useState(DEFAULT_FORM_STATE);
   const [submitting, setSubmitting] = useState(false);
+  const [stocks, setStocks] = useState<Array<{ id: string; description: string | null }>>([]);
+
+  useEffect(() => {
+    async function fetchStocks() {
+      try {
+        const res = await fetch('/api/admin/expenses');
+        const data = await res.json();
+        if (res.ok) {
+          setStocks(data.stockEntries || []);
+        }
+      } catch (err) {
+        console.error('Failed to fetch stocks:', err);
+      }
+    }
+    fetchStocks();
+  }, []);
 
   // Color Builder Temp State
   const [newColorName, setNewColorName] = useState('');
@@ -255,6 +277,43 @@ export default function AddProductPage() {
                     size="medium"
                     InputLabelProps={{ shrink: true }}
                   />
+                </Grid>
+
+                <Grid item xs={12}>
+                  <TextField
+                    label="Article Number"
+                    fullWidth
+                    placeholder="e.g. bu-p#001 (leave empty to auto-generate)"
+                    value={formData.article_number}
+                    onChange={(e) =>
+                      setFormData((prev) => ({ ...prev, article_number: e.target.value }))
+                    }
+                    size="medium"
+                    InputLabelProps={{ shrink: true }}
+                  />
+                </Grid>
+
+                <Grid item xs={12}>
+                  <FormControl fullWidth size="medium">
+                    <InputLabel id="stock-select-label">Link to Stock ID (Optional)</InputLabel>
+                    <Select
+                      labelId="stock-select-label"
+                      label="Link to Stock ID (Optional)"
+                      value={formData.stock_id}
+                      onChange={(e) =>
+                        setFormData((prev) => ({ ...prev, stock_id: e.target.value as string }))
+                      }
+                    >
+                      <MenuItem value="">
+                        <em>None - Do not link to any Stock batch</em>
+                      </MenuItem>
+                      {stocks.map((stk) => (
+                        <MenuItem key={stk.id} value={stk.id}>
+                          {stk.id} {stk.description ? `(${stk.description})` : ''}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
                 </Grid>
 
                 <Grid item xs={12} sm={6}>
