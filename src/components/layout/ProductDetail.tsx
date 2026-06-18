@@ -2,7 +2,8 @@
 import BannerHeader from '@/src/components/headers/BannerHeader';
 import NavBar from '@/src/components/layout/NavBar';
 import { Product } from '@/src/types/productTypes';
-import { Box, Container, Grid, Dialog, DialogContent, IconButton } from '@mui/material';
+import { brand, fonts } from '@/src/lib/designTokens';
+import { Box, Container, Grid, Dialog, DialogContent, IconButton, Typography } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import NavigateBeforeIcon from '@mui/icons-material/NavigateBefore';
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
@@ -50,6 +51,7 @@ export default function ProductDetail(props: PropsWithChildren<ProductValue>) {
     product_description,
     product_size,
     product_category,
+    article_number,
   } = product;
 
   const [size, setSize] = useState(() => {
@@ -73,6 +75,8 @@ export default function ProductDetail(props: PropsWithChildren<ProductValue>) {
     itemS,
     setItemS,
     CurrentColor,
+    currentColor,
+    setCurrentColor,
   } = useProductColorHook(product_color);
 
   const [lightboxOpen, setLightboxOpen] = useState(false);
@@ -101,6 +105,7 @@ export default function ProductDetail(props: PropsWithChildren<ProductValue>) {
   const currentImageIndex = Math.max(0, product_img.indexOf(currentMainImage));
 
   const dispatch = useDispatch<AppDispatch>();
+  const articleCode = article_number || `BST-${(product_category || 'RTW').slice(0, 3).toUpperCase()}-${id.slice(0, 5).toUpperCase()}`;
 
   const itemToAdd = {
     id: id,
@@ -172,6 +177,8 @@ export default function ProductDetail(props: PropsWithChildren<ProductValue>) {
               <ProductInformation
                 name={product_name}
                 description={product_description}
+                articleNumber={articleCode}
+                currentColor={CurrentColor}
               />
               <Box
                 sx={{
@@ -181,6 +188,57 @@ export default function ProductDetail(props: PropsWithChildren<ProductValue>) {
                   gap: '16px',
                 }}
               >
+                {/* Color Selector */}
+                {product_color && product_color.length > 0 && (
+                  <Box sx={{ mb: 1 }}>
+                    <Typography
+                      sx={{
+                        fontSize: '11.5px',
+                        fontWeight: 600,
+                        textTransform: 'uppercase',
+                        letterSpacing: '0.12em',
+                        color: brand.ink,
+                        fontFamily: fonts.sans,
+                        mb: 1.5,
+                      }}
+                    >
+                      Color: <span style={{ color: brand.muted, fontWeight: 400 }}>{CurrentColor}</span>
+                    </Typography>
+                    <Box sx={{ display: 'flex', gap: 1.5 }}>
+                      {product_color.map((colorItem) => {
+                        const isHexSelected = colorItem.hex === currentColor;
+                        return (
+                          <Box
+                            key={colorItem.hex}
+                            onClick={() => {
+                              setCurrentColor(colorItem.hex);
+                              const matchIndex = product_img.findIndex((img) => img.toLowerCase().includes(colorItem.name.toLowerCase()));
+                              if (matchIndex !== -1) {
+                                setIsHovered(true);
+                                setIsSelected(product_img[matchIndex]);
+                                setItemS(matchIndex.toString());
+                              }
+                            }}
+                            sx={{
+                              width: 26,
+                              height: 26,
+                              borderRadius: '50%',
+                              bgcolor: colorItem.hex || colorItem.currentColor || '#cccccc',
+                              cursor: 'pointer',
+                              border: isHexSelected ? '2px solid #111111' : '1px solid rgba(0,0,0,0.15)',
+                              outline: isHexSelected ? '1px solid #111111' : 'none',
+                              outlineOffset: '2.5px',
+                              transition: 'transform 0.2s',
+                              '&:hover': { transform: 'scale(1.08)' }
+                            }}
+                            title={colorItem.name}
+                          />
+                        );
+                      })}
+                    </Box>
+                  </Box>
+                )}
+
                 <SizeSelector
                   selectedSize={size}
                   onSizeSelect={setSize}
@@ -234,6 +292,8 @@ export default function ProductDetail(props: PropsWithChildren<ProductValue>) {
             <ProductInformation
               name={product_name}
               description={product_description}
+              articleNumber={articleCode}
+              currentColor={CurrentColor}
             />
             <Box
               sx={{
@@ -243,6 +303,57 @@ export default function ProductDetail(props: PropsWithChildren<ProductValue>) {
                 gap: '16px',
               }}
             >
+              {/* Color Selector */}
+              {product_color && product_color.length > 0 && (
+                <Box sx={{ mb: 1 }}>
+                  <Typography
+                    sx={{
+                      fontSize: '11.5px',
+                      fontWeight: 600,
+                      textTransform: 'uppercase',
+                      letterSpacing: '0.12em',
+                      color: brand.ink,
+                      fontFamily: fonts.sans,
+                      mb: 1.5,
+                    }}
+                  >
+                    Color: <span style={{ color: brand.muted, fontWeight: 400 }}>{CurrentColor}</span>
+                  </Typography>
+                  <Box sx={{ display: 'flex', gap: 1.5 }}>
+                    {product_color.map((colorItem) => {
+                      const isHexSelected = colorItem.hex === currentColor;
+                      return (
+                        <Box
+                          key={colorItem.hex}
+                          onClick={() => {
+                            setCurrentColor(colorItem.hex);
+                            const matchIndex = product_img.findIndex((img) => img.toLowerCase().includes(colorItem.name.toLowerCase()));
+                            if (matchIndex !== -1) {
+                              setIsHovered(true);
+                              setIsSelected(product_img[matchIndex]);
+                              setItemS(matchIndex.toString());
+                            }
+                          }}
+                          sx={{
+                            width: 26,
+                            height: 26,
+                            borderRadius: '50%',
+                            bgcolor: colorItem.hex || colorItem.currentColor || '#cccccc',
+                            cursor: 'pointer',
+                            border: isHexSelected ? '2px solid #111111' : '1px solid rgba(0,0,0,0.15)',
+                            outline: isHexSelected ? '1px solid #111111' : 'none',
+                            outlineOffset: '2.5px',
+                            transition: 'transform 0.2s',
+                            '&:hover': { transform: 'scale(1.08)' }
+                          }}
+                          title={colorItem.name}
+                        />
+                      );
+                    })}
+                  </Box>
+                </Box>
+              )}
+
               <SizeSelector
                 selectedSize={size}
                 onSizeSelect={setSize}

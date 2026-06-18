@@ -1,31 +1,21 @@
 'use client';
 
 import { useEffect, useMemo, useState } from 'react';
-import Link from 'next/link';
 import ProductCard from '@/src/components/ui/ProductCard';
 import { useSearchParams } from 'next/navigation';
 import {
   Box,
-  Button,
   Grid,
   Skeleton,
   Typography,
-  TextField,
-  InputAdornment,
   FormControl,
   InputLabel,
   Select,
   MenuItem,
-  Slider,
-  Stack,
   Pagination,
-  Accordion,
-  AccordionSummary,
-  AccordionDetails,
+  InputAdornment,
 } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import CheckIcon from '@mui/icons-material/Check';
 import BannerHeader from '@/src/components/headers/BannerHeader';
 import NavBar from '@/src/components/layout/NavBar';
 import Footer from '@/src/components/layout/Footer';
@@ -33,7 +23,7 @@ import SectionContainer from '@/src/components/ui/SectionContainer';
 import SectionHeading from '@/src/components/ui/SectionHeading';
 import UseProductsReturn from '@/src/hooks/UseProductsReturn';
 import type { Product } from '@/src/types/productTypes';
-import { brand, sectionSpacing, shadows } from '@/src/lib/designTokens';
+import { brand, fonts } from '@/src/lib/designTokens';
 
 function matchesCategoryAndSub(product: Product, category: string, sub: string): boolean {
   const cat = product.product_category?.toLowerCase() ?? '';
@@ -131,9 +121,9 @@ const SUB_CATEGORIES: Record<string, { label: string; value: string }[]> = {
 };
 
 const SORT_OPTIONS = [
-  { value: 'new', label: 'New' },
-  { value: 'price-asc', label: 'Price: Low - High' },
-  { value: 'popular', label: 'Popular' },
+  { value: 'new', label: 'New Arrivals' },
+  { value: 'price-asc', label: 'Price: Low to High' },
+  { value: 'popular', label: 'Popularity' },
 ];
 
 export default function ShopCatalog() {
@@ -146,10 +136,9 @@ export default function ShopCatalog() {
 
   const [selectedCategory, setSelectedCategory] = useState(initialCategory);
   const [selectedSub, setSelectedSub] = useState(initialSub);
-  const [selectedColors, setSelectedColors] = useState<string[]>([]);
-  const [selectedSizes, setSelectedSizes] = useState<string[]>([]);
   const [sortBy, setSortBy] = useState('new');
   const [page, setPage] = useState(1);
+  const [searchQuery, setSearchQuery] = useState(qRaw);
   const products = items ?? [];
 
   useEffect(() => {
@@ -160,30 +149,6 @@ export default function ShopCatalog() {
     setSelectedSub(initialSub);
   }, [initialSub]);
 
-  const colorOptions = useMemo(() => {
-    const colors = new Set<string>();
-    products.forEach((product) =>
-      product.product_color.forEach((color) => colors.add(color.name)),
-    );
-    return Array.from(colors).sort();
-  }, [products]);
-
-  const colorMap = useMemo(() => {
-    const map: Record<string, string> = {};
-    products.forEach((product) =>
-      product.product_color.forEach((color) => {
-        map[color.name] = color.hex || color.currentColor || '#cccccc';
-      }),
-    );
-    return map;
-  }, [products]);
-
-  const sizeOptions = useMemo(() => {
-    const sizes = new Set<string>();
-    products.forEach((product) => product.product_size.forEach((size) => sizes.add(size)));
-    return Array.from(sizes).sort((a, b) => (a.length === b.length ? a.localeCompare(b) : a.length - b.length));
-  }, [products]);
-
   const priceRange = useMemo(() => {
     const values = products.map((product) => Number(product.procuct_price) || 0);
     const min = Math.min(...values, 0);
@@ -191,13 +156,7 @@ export default function ShopCatalog() {
     return [min, max] as [number, number];
   }, [products]);
 
-  const [selectedPrice, setSelectedPrice] = useState<[number, number]>(priceRange);
-
-  useEffect(() => {
-    if (priceRange[0] !== selectedPrice[0] || priceRange[1] !== selectedPrice[1]) {
-      setSelectedPrice(priceRange);
-    }
-  }, [priceRange]);
+  const [selectedPrice] = useState<[number, number]>(priceRange);
 
   const filteredItems = useMemo(() => {
     let list = products;
@@ -209,18 +168,6 @@ export default function ShopCatalog() {
     if (q) {
       list = list.filter((product) =>
         product.product_name.toLowerCase().includes(q),
-      );
-    }
-
-    if (selectedColors.length > 0) {
-      list = list.filter((product) =>
-        product.product_color.some((color) => selectedColors.includes(color.name)),
-      );
-    }
-
-    if (selectedSizes.length > 0) {
-      list = list.filter((product) =>
-        product.product_size.some((size) => selectedSizes.includes(size)),
       );
     }
 
@@ -240,39 +187,11 @@ export default function ShopCatalog() {
     }
 
     return list;
-  }, [products, selectedCategory, selectedSub, q, selectedColors, selectedSizes, selectedPrice, sortBy]);
+  }, [products, selectedCategory, selectedSub, q, selectedPrice, sortBy]);
 
-  const itemsPerPage = 12;
+  const itemsPerPage = 16; // 4 items per row layout fits multiples of 4 (16 is perfect)
   const pageCount = Math.max(1, Math.ceil(filteredItems.length / itemsPerPage));
   const pageItems = filteredItems.slice((page - 1) * itemsPerPage, page * itemsPerPage);
-
-  const handleToggleColor = (color: string) => {
-    setPage(1);
-    setSelectedColors((current) =>
-      current.includes(color)
-        ? current.filter((item) => item !== color)
-        : [...current, color],
-    );
-  };
-
-  const handleToggleSize = (size: string) => {
-    setPage(1);
-    setSelectedSizes((current) =>
-      current.includes(size)
-        ? current.filter((item) => item !== size)
-        : [...current, size],
-    );
-  };
-
-  const handleClearFilters = () => {
-    setSelectedCategory('all');
-    setSelectedSub('all');
-    setSelectedColors([]);
-    setSelectedSizes([]);
-    setSelectedPrice(priceRange);
-    setSortBy('new');
-    setPage(1);
-  };
 
   const pageTitle = selectedCategory && selectedCategory !== 'all'
     ? CATEGORY_LABELS[selectedCategory] ?? selectedCategory
@@ -284,421 +203,297 @@ export default function ShopCatalog() {
     <>
       <BannerHeader />
       <NavBar />
-      <Box component="main" sx={{ bgcolor: brand.surface, minHeight: '100vh' }}>
-        <Box sx={{ bgcolor: brand.surface }}>
-          <SectionContainer sx={{ py: sectionSpacing.py }}>
-            
-            {/* Header section inspired by Limelight */}
-            <Box sx={{ mb: { xs: 4, md: 5 }, maxWidth: 960 }}>
-              <SectionHeading
-                eyebrow="Bustaniya Collection"
-                title={pageTitle}
-                subtitle={`Explore the refined ${pageTitle.toLowerCase()} collection with Limelight-inspired premium styling and seamless subcategories.`}
-                align="left"
-              />
-            </Box>
+      
+      <Box component="main" sx={{ bgcolor: brand.white, minHeight: '100vh', pt: { xs: 4, md: 6 } }}>
+        <SectionContainer sx={{ py: { xs: 2, md: 4 } }}>
+          
+          {/* Header Cover Title */}
+          <Box sx={{ mb: { xs: 4, md: 6 } }}>
+            <SectionHeading
+              title={pageTitle}
+              align="center"
+            />
+          </Box>
 
-            {/* Horizontal Subcategory Bar (Limelight-Style Navigation) */}
-            <Box
-              sx={{
-                display: 'flex',
-                gap: 1.5,
-                overflowX: 'auto',
-                pb: 2.5,
-                mb: 4.5,
-                borderBottom: '1px solid #eef0ed',
-                scrollBehavior: 'smooth',
-                scrollbarWidth: 'none', // Hide Firefox scrollbar
-                '&::-webkit-scrollbar': { display: 'none' }, // Hide Chrome/Safari scrollbar
-              }}
-            >
-              {selectedCategory === 'all'
-                ? MAIN_CATEGORIES.map((cat) => {
-                    const isSelected = selectedCategory === cat.value;
-                    return (
-                      <Button
-                        key={cat.value}
-                        variant="outlined"
-                        onClick={() => {
-                          setPage(1);
-                          setSelectedCategory(cat.value);
-                          setSelectedSub('all');
-                        }}
+          {/* Minimal Text Tab Menu Category Selector */}
+          <Box
+            sx={{
+              display: 'flex',
+              justifyContent: 'center',
+              gap: { xs: 3.5, md: 5 },
+              overflowX: 'auto',
+              pb: 1.5,
+              mb: 6,
+              borderBottom: `1px solid ${brand.border}`,
+              scrollbarWidth: 'none',
+              '&::-webkit-scrollbar': { display: 'none' },
+            }}
+          >
+            {selectedCategory === 'all'
+              ? MAIN_CATEGORIES.map((cat) => {
+                  const isSelected = selectedCategory === cat.value;
+                  return (
+                    <Box
+                      key={cat.value}
+                      onClick={() => {
+                        setPage(1);
+                        setSelectedCategory(cat.value);
+                        setSelectedSub('all');
+                      }}
+                      sx={{
+                        cursor: 'pointer',
+                        pb: 1.5,
+                        borderBottom: isSelected ? '1px solid #111111' : '1px solid transparent',
+                        transition: 'all 0.25s ease',
+                        '&:hover': {
+                          borderBottom: '1px solid #111111',
+                          '& p': { color: '#111111' },
+                        }
+                      }}
+                    >
+                      <Typography
                         sx={{
-                          flexShrink: 0,
-                          px: 3.5,
-                          py: 1,
-                          borderRadius: '100px',
                           textTransform: 'uppercase',
                           fontSize: '11px',
-                          fontWeight: 700,
-                          letterSpacing: '0.08em',
-                          fontFamily: "'Inter', sans-serif",
-                          bgcolor: isSelected ? '#111111' : 'transparent',
-                          color: isSelected ? '#ffffff' : '#555555',
-                          borderColor: isSelected ? '#111111' : '#e0e0e0',
-                          '&:hover': {
-                            bgcolor: isSelected ? '#111111' : '#f5f5f5',
-                            borderColor: '#111111',
-                            color: isSelected ? '#ffffff' : '#111111',
-                          },
+                          fontWeight: isSelected ? 600 : 500,
+                          letterSpacing: '0.18em',
+                          fontFamily: fonts.sans,
+                          color: isSelected ? '#111111' : 'rgba(0,0,0,0.4)',
+                          transition: 'color 0.25s ease',
                         }}
                       >
                         {cat.label}
-                      </Button>
-                    );
-                  })
-                : subCats.map((sub) => {
-                    const isSelected = selectedSub === sub.value;
-                    return (
-                      <Button
-                        key={sub.value}
-                        variant="outlined"
-                        onClick={() => {
-                          setPage(1);
-                          setSelectedSub(sub.value);
-                        }}
+                      </Typography>
+                    </Box>
+                  );
+                })
+              : (
+                  <>
+                    {/* Back link */}
+                    <Box
+                      onClick={() => {
+                        setPage(1);
+                        setSelectedCategory('all');
+                        setSelectedSub('all');
+                      }}
+                      sx={{
+                        cursor: 'pointer',
+                        pb: 1.5,
+                        mr: 1,
+                      }}
+                    >
+                      <Typography
                         sx={{
-                          flexShrink: 0,
-                          px: 3.5,
-                          py: 1,
-                          borderRadius: '100px',
                           textTransform: 'uppercase',
                           fontSize: '11px',
-                          fontWeight: 700,
-                          letterSpacing: '0.08em',
-                          fontFamily: "'Inter', sans-serif",
-                          bgcolor: isSelected ? '#111111' : 'transparent',
-                          color: isSelected ? '#ffffff' : '#555555',
-                          borderColor: isSelected ? '#111111' : '#e0e0e0',
-                          '&:hover': {
-                            bgcolor: isSelected ? '#111111' : '#f5f5f5',
-                            borderColor: '#111111',
-                            color: isSelected ? '#ffffff' : '#111111',
-                          },
+                          fontWeight: 500,
+                          letterSpacing: '0.18em',
+                          fontFamily: fonts.sans,
+                          color: 'rgba(0,0,0,0.4)',
+                          transition: 'color 0.2s ease',
+                          '&:hover': { color: '#111111' },
                         }}
                       >
-                        {sub.label}
-                      </Button>
-                    );
-                  })}
-              {selectedCategory !== 'all' && (
-                <Button
-                  variant="text"
-                  onClick={() => {
-                    setPage(1);
-                    setSelectedCategory('all');
-                    setSelectedSub('all');
-                  }}
-                  sx={{
-                    flexShrink: 0,
-                    fontSize: '11px',
-                    fontWeight: 700,
-                    textTransform: 'uppercase',
-                    letterSpacing: '0.08em',
-                    color: brand.muted,
-                    '&:hover': { color: '#111' }
-                  }}
-                >
-                  ← Back to All
-                </Button>
-              )}
-            </Box>
+                        ← All
+                      </Typography>
+                    </Box>
 
-            <Box sx={{ bgcolor: brand.white, borderRadius: 2, boxShadow: '0 4px 20px rgba(0,0,0,0.02)', border: '1px solid #f2f2f2', p: { xs: 2, md: 4 }, mb: 4 }}>
-              
-              {/* Search Bar */}
+                    {/* Subcategories */}
+                    {subCats.map((sub) => {
+                      const isSelected = selectedSub === sub.value;
+                      return (
+                        <Box
+                          key={sub.value}
+                          onClick={() => {
+                            setPage(1);
+                            setSelectedSub(sub.value);
+                          }}
+                          sx={{
+                            cursor: 'pointer',
+                            pb: 1.5,
+                            borderBottom: isSelected ? '1px solid #111111' : '1px solid transparent',
+                            transition: 'all 0.25s ease',
+                            '&:hover': {
+                              borderBottom: '1px solid #111111',
+                              '& p': { color: '#111111' },
+                            }
+                          }}
+                        >
+                          <Typography
+                            sx={{
+                              textTransform: 'uppercase',
+                              fontSize: '11px',
+                              fontWeight: isSelected ? 600 : 500,
+                              letterSpacing: '0.18em',
+                              fontFamily: fonts.sans,
+                              color: isSelected ? '#111111' : 'rgba(0,0,0,0.4)',
+                              transition: 'color 0.25s ease',
+                            }}
+                          >
+                            {sub.label}
+                          </Typography>
+                        </Box>
+                      );
+                    })}
+                  </>
+                )
+            }
+          </Box>
+
+          <Box>
+            {/* Elegant Header Controls Block: Search & Sort aligned on same row */}
+            <Box
+              sx={{
+                display: 'flex',
+                flexDirection: { xs: 'column', sm: 'row' },
+                gap: 3,
+                justifyContent: 'space-between',
+                alignItems: { xs: 'stretch', sm: 'center' },
+                mb: 5,
+              }}
+            >
+              {/* Subtle bottom-line-only search */}
               <Box
                 component="form"
                 action="/shop"
                 method="GET"
                 sx={{
-                  display: 'grid',
-                  gap: 2,
-                  gridTemplateColumns: { xs: '1fr', md: '1fr auto' },
+                  display: 'flex',
                   alignItems: 'center',
-                  mb: 4,
+                  borderBottom: '1px solid #e0e0e0',
+                  width: { xs: '100%', sm: '280px' },
+                  transition: 'border-color 0.25s ease',
+                  '&:focus-within': {
+                    borderBottom: '1px solid #111111',
+                  },
                 }}
               >
-                <TextField
+                <InputAdornment position="start" sx={{ mr: 1, ml: 0.5 }}>
+                  <SearchIcon sx={{ color: '#888', fontSize: 16 }} />
+                </InputAdornment>
+                <input
                   name="q"
-                  defaultValue={qRaw}
-                  placeholder="Search products by name…"
-                  fullWidth
-                  size="small"
-                  sx={{
-                    bgcolor: '#fafafa',
-                    '& .MuiOutlinedInput-root': {
-                      borderRadius: '4px',
-                      '& fieldset': { borderColor: '#e5e5e5' },
-                      '&:hover fieldset': { borderColor: '#b5b5b5' },
-                      '&.Mui-focused fieldset': { borderColor: '#111111', borderWidth: '1px' },
-                    },
-                  }}
-                  InputProps={{
-                    startAdornment: (
-                      <InputAdornment position="start">
-                        <SearchIcon sx={{ color: '#999', fontSize: 20 }} />
-                      </InputAdornment>
-                    ),
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  placeholder="Search catalog..."
+                  style={{
+                    border: 'none',
+                    outline: 'none',
+                    width: '100%',
+                    padding: '8px 0',
+                    fontSize: '12px',
+                    fontFamily: fonts.sans,
+                    letterSpacing: '0.05em',
+                    color: '#111111',
+                    background: 'transparent',
                   }}
                 />
-                <Button
-                  type="submit"
-                  variant="contained"
-                  disableElevation
-                  sx={{
-                    bgcolor: '#111111',
-                    color: '#ffffff',
-                    textTransform: 'uppercase',
-                    letterSpacing: '0.1em',
-                    fontWeight: 600,
-                    fontSize: '12px',
-                    px: { xs: 3, md: 4 },
-                    borderRadius: '4px',
-                    '&:hover': { bgcolor: '#2a2a2a' },
-                    height: { xs: 40, md: 40 },
-                  }}
-                >
-                  Search
-                </Button>
               </Box>
 
-              <Grid container spacing={4}>
-                
-                {/* Left Sidebar Filter Section (Limelight Style) */}
-                <Grid item xs={12} lg={3}>
-                  <Box sx={{ pr: { lg: 2 } }}>
-                    
-                    <Box sx={{ pb: 2, mb: 1, borderBottom: '1px solid #eaeaea', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                      <Typography sx={{ fontWeight: 700, fontSize: '14px', textTransform: 'uppercase', letterSpacing: '0.08em', color: '#111' }}>
-                        Filters
-                      </Typography>
-                      <Button
-                        onClick={handleClearFilters}
-                        sx={{
-                          fontSize: '11px',
-                          textTransform: 'uppercase',
-                          color: '#777',
-                          p: 0,
-                          minWidth: 0,
-                          '&:hover': { color: '#111', bgcolor: 'transparent' }
-                        }}
-                      >
-                        Reset All
-                      </Button>
-                    </Box>
-
-                    {/* Category Accordion */}
-                    <Accordion disableGutters elevation={0} defaultExpanded sx={{ bgcolor: 'transparent', '&::before': { display: 'none' } }}>
-                      <AccordionSummary expandIcon={<ExpandMoreIcon sx={{ fontSize: 18 }} />} sx={{ px: 0, py: 1 }}>
-                        <Typography sx={{ fontSize: '13px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.06em', color: '#111' }}>
-                          Category
-                        </Typography>
-                      </AccordionSummary>
-                      <AccordionDetails sx={{ px: 0, py: 1 }}>
-                        <Stack spacing={1.25}>
-                          {MAIN_CATEGORIES.map((cat) => {
-                            const isSelected = selectedCategory === cat.value;
-                            return (
-                              <Box
-                                key={cat.value}
-                                onClick={() => {
-                                  setPage(1);
-                                  setSelectedCategory(cat.value);
-                                  setSelectedSub('all');
-                                }}
-                                sx={{
-                                  display: 'flex',
-                                  alignItems: 'center',
-                                  cursor: 'pointer',
-                                  transition: 'color 0.2s',
-                                  color: isSelected ? '#111111' : '#666666',
-                                  '&:hover': { color: '#111111' },
-                                }}
-                              >
-                                <Box
-                                  sx={{
-                                    width: 6,
-                                    height: 6,
-                                    borderRadius: '50%',
-                                    mr: 1.5,
-                                    bgcolor: isSelected ? '#111111' : 'transparent',
-                                    border: isSelected ? 'none' : '1px solid #ccc',
-                                  }}
-                                />
-                                <Typography sx={{ fontSize: '13px', fontWeight: isSelected ? 700 : 500 }}>
-                                  {cat.label}
-                                </Typography>
-                              </Box>
-                            );
-                          })}
-                        </Stack>
-                      </AccordionDetails>
-                    </Accordion>
-
-                    {/* Price Slider Accordion */}
-                    <Accordion disableGutters elevation={0} defaultExpanded sx={{ bgcolor: 'transparent', '&::before': { display: 'none' } }}>
-                      <AccordionSummary expandIcon={<ExpandMoreIcon sx={{ fontSize: 18 }} />} sx={{ px: 0, py: 1 }}>
-                        <Typography sx={{ fontSize: '13px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.06em', color: '#111' }}>
-                          Price Range
-                        </Typography>
-                      </AccordionSummary>
-                      <AccordionDetails sx={{ px: 0, py: 1 }}>
-                        <Box sx={{ px: 1 }}>
-                          <Slider
-                            value={selectedPrice}
-                            onChange={(_, value) => {
-                              setPage(1);
-                              setSelectedPrice(value as [number, number]);
-                            }}
-                            valueLabelDisplay="auto"
-                            min={priceRange[0]}
-                            max={priceRange[1]}
-                            sx={{
-                              color: '#111111',
-                              '& .MuiSlider-thumb': {
-                                width: 14,
-                                height: 14,
-                                backgroundColor: '#111111',
-                                '&:hover, &.Mui-focusVisible': { boxShadow: '0 0 0 6px rgba(0,0,0,0.1)' }
-                              },
-                              '& .MuiSlider-rail': { opacity: 0.2, color: '#999' }
-                            }}
-                          />
-                          <Typography sx={{ color: '#555', fontSize: '12px', fontWeight: 600, mt: 1 }}>
-                            Rs. {selectedPrice[0]} - Rs. {selectedPrice[1]}
-                          </Typography>
-                        </Box>
-                      </AccordionDetails>
-                    </Accordion>
-
-                    {/* Size Accordion (Square Box Grid) */}
-                    <Accordion disableGutters elevation={0} defaultExpanded sx={{ bgcolor: 'transparent', '&::before': { display: 'none' } }}>
-                      <AccordionSummary expandIcon={<ExpandMoreIcon sx={{ fontSize: 18 }} />} sx={{ px: 0, py: 1 }}>
-                        <Typography sx={{ fontSize: '13px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.06em', color: '#111' }}>
-                          Size
-                        </Typography>
-                      </AccordionSummary>
-                      <AccordionDetails sx={{ px: 0, py: 1 }}>
-                        <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
-                          {sizeOptions.map((size) => {
-                            const isSelected = selectedSizes.includes(size);
-                            return (
-                              <Box
-                                key={size}
-                                onClick={() => handleToggleSize(size)}
-                                sx={{
-                                  width: 36,
-                                  height: 36,
-                                  border: isSelected ? '1px solid #111111' : '1px solid #e0e0e0',
-                                  bgcolor: isSelected ? '#111111' : 'transparent',
-                                  color: isSelected ? '#ffffff' : '#333333',
-                                  display: 'flex',
-                                  alignItems: 'center',
-                                  justifyContent: 'center',
-                                  cursor: 'pointer',
-                                  fontWeight: 600,
-                                  fontSize: '11px',
-                                  fontFamily: "'Inter', sans-serif",
-                                  transition: 'all 0.2s',
-                                  '&:hover': {
-                                    borderColor: '#111111',
-                                    color: isSelected ? '#ffffff' : '#111111',
-                                  }
-                                }}
-                              >
-                                {size}
-                              </Box>
-                            );
-                          })}
-                        </Box>
-                      </AccordionDetails>
-                    </Accordion>
-
-                  </Box>
-                </Grid>
-
-                {/* Right Side Product Grid */}
-                <Grid item xs={12} lg={9}>
-                  <Box sx={{ mb: 3.5, display: 'flex', flexWrap: 'wrap', gap: 2, alignItems: 'center', justifyContent: 'space-between' }}>
-                    <Typography variant="body2" sx={{ color: '#666', fontWeight: 500, fontSize: '13.5px' }}>
-                      Showing {filteredItems.length} {filteredItems.length === 1 ? 'product' : 'products'}
-                      {q ? ` for “${qRaw.trim()}”` : ''}
-                    </Typography>
-                    <FormControl size="small" sx={{ minWidth: 160 }}>
-                      <InputLabel sx={{ fontSize: '13px', '&.Mui-focused': { color: '#111' } }}>Sort by</InputLabel>
-                      <Select
-                        value={sortBy}
-                        label="Sort by"
-                        onChange={(event) => {
-                          setSortBy(event.target.value);
-                          setPage(1);
-                        }}
-                        sx={{
-                          fontSize: '13px',
-                          '&.MuiOutlinedInput-root': {
-                            '&.Mui-focused fieldset': { borderColor: '#111' }
-                          }
-                        }}
-                      >
-                        {SORT_OPTIONS.map((option) => (
-                          <MenuItem key={option.value} value={option.value} sx={{ fontSize: '13px' }}>
-                            {option.label}
-                          </MenuItem>
-                        ))}
-                      </Select>
-                    </FormControl>
-                  </Box>
-
-                  <Grid container spacing={{ xs: 2, sm: 2.5, md: 3 }}>
-                    {loading
-                      ? Array.from({ length: 8 }).map((_, i) => (
-                          <Grid item xs={6} sm={4} md={4} key={i}>
-                            <Skeleton variant="rectangular" sx={{ aspectRatio: '4/5', borderRadius: '2px' }} />
-                            <Skeleton width="75%" sx={{ mt: 1.5, height: 18 }} />
-                            <Skeleton width="45%" sx={{ height: 16 }} />
-                          </Grid>
-                        ))
-                      : pageItems.map((item) => (
-                          <Grid item xs={6} sm={4} md={4} key={item.id}>
-                            <ProductCard
-                              product={item}
-                              href={`/shop/${item.id}`}
-                              layout="grid"
-                              sizes="(max-width:600px) 50vw, 30vw"
-                            />
-                          </Grid>
-                        ))}
-                  </Grid>
-
-                  {pageCount > 1 && (
-                    <Box sx={{ mt: 5, display: 'flex', justifyContent: 'center' }}>
-                      <Pagination
-                        count={pageCount}
-                        page={page}
-                        onChange={(_, value) => setPage(value)}
-                        variant="outlined"
-                        shape="rounded"
-                        sx={{
-                          '& .MuiPaginationItem-root': {
-                            borderRadius: '2px',
-                            '&.Mui-selected': {
-                              bgcolor: '#111111',
-                              color: '#ffffff',
-                              borderColor: '#111111',
-                              '&:hover': { bgcolor: '#2a2a2a' }
-                            }
-                          }
-                        }}
-                      />
-                    </Box>
-                  )}
-                </Grid>
-              </Grid>
+              {/* Minimalist Meta Details & Sorting Dropdown */}
+              <Box
+                sx={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  gap: 3,
+                }}
+              >
+                <Typography sx={{ color: brand.muted, fontWeight: 400, fontSize: '12.5px', fontFamily: fonts.sans, display: { xs: 'none', sm: 'block' } }}>
+                  Showing {filteredItems.length} {filteredItems.length === 1 ? 'product' : 'products'}
+                </Typography>
+                <FormControl size="small" sx={{ minWidth: 160 }}>
+                  <InputLabel sx={{ fontSize: '12px', fontFamily: fonts.sans, '&.Mui-focused': { color: '#111' } }}>Sort by</InputLabel>
+                  <Select
+                    value={sortBy}
+                    label="Sort by"
+                    onChange={(event) => {
+                      setSortBy(event.target.value);
+                      setPage(1);
+                    }}
+                    sx={{
+                      fontSize: '12px',
+                      fontFamily: fonts.sans,
+                      borderRadius: 0,
+                      '&.MuiOutlinedInput-root': {
+                        '&.Mui-focused fieldset': { borderColor: '#111111', borderWidth: '1px' }
+                      }
+                    }}
+                  >
+                    {SORT_OPTIONS.map((option) => (
+                      <MenuItem key={option.value} value={option.value} sx={{ fontSize: '12px', fontFamily: fonts.sans }}>
+                        {option.label}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              </Box>
             </Box>
-          </SectionContainer>
-        </Box>
+
+            {/* Main Full-Width Grid */}
+            <Grid container spacing={{ xs: 2, sm: 3, md: 3 }}>
+              {loading
+                ? Array.from({ length: 8 }).map((_, i) => (
+                    <Grid item xs={6} sm={4} md={3} key={i}>
+                      <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.5 }}>
+                        <Skeleton variant="rectangular" sx={{ aspectRatio: '3/4', borderRadius: 0 }} />
+                        <Skeleton width="80%" height={16} />
+                        <Skeleton width="50%" height={14} />
+                      </Box>
+                    </Grid>
+                  ))
+                : pageItems.map((item) => (
+                    <Grid item xs={6} sm={4} md={3} key={item.id}>
+                      <ProductCard
+                        product={item}
+                        href={`/shop/${item.id}`}
+                        layout="grid"
+                        sizes="(max-width:600px) 50vw, (max-width:900px) 33vw, 25vw"
+                      />
+                    </Grid>
+                  ))}
+            </Grid>
+
+            {/* Empty State */}
+            {!loading && pageItems.length === 0 && (
+              <Box sx={{ py: 10, textAlign: 'center' }}>
+                <Typography sx={{ fontSize: '1.25rem', fontFamily: fonts.display, color: brand.ink, mb: 1 }}>
+                  No Products Found
+                </Typography>
+                <Typography sx={{ color: brand.muted, fontSize: '14px', fontFamily: fonts.sans }}>
+                  Try adjusting your search query or filters.
+                </Typography>
+              </Box>
+            )}
+
+            {/* Pagination */}
+            {pageCount > 1 && (
+              <Box sx={{ mt: 8, display: 'flex', justifyContent: 'center' }}>
+                <Pagination
+                  count={pageCount}
+                  page={page}
+                  onChange={(_, value) => setPage(value)}
+                  variant="outlined"
+                  shape="rounded"
+                  sx={{
+                    '& .MuiPaginationItem-root': {
+                      borderRadius: 0,
+                      fontFamily: fonts.sans,
+                      fontSize: '12px',
+                      fontWeight: 500,
+                      '&.Mui-selected': {
+                        bgcolor: '#111111',
+                        color: '#ffffff',
+                        borderColor: '#111111',
+                        '&:hover': { bgcolor: '#222222' }
+                      }
+                    }
+                  }}
+                />
+              </Box>
+            )}
+          </Box>
+        </SectionContainer>
       </Box>
       <Footer />
     </>

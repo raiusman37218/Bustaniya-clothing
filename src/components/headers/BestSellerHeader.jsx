@@ -4,7 +4,6 @@ import ViewAllLink from '@/src/components/ui/ViewAllLink';
 function BestSellerHeader() {
   return (
     <SectionHeading
-      eyebrow="Customer favourites"
       title="Best sellers"
       align="center"
       action={<ViewAllLink href="/shop" />}

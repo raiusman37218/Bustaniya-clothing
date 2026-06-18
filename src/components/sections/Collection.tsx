@@ -51,12 +51,11 @@ function Collection() {
   const activeItem = items[activeIndex] || items[0] || {};
 
   return (
-    <SectionContainer sx={{ py: { xs: 4, md: 8 } }}>
+    <SectionContainer id="collections" sx={{ py: { xs: 4, md: 8 } }}>
       {isMobile ? (
         // MOBILE LAYOUT: Clean horizontal scroll of cards
         <Box>
           <SectionHeading
-            eyebrow="Curated looks"
             title="The collection"
             align="center"
           />
@@ -130,19 +129,6 @@ function Collection() {
             <Box sx={{ pl: { lg: 4 } }}>
               {/* Section Header */}
               <Box sx={{ mb: 6 }}>
-                <Typography
-                  sx={{
-                    fontSize: '12px',
-                    letterSpacing: '0.22em',
-                    textTransform: 'uppercase',
-                    color: brand.muted,
-                    fontWeight: 500,
-                    fontFamily: fonts.sans,
-                    mb: 1.5,
-                  }}
-                >
-                  Curated looks
-                </Typography>
                 <Typography
                   component="h2"
                   sx={{

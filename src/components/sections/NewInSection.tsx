@@ -31,7 +31,6 @@ export default function NewInSection() {
   return (
     <SectionContainer>
       <SectionHeading
-        eyebrow="Fresh drops every week"
         title="New arrivals"
         align="center"
       />

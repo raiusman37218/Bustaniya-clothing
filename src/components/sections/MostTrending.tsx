@@ -89,7 +89,6 @@ export default function MostTrending() {
     <Box sx={{ backgroundColor: brand.white, overflow: 'hidden' }}>
       <SectionContainer>
         <SectionHeading
-          eyebrow="Shop the moment"
           title="Most trending"
           align="center"
           action={<ViewAllLink />}
