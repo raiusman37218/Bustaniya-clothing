@@ -21,16 +21,16 @@ export default function ProductUtilityIcons() {
     >
       <Box display={'flex'} alignItems={'center'} gap={'8px'}>
         <LocalShippingOutlinedIcon sx={{ color: brand.sage, fontSize: '1.3rem' }} />
-        <Typography 
-          sx={{ 
-            fontFamily: fonts.sans,
-            fontSize: '0.85rem',
-            fontWeight: 500,
-            color: brand.charcoal,
-          }}
-        >
-          Free Shipping & Easy Returns
-        </Typography>
+          <Typography 
+            sx={{ 
+              fontFamily: fonts.sans,
+              fontSize: '0.85rem',
+              fontWeight: 500,
+              color: brand.charcoal,
+            }}
+          >
+            Nationwide Shipping & Easy Returns
+          </Typography>
       </Box>
       <Box 
         display={'flex'} 

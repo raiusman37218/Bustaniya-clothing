@@ -15,12 +15,12 @@ function BannerHeader() {
           textTransform: 'uppercase',
           fontSize: { xs: '11px', sm: '12px', md: '13px' },
           lineHeight: 1.4,
-          bgcolor: '#1a1a1a',
+          bgcolor: brand.sage,
           color: '#ffffff',
           fontFamily: fonts.sans,
         }}
       >
-        UNLOCK FREE SHIPPING ON NATIONWIDE PAID ORDERS — <a href="/collections/all" style={{ color: '#fff', textDecoration: 'underline' }}>SHOP NOW</a>
+        DISCOVER THE LATEST PIECES — <a href="/shop" style={{ color: '#fff', textDecoration: 'underline' }}>SHOP NOW</a>
       </Typography>
     </Box>
   );

@@ -40,7 +40,7 @@ export default function AccordionProduct() {
       id: 4,
       name: "Shipping & Returns",
       content:
-        "Shipping: Free shipping on US and Canada orders over $175. Returns: Unwashed, worn items are eligible for returns or exchanges within 30 days of purchase. Final Sale items are not eligible for returns or exchanges.",
+        "Shipping: Flat rate delivery nationwide. Returns: Unwashed, worn items are eligible for returns or exchanges within 30 days of purchase. Final Sale items are not eligible for returns or exchanges.",
     },
   ];
 
