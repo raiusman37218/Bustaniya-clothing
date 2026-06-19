@@ -18,4 +18,5 @@ export interface Product {
   product_size: string[];
   article_number?: string;
   stock_id?: string;
+  stock_quantity?: number;
 }

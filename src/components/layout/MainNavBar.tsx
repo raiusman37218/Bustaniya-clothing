@@ -40,22 +40,42 @@ function MainNavBar({ variant = 'default' }: MainNavBarProps) {
     if (!isOpenSearch) setIsOpenSearch(true);
   };
 
+  const utilityButtonStyles = {
+    color: 'inherit',
+    padding: 0.75,
+    minWidth: 0,
+    width: 40,
+    height: 40,
+    borderRadius: '50%',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+    '&:hover': {
+      backgroundColor: isOverlay ? 'rgba(53, 69, 49, 0.08)' : 'rgba(0, 0, 0, 0.05)',
+      transform: 'scale(1.08)',
+    },
+    '&:active': {
+      transform: 'scale(0.95)',
+    },
+  };
+
   const searchButton = isOpenSearch ? (
-    <Button
+    <IconButton
       aria-label="Close search"
-      sx={{ color: 'inherit', padding: 0, minWidth: 0 }}
       onClick={handleCloseSearch}
+      sx={utilityButtonStyles}
     >
-      <CloseIcon sx={{ color: iconColor, fontSize: 24 }} />
-    </Button>
+      <CloseIcon sx={{ color: iconColor, fontSize: 22 }} />
+    </IconButton>
   ) : (
-    <Button
+    <IconButton
       aria-label="Open search"
       onClick={handleOpenSearch}
-      sx={{ color: 'inherit', padding: 0, minWidth: 0 }}
+      sx={utilityButtonStyles}
     >
-      <SearchOutlinedIcon sx={{ color: iconColor, fontSize: 24 }} />
-    </Button>
+      <SearchOutlinedIcon sx={{ color: iconColor, fontSize: 22 }} />
+    </IconButton>
   );
 
   const utilityIcons = (
@@ -64,7 +84,7 @@ function MainNavBar({ variant = 'default' }: MainNavBarProps) {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'flex-end',
-        gap: { xs: 1.25, md: 1.75 },
+        gap: { xs: 0.5, md: 1 },
         flexShrink: 0,
       }}
     >
@@ -86,11 +106,49 @@ function MainNavBar({ variant = 'default' }: MainNavBarProps) {
       edge="start"
       sx={{
         color: iconColor,
-        p: 0.75,
+        p: 1,
         ml: { xs: -0.5, md: 0 },
+        display: { xs: 'inline-flex', md: 'none' }, // HIDE ON DESKTOP!
+        transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+        borderRadius: '50%',
+        '&:hover': {
+          backgroundColor: isOverlay ? 'rgba(53, 69, 49, 0.08)' : 'rgba(0, 0, 0, 0.05)',
+        },
       }}
     >
-      <MenuOutlinedIcon sx={{ fontSize: { xs: 26, md: 28 } }} />
+      <Box
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'space-between',
+          width: 20,
+          height: 12,
+          position: 'relative',
+          '& span': {
+            display: 'block',
+            width: '100%',
+            height: '1.5px',
+            backgroundColor: iconColor,
+            borderRadius: '1px',
+            transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+          },
+          '&:hover span:nth-of-type(1)': {
+            transform: 'scaleX(0.75)',
+            transformOrigin: 'left',
+          },
+          '&:hover span:nth-of-type(2)': {
+            transform: 'scaleX(1.15)',
+          },
+          '&:hover span:nth-of-type(3)': {
+            transform: 'scaleX(0.75)',
+            transformOrigin: 'right',
+          },
+        }}
+      >
+        <span />
+        <span />
+        <span />
+      </Box>
     </IconButton>
   );
 

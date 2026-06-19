@@ -3,7 +3,7 @@ import BannerHeader from '@/src/components/headers/BannerHeader';
 import NavBar from '@/src/components/layout/NavBar';
 import { Product } from '@/src/types/productTypes';
 import { brand, fonts } from '@/src/lib/designTokens';
-import { Box, Container, Grid, Dialog, DialogContent, IconButton, Typography } from '@mui/material';
+import { Box, Container, Grid, Dialog, DialogContent, IconButton, Typography, Table, TableBody, TableCell, TableHead, TableRow } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import NavigateBeforeIcon from '@mui/icons-material/NavigateBefore';
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
@@ -32,6 +32,8 @@ import Image from 'next/image';
 import { useAuth } from '@/src/context/authContext';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { useRouter } from 'next/navigation';
+import { parsePricePkr, formatPkrNishat } from '@/src/lib/currency/formatCurrency';
 
 interface ProductValue {
   product: Product;
@@ -57,8 +59,10 @@ export default function ProductDetail(props: PropsWithChildren<ProductValue>) {
   const [size, setSize] = useState(() => {
     return product_size.includes('M') ? 'M' : (product_size[0] || '');
   });
+  const [quantity, setQuantity] = useState(1);
   const [openToaster, setOpenToaster] = useState(false);
   const { isLoggedIn } = useAuth();
+  const router = useRouter();
 
   useEffect(() => {
     setSize(product_size.includes('M') ? 'M' : (product_size[0] || ''));
@@ -107,11 +111,13 @@ export default function ProductDetail(props: PropsWithChildren<ProductValue>) {
   const dispatch = useDispatch<AppDispatch>();
   const articleCode = article_number || `BST-${(product_category || 'RTW').slice(0, 3).toUpperCase()}-${id.slice(0, 5).toUpperCase()}`;
 
+  const formattedPrice = formatPkrNishat(parsePricePkr(procuct_price));
+
   const itemToAdd = {
     id: id,
     name: product_name,
     image: product_img[0],
-    quantity: 1,
+    quantity: quantity,
     price: procuct_price.toString(),
     color: CurrentColor,
     size: size,
@@ -128,6 +134,19 @@ export default function ProductDetail(props: PropsWithChildren<ProductValue>) {
     }
     dispatch(addCart(itemToAdd));
     dispatch(openCart());
+  };
+
+  const handleBuyNow = () => {
+    if (!size) {
+      toast.error('Please select a size.');
+      return;
+    }
+    if (product.product_instock === false) {
+      toast.error('This item is out of stock.');
+      return;
+    }
+    dispatch(addCart(itemToAdd));
+    router.push('/checkout');
   };
 
   const handleImageSelect = (image: string, index: any) => {
@@ -154,35 +173,74 @@ export default function ProductDetail(props: PropsWithChildren<ProductValue>) {
             spacing={4}
             sx={{ mt: 4, display: { xs: 'none', md: 'flex' } }}
           >
-            {/* Left Column: Image Gallery + Main Image */}
-            <Grid item xs={12} md={7.5} sx={{ display: 'flex', gap: '20px' }}>
-              <Box sx={{ width: '120px', flexShrink: 0 }}>
-                <ProductImageGallery
-                  SelectItem={itemS}
-                  options={product_img}
-                  onSelect={handleImageSelect}
-                />
-              </Box>
-              <Box onClick={() => handleOpenLightbox(currentImageIndex)} sx={{ flexGrow: 1, cursor: 'zoom-in' }}>
-                <ProductImage
-                  Images={product_img[0]}
-                  isHovered={isHovered}
-                  isSelected={isSelected}
-                />
+            {/* Left Column: Modern Multi-Image Grid (Desktop) */}
+            <Grid item xs={12} md={7} sx={{ display: { xs: 'none', md: 'block' } }}>
+              <Box
+                sx={{
+                  display: 'grid',
+                  gridTemplateColumns: 'repeat(2, 1fr)',
+                  gap: '12px',
+                  width: '100%',
+                }}
+              >
+                {product_img.map((img, idx) => (
+                  <Box
+                    key={img}
+                    onClick={() => handleOpenLightbox(idx)}
+                    sx={{
+                      position: 'relative',
+                      cursor: 'zoom-in',
+                      width: '100%',
+                      aspectRatio: '3/4',
+                      overflow: 'hidden',
+                      bgcolor: '#f9f9f9',
+                      gridColumn: idx === 0 && product_img.length % 2 !== 0 ? 'span 2' : 'span 1',
+                      transition: 'all 0.3s ease',
+                      '&:hover img': {
+                        transform: 'scale(1.025)',
+                      },
+                    }}
+                  >
+                    <Image
+                      src={img}
+                      alt={`${product_name} - view ${idx + 1}`}
+                      fill
+                      sizes="(max-width: 900px) 100vw, 35vw"
+                      style={{ objectFit: 'cover', transition: 'transform 0.4s ease' }}
+                    />
+                  </Box>
+                ))}
               </Box>
             </Grid>
 
-            {/* Right Column: Title, Info, Selector, Buttons */}
-            <Grid item xs={12} md={4.5} sx={{ pl: { md: 2 } }}>
+            {/* Right Column: Sticky details */}
+            <Grid
+              item
+              xs={12}
+              md={5}
+              sx={{
+                pl: { md: 4 },
+                position: { md: 'sticky' },
+                top: { md: '110px' },
+                alignSelf: 'flex-start',
+                maxHeight: { md: 'calc(100vh - 140px)' },
+                overflowY: { md: 'auto' },
+                '&::-webkit-scrollbar': { display: 'none' },
+                msOverflowStyle: 'none',
+                scrollbarWidth: 'none',
+              }}
+            >
               <ProductInformation
                 name={product_name}
                 description={product_description}
+                price={formattedPrice}
                 articleNumber={articleCode}
                 currentColor={CurrentColor}
+                stockQuantity={product.stock_quantity}
               />
               <Box
                 sx={{
-                  mt: 4,
+                  mt: 3,
                   display: 'flex',
                   flexDirection: 'column',
                   gap: '16px',
@@ -256,10 +314,51 @@ export default function ProductDetail(props: PropsWithChildren<ProductValue>) {
                 <ProductAddCart
                   openToaster={openToaster}
                   handle={handle}
+                  handleBuyNow={handleBuyNow}
                   price={procuct_price}
                   close={setOpenToaster}
+                  quantity={quantity}
+                  setQuantity={setQuantity}
                 />
               </Box>
+
+              {/* Inline Size Chart Table */}
+              <Box sx={{ mt: 3, border: '1px solid #eaeaea', borderRadius: '8px', overflow: 'hidden' }}>
+                <Typography sx={{ bgcolor: '#000000', color: '#ffffff', px: 2, py: 1.2, fontSize: '0.8rem', fontWeight: 600, fontFamily: fonts.sans, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                  Size Chart (Inches)
+                </Typography>
+                <Box sx={{ overflowX: 'auto' }}>
+                  <Table size="small">
+                    <TableHead sx={{ bgcolor: '#f9f9f9' }}>
+                      <TableRow>
+                        <TableCell sx={{ fontWeight: 600, fontSize: '0.75rem', fontFamily: fonts.sans, py: 1 }}>Size</TableCell>
+                        <TableCell sx={{ fontWeight: 600, fontSize: '0.75rem', fontFamily: fonts.sans, py: 1 }}>Shoulder</TableCell>
+                        <TableCell sx={{ fontWeight: 600, fontSize: '0.75rem', fontFamily: fonts.sans, py: 1 }}>Chest</TableCell>
+                        <TableCell sx={{ fontWeight: 600, fontSize: '0.75rem', fontFamily: fonts.sans, py: 1 }}>Length</TableCell>
+                        <TableCell sx={{ fontWeight: 600, fontSize: '0.75rem', fontFamily: fonts.sans, py: 1 }}>Sleeve</TableCell>
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      {[
+                        { size: 'XS', shoulder: '14"', chest: '18.5"', length: '28"', sleeve: '21"' },
+                        { size: 'S', shoulder: '14.5"', chest: '19"', length: '28"', sleeve: '21"' },
+                        { size: 'M', shoulder: '15"', chest: '20"', length: '28"', sleeve: '21"' },
+                        { size: 'L', shoulder: '15.5"', chest: '22"', length: '28"', sleeve: '22"' },
+                        { size: 'XL', shoulder: '16"', chest: '24"', length: '28"', sleeve: '22"' },
+                      ].map((row) => (
+                        <TableRow key={row.size}>
+                          <TableCell sx={{ fontSize: '0.75rem', fontFamily: fonts.sans, fontWeight: 600, py: 1 }}>{row.size}</TableCell>
+                          <TableCell sx={{ fontSize: '0.75rem', fontFamily: fonts.sans, color: '#555555', py: 1 }}>{row.shoulder}</TableCell>
+                          <TableCell sx={{ fontSize: '0.75rem', fontFamily: fonts.sans, color: '#555555', py: 1 }}>{row.chest}</TableCell>
+                          <TableCell sx={{ fontSize: '0.75rem', fontFamily: fonts.sans, color: '#555555', py: 1 }}>{row.length}</TableCell>
+                          <TableCell sx={{ fontSize: '0.75rem', fontFamily: fonts.sans, color: '#555555', py: 1 }}>{row.sleeve}</TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </Box>
+              </Box>
+
               <ProductUtilityIcons />
               <ProductMaterialDescription />
               <AccordionProduct />
@@ -292,8 +391,10 @@ export default function ProductDetail(props: PropsWithChildren<ProductValue>) {
             <ProductInformation
               name={product_name}
               description={product_description}
+              price={formattedPrice}
               articleNumber={articleCode}
               currentColor={CurrentColor}
+              stockQuantity={product.stock_quantity}
             />
             <Box
               sx={{
@@ -371,10 +472,51 @@ export default function ProductDetail(props: PropsWithChildren<ProductValue>) {
               <ProductAddCart
                 openToaster={openToaster}
                 handle={handle}
+                handleBuyNow={handleBuyNow}
                 price={procuct_price}
                 close={setOpenToaster}
+                quantity={quantity}
+                setQuantity={setQuantity}
               />
             </Box>
+
+            {/* Inline Size Chart Table for Mobile */}
+            <Box sx={{ mt: 4, border: '1px solid #eaeaea', borderRadius: '8px', overflow: 'hidden' }}>
+              <Typography sx={{ bgcolor: '#000000', color: '#ffffff', px: 2, py: 1.2, fontSize: '0.8rem', fontWeight: 600, fontFamily: fonts.sans, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                Size Chart (Inches)
+              </Typography>
+              <Box sx={{ overflowX: 'auto' }}>
+                <Table size="small">
+                  <TableHead sx={{ bgcolor: '#f9f9f9' }}>
+                    <TableRow>
+                      <TableCell sx={{ fontWeight: 600, fontSize: '0.75rem', fontFamily: fonts.sans, py: 1 }}>Size</TableCell>
+                      <TableCell sx={{ fontWeight: 600, fontSize: '0.75rem', fontFamily: fonts.sans, py: 1 }}>Shoulder</TableCell>
+                      <TableCell sx={{ fontWeight: 600, fontSize: '0.75rem', fontFamily: fonts.sans, py: 1 }}>Chest</TableCell>
+                      <TableCell sx={{ fontWeight: 600, fontSize: '0.75rem', fontFamily: fonts.sans, py: 1 }}>Length</TableCell>
+                      <TableCell sx={{ fontWeight: 600, fontSize: '0.75rem', fontFamily: fonts.sans, py: 1 }}>Sleeve</TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {[
+                      { size: 'XS', shoulder: '14"', chest: '18.5"', length: '28"', sleeve: '21"' },
+                      { size: 'S', shoulder: '14.5"', chest: '19"', length: '28"', sleeve: '21"' },
+                      { size: 'M', shoulder: '15"', chest: '20"', length: '28"', sleeve: '21"' },
+                      { size: 'L', shoulder: '15.5"', chest: '22"', length: '28"', sleeve: '22"' },
+                      { size: 'XL', shoulder: '16"', chest: '24"', length: '28"', sleeve: '22"' },
+                    ].map((row) => (
+                      <TableRow key={row.size}>
+                        <TableCell sx={{ fontSize: '0.75rem', fontFamily: fonts.sans, fontWeight: 600, py: 1 }}>{row.size}</TableCell>
+                        <TableCell sx={{ fontSize: '0.75rem', fontFamily: fonts.sans, color: '#555555', py: 1 }}>{row.shoulder}</TableCell>
+                        <TableCell sx={{ fontSize: '0.75rem', fontFamily: fonts.sans, color: '#555555', py: 1 }}>{row.chest}</TableCell>
+                        <TableCell sx={{ fontSize: '0.75rem', fontFamily: fonts.sans, color: '#555555', py: 1 }}>{row.length}</TableCell>
+                        <TableCell sx={{ fontSize: '0.75rem', fontFamily: fonts.sans, color: '#555555', py: 1 }}>{row.sleeve}</TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </Box>
+            </Box>
+
             <ProductUtilityIcons />
             <ProductMaterialDescription />
             <AccordionProduct />

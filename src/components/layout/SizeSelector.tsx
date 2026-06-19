@@ -1,6 +1,6 @@
 import React, { PropsWithChildren } from 'react';
 import { Box, Button, Typography } from '@mui/material';
-import { brand, fonts, radius } from '@/src/lib/designTokens';
+import { fonts } from '@/src/lib/designTokens';
 
 interface SizeSelectorProps {
   onSizeSelect: (size: string) => void;
@@ -12,42 +12,17 @@ export default function SizeSelector(props: PropsWithChildren<SizeSelectorProps>
   const { productSize, selectedSize, onSizeSelect } = props;
 
   return (
-    <Box sx={{ my: 2, width: '100%' }}>
+    <Box sx={{ my: 1.5, width: '100%' }}>
       <Typography
         sx={{
           fontFamily: fonts.sans,
-          fontSize: '0.85rem',
+          fontSize: '0.9rem',
           fontWeight: 600,
-          textTransform: 'uppercase',
-          letterSpacing: '0.08em',
-          color: brand.charcoal,
+          color: '#121212',
           mb: 1.5,
-          display: 'flex',
-          alignItems: 'center',
-          gap: '8px',
         }}
       >
-        <span>Size:</span>
-        {selectedSize ? (
-          <Box
-            component="span"
-            sx={{
-              fontWeight: 700,
-              color: brand.sage,
-              backgroundColor: 'rgba(90, 109, 87, 0.08)',
-              px: 1.2,
-              py: 0.2,
-              fontSize: '0.8rem',
-              borderRadius: '2px',
-            }}
-          >
-            {selectedSize}
-          </Box>
-        ) : (
-          <Box component="span" sx={{ fontWeight: 400, color: brand.muted, fontSize: '0.8rem' }}>
-            Not selected
-          </Box>
-        )}
+        Size
       </Typography>
 
       <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: '10px' }}>
@@ -57,24 +32,24 @@ export default function SizeSelector(props: PropsWithChildren<SizeSelectorProps>
             <Button
               key={s}
               onClick={() => onSizeSelect(s)}
-              variant={isSelected ? 'contained' : 'outlined'}
+              variant="outlined"
               disableElevation
               sx={{
-                minWidth: '50px',
-                height: '46px',
-                padding: '0 12px',
-                borderRadius: radius.button,
+                minWidth: '60px',
+                height: '40px',
+                px: 2.5,
+                borderRadius: '20px',
                 fontFamily: fonts.sans,
-                fontSize: '0.875rem',
-                fontWeight: isSelected ? 600 : 500,
-                border: isSelected ? `1px solid ${brand.sage}` : `1px solid ${brand.border}`,
-                backgroundColor: isSelected ? brand.sage : 'transparent',
-                color: isSelected ? brand.white : brand.charcoal,
+                fontSize: '0.85rem',
+                fontWeight: 500,
+                border: isSelected ? '1px solid #111111' : '1px solid #d3d3d3',
+                backgroundColor: isSelected ? '#111111' : 'transparent',
+                color: isSelected ? '#ffffff' : '#111111',
                 transition: 'all 0.15s ease-in-out',
                 textTransform: 'none',
                 '&:hover': {
-                  backgroundColor: isSelected ? brand.sageLight : 'rgba(90, 109, 87, 0.05)',
-                  borderColor: brand.sage,
+                  backgroundColor: isSelected ? '#222222' : 'rgba(0, 0, 0, 0.05)',
+                  borderColor: '#111111',
                 },
               }}
             >
