@@ -50,11 +50,6 @@ export const PAKISTANI_FASHION = {
   /** Home hero carousel: hero1 → hero4 sequence */
   heroSlides: [
     {
-      src: 'https://res.cloudinary.com/dqd6xx60g/image/upload/v1781961330/bustaniya_monochrome_plum_1_suichx.png',
-      alt: 'Bustaniya — Premium Monochrome Plum Collection',
-      objectPosition: 'center center',
-    },
-    {
       src: '/images/suit_variation_olive.png',
       alt: 'Bustaniya — Premium Pastel Suit Collection',
       objectPosition: 'center center',

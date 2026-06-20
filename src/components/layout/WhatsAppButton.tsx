@@ -32,7 +32,7 @@ export default function WhatsAppButton() {
   const [isOpen, setIsOpen] = useState(false);
   const [message, setMessage] = useState('');
   const [showTooltip, setShowTooltip] = useState(false);
-  const phoneNumber = '+923194821372';
+  const phoneNumber = '+923053530008';
 
   useEffect(() => {
     // Show a floating bubble tooltip after 2.5 seconds to attract attention
