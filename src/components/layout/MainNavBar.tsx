@@ -165,7 +165,12 @@ function MainNavBar({ variant = 'default' }: MainNavBarProps) {
     <AppBar
       position={isOverlay ? 'static' : 'sticky'}
       sx={{
-        backgroundColor: isOverlay ? 'transparent' : '#bbe983',
+        background: isOverlay ? 'transparent' : `
+          repeating-linear-gradient(0deg, rgba(53, 69, 49, 0.012) 0px, rgba(53, 69, 49, 0.012) 1px, transparent 1px, transparent 4px),
+          repeating-linear-gradient(90deg, rgba(53, 69, 49, 0.012) 0px, rgba(53, 69, 49, 0.012) 1px, transparent 1px, transparent 4px),
+          radial-gradient(circle at 25% 50%, #cbf598 0%, #bbe983 55%, #b2e079 100%)
+        `,
+        backgroundBlendMode: isOverlay ? 'normal' : 'multiply',
         boxShadow: isOverlay ? 'none' : '0 1px 0 rgba(0,0,0,0.06)',
         color: isOverlay ? '#354531' : '#1d2d14',
         width: '100%',
