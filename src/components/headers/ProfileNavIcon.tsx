@@ -2,11 +2,10 @@
 
 import PersonOutlineOutlinedIcon from '@mui/icons-material/PersonOutlineOutlined';
 import Link from '@mui/material/Link';
-import { Button, Menu, MenuItem, ListItemIcon } from '@mui/material';
+import { Button, Menu, MenuItem, ListItemIcon, IconButton } from '@mui/material';
 import { useState } from 'react';
 import { useAuth } from '@/src/context/authContext';
 import { Logout } from '@mui/icons-material';
-import Person4Icon from '@mui/icons-material/Person4';
 import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined';
 
 type ProfileNavIconProps = {
@@ -26,20 +25,36 @@ export default function ProfileNavIcon({ iconColor = '#404040' }: ProfileNavIcon
     setAnchorEl(null);
   };
 
+  const iconButtonSx = {
+    color: iconColor,
+    padding: 0.75,
+    minWidth: 0,
+    width: 40,
+    height: 40,
+    borderRadius: '50%',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+    '&:hover': {
+      backgroundColor: iconColor === '#354531' ? 'rgba(53, 69, 49, 0.08)' : 'rgba(0, 0, 0, 0.05)',
+      transform: 'scale(1.08)',
+    },
+    '&:active': {
+      transform: 'scale(0.95)',
+    },
+  };
+
   if (isLoggedIn) {
     return (
       <>
-        <Button
+        <IconButton
           onClick={handleClick}
           aria-label="Profile menu"
-          sx={{
-            color: iconColor,
-            padding: 0,
-            minWidth: 0,
-          }}
+          sx={iconButtonSx}
         >
-          <AccountCircleOutlinedIcon sx={{ color: iconColor }} />
-        </Button>
+          <AccountCircleOutlinedIcon sx={{ color: iconColor, fontSize: 22 }} />
+        </IconButton>
         <Menu
           anchorEl={anchorEl}
           open={open}
@@ -72,8 +87,13 @@ export default function ProfileNavIcon({ iconColor = '#404040' }: ProfileNavIcon
   }
 
   return (
-    <Link href="/login" color="inherit" underline="none" aria-label="Sign in">
-      <Person4Icon sx={{ color: iconColor, display: 'block' }} />
-    </Link>
+    <IconButton
+      component="a"
+      href="/login"
+      aria-label="Sign in"
+      sx={iconButtonSx}
+    >
+      <PersonOutlineOutlinedIcon sx={{ color: iconColor, fontSize: 22 }} />
+    </IconButton>
   );
 }

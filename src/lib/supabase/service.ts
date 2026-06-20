@@ -36,11 +36,9 @@ export function createAnonSupabase(): SupabaseClient<Database> {
   });
 }
 
-/** Prefer service role; fall back to anon for product SELECT. */
+/** Prefer service role on server; use anon on client for product SELECT. */
 export function createCatalogSupabase(): SupabaseClient<Database> {
-  try {
-    return createServiceSupabase();
-  } catch {
-    return createAnonSupabase();
-  }
+  // Always use the public anon client for product catalog operations to avoid 
+  // service key configuration issues on the server side.
+  return createAnonSupabase();
 }

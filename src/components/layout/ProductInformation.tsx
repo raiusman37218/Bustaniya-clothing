@@ -1,6 +1,6 @@
 import React, { PropsWithChildren } from "react";
 import { Box, Typography } from "@mui/material";
-import { fonts, brand } from "@/src/lib/designTokens";
+import { fonts } from "@/src/lib/designTokens";
 
 interface Types {
   name: string;
@@ -12,17 +12,17 @@ interface Types {
 }
 
 export default function ProductInformation(props: PropsWithChildren<Types>) {
-  const { name, description, price, articleNumber, currentColor, stockQuantity } = props;
+  const { name, price, articleNumber } = props;
   
   return (
-    <Box sx={{ display: "flex", flexDirection: "column", gap: "12px" }}>
+    <Box sx={{ display: "flex", flexDirection: "column", gap: "8px" }}>
       <Box sx={{ display: "flex", flexDirection: "column", gap: "6px" }}>
         <Typography 
           variant="h1" 
           sx={{ 
             fontFamily: fonts.sans,
             fontWeight: 500,
-            color: '#121212',
+            color: '#4A0E17',
             fontSize: { xs: '1.6rem', md: '2.1rem' },
             lineHeight: 1.25,
             letterSpacing: '0.01em',
@@ -36,9 +36,9 @@ export default function ProductInformation(props: PropsWithChildren<Types>) {
           <Typography
             sx={{
               fontFamily: fonts.sans,
-              fontSize: { xs: '1.15rem', md: '1.25rem' },
+              fontSize: { xs: '1.1rem', md: '1.2rem' },
               fontWeight: 500,
-              color: '#121212',
+              color: '#4A0E17',
               mt: 0.5,
             }}
           >
@@ -62,56 +62,9 @@ export default function ProductInformation(props: PropsWithChildren<Types>) {
             </Typography>
           </Box>
         )}
-
-        {/* Inventory Indicator */}
-        {stockQuantity !== undefined && (
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: '8px', mt: 1 }}>
-            <Box 
-              sx={{ 
-                width: '8px', 
-                height: '8px', 
-                borderRadius: '50%', 
-                backgroundColor: stockQuantity <= 5 ? '#e53935' : '#4caf50',
-                animation: stockQuantity <= 5 ? 'pulse 1.5s infinite' : 'none',
-                '@keyframes pulse': {
-                  '0%': { transform: 'scale(0.95)', opacity: 0.5 },
-                  '50%': { transform: 'scale(1.15)', opacity: 1 },
-                  '100%': { transform: 'scale(0.95)', opacity: 0.5 },
-                }
-              }} 
-            />
-            <Typography
-              sx={{
-                fontFamily: fonts.sans,
-                fontSize: '0.85rem',
-                fontWeight: 600,
-                color: stockQuantity <= 5 ? '#d32f2f' : '#2e7d32',
-              }}
-            >
-              {stockQuantity <= 0 
-                ? 'Out of stock' 
-                : stockQuantity <= 5 
-                  ? `Only ${stockQuantity} left in stock - order soon!` 
-                  : `In stock (${stockQuantity} units available)`
-              }
-            </Typography>
-          </Box>
-        )}
       </Box>
 
-      <Box sx={{ borderBottom: '1px solid #eaeaea', my: 1 }} />
-
-      <Typography 
-        sx={{ 
-          fontFamily: fonts.sans,
-          fontSize: '0.9rem',
-          lineHeight: 1.6,
-          color: brand.charcoal,
-          mt: 0.5,
-        }}
-      >
-        {description}
-      </Typography>
+      <Box sx={{ borderBottom: '1px solid #4a0e17', opacity: 0.2, my: 1.5 }} />
     </Box>
   );
 }

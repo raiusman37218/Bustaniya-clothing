@@ -2,7 +2,7 @@
 import BannerHeader from '@/src/components/headers/BannerHeader';
 import NavBar from '@/src/components/layout/NavBar';
 import { Product } from '@/src/types/productTypes';
-import { brand, fonts } from '@/src/lib/designTokens';
+import { fonts } from '@/src/lib/designTokens';
 import { Box, Container, Grid, Dialog, DialogContent, IconButton, Typography, Table, TableBody, TableCell, TableHead, TableRow } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import NavigateBeforeIcon from '@mui/icons-material/NavigateBefore';
@@ -17,9 +17,6 @@ import useProductColorHook from '@/src/hooks/useProductColorHook';
 import { useDispatch } from 'react-redux';
 import { AppDispatch } from '@/src/app/store';
 import { addCart, openCart } from '@/src/featuers/cart/cartSlice';
-import ProductImageGallery from './ProductImageGallery';
-import ProductImage from './ProductImage';
-import ProductInformation from './ProductInformation';
 import ProductUtilityIcons from './ProductUtilityIcons';
 import ProductMaterialDescription from './ProductMaterialDescription';
 import SizeSelector from './SizeSelector';
@@ -34,6 +31,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useRouter } from 'next/navigation';
 import { parsePricePkr, formatPkrNishat } from '@/src/lib/currency/formatCurrency';
+import ProductInformation from './ProductInformation';
 
 interface ProductValue {
   product: Product;
@@ -105,9 +103,6 @@ export default function ProductDetail(props: PropsWithChildren<ProductValue>) {
     setLightboxIndex((prev) => (prev === product_img.length - 1 ? 0 : prev + 1));
   };
 
-  const currentMainImage = isHovered ? isSelected : product_img[0];
-  const currentImageIndex = Math.max(0, product_img.indexOf(currentMainImage));
-
   const dispatch = useDispatch<AppDispatch>();
   const articleCode = article_number || `BST-${(product_category || 'RTW').slice(0, 3).toUpperCase()}-${id.slice(0, 5).toUpperCase()}`;
 
@@ -149,12 +144,6 @@ export default function ProductDetail(props: PropsWithChildren<ProductValue>) {
     router.push('/checkout');
   };
 
-  const handleImageSelect = (image: string, index: any) => {
-    setIsHovered(true);
-    setIsSelected(image);
-    setItemS(itemS === index.toString() ? null : index.toString());
-  };
-
   return (
     <>
       <BannerHeader />
@@ -194,7 +183,7 @@ export default function ProductDetail(props: PropsWithChildren<ProductValue>) {
                       aspectRatio: '3/4',
                       overflow: 'hidden',
                       bgcolor: '#f9f9f9',
-                      gridColumn: idx === 0 && product_img.length % 2 !== 0 ? 'span 2' : 'span 1',
+                      gridColumn: 'span 1', // Clean 2x2 grid without top image spanning full-width
                       transition: 'all 0.3s ease',
                       '&:hover img': {
                         transform: 'scale(1.025)',
@@ -255,12 +244,12 @@ export default function ProductDetail(props: PropsWithChildren<ProductValue>) {
                         fontWeight: 600,
                         textTransform: 'uppercase',
                         letterSpacing: '0.12em',
-                        color: brand.ink,
+                        color: '#1d2d14',
                         fontFamily: fonts.sans,
                         mb: 1.5,
                       }}
                     >
-                      Color: <span style={{ color: brand.muted, fontWeight: 400 }}>{CurrentColor}</span>
+                      Color: <span style={{ color: 'rgba(29, 45, 20, 0.6)', fontWeight: 400 }}>{CurrentColor}</span>
                     </Typography>
                     <Box sx={{ display: 'flex', gap: 1.5 }}>
                       {product_color.map((colorItem) => {
@@ -270,12 +259,6 @@ export default function ProductDetail(props: PropsWithChildren<ProductValue>) {
                             key={colorItem.hex}
                             onClick={() => {
                               setCurrentColor(colorItem.hex);
-                              const matchIndex = product_img.findIndex((img) => img.toLowerCase().includes(colorItem.name.toLowerCase()));
-                              if (matchIndex !== -1) {
-                                setIsHovered(true);
-                                setIsSelected(product_img[matchIndex]);
-                                setItemS(matchIndex.toString());
-                              }
                             }}
                             sx={{
                               width: 26,
@@ -283,8 +266,8 @@ export default function ProductDetail(props: PropsWithChildren<ProductValue>) {
                               borderRadius: '50%',
                               bgcolor: colorItem.hex || colorItem.currentColor || '#cccccc',
                               cursor: 'pointer',
-                              border: isHexSelected ? '2px solid #111111' : '1px solid rgba(0,0,0,0.15)',
-                              outline: isHexSelected ? '1px solid #111111' : 'none',
+                              border: isHexSelected ? '2px solid #1d2d14' : '1px solid rgba(0,0,0,0.15)',
+                              outline: isHexSelected ? '1px solid #1d2d14' : 'none',
                               outlineOffset: '2.5px',
                               transition: 'transform 0.2s',
                               '&:hover': { transform: 'scale(1.08)' }
@@ -302,7 +285,7 @@ export default function ProductDetail(props: PropsWithChildren<ProductValue>) {
                   onSizeSelect={setSize}
                   productSize={product_size}
                 />
-                
+
                 <Box sx={{ display: 'flex', justifyContent: 'flex-start', mt: -1 }}>
                   <SizeGuidModal
                     handleOpen={handleOpen}
@@ -322,20 +305,20 @@ export default function ProductDetail(props: PropsWithChildren<ProductValue>) {
                 />
               </Box>
 
-              {/* Inline Size Chart Table */}
-              <Box sx={{ mt: 3, border: '1px solid #eaeaea', borderRadius: '8px', overflow: 'hidden' }}>
-                <Typography sx={{ bgcolor: '#000000', color: '#ffffff', px: 2, py: 1.2, fontSize: '0.8rem', fontWeight: 600, fontFamily: fonts.sans, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-                  Size Chart (Inches)
+              {/* Inline Size Chart Table (Premium Solid Black Table) */}
+              <Box sx={{ mt: 4, bgcolor: '#000000', border: '1px solid #000000', overflow: 'hidden' }}>
+                <Typography sx={{ bgcolor: '#000000', color: '#ffffff', px: 2, py: 1.5, fontSize: '0.85rem', fontWeight: 600, fontFamily: fonts.sans, letterSpacing: '0.05em' }}>
+                  {product_category ? `${product_category} Size Chart (Inches)` : 'Size Chart (Inches)'}
                 </Typography>
-                <Box sx={{ overflowX: 'auto' }}>
-                  <Table size="small">
-                    <TableHead sx={{ bgcolor: '#f9f9f9' }}>
+                <Box sx={{ overflowX: 'auto', px: 1, pb: 1 }}>
+                  <Table size="small" sx={{ '& .MuiTableCell-root': { borderBottom: '1px solid rgba(255,255,255,0.12)' } }}>
+                    <TableHead>
                       <TableRow>
-                        <TableCell sx={{ fontWeight: 600, fontSize: '0.75rem', fontFamily: fonts.sans, py: 1 }}>Size</TableCell>
-                        <TableCell sx={{ fontWeight: 600, fontSize: '0.75rem', fontFamily: fonts.sans, py: 1 }}>Shoulder</TableCell>
-                        <TableCell sx={{ fontWeight: 600, fontSize: '0.75rem', fontFamily: fonts.sans, py: 1 }}>Chest</TableCell>
-                        <TableCell sx={{ fontWeight: 600, fontSize: '0.75rem', fontFamily: fonts.sans, py: 1 }}>Length</TableCell>
-                        <TableCell sx={{ fontWeight: 600, fontSize: '0.75rem', fontFamily: fonts.sans, py: 1 }}>Sleeve</TableCell>
+                        <TableCell sx={{ color: '#ffffff', fontWeight: 600, fontSize: '0.75rem', fontFamily: fonts.sans, py: 1 }}>Size</TableCell>
+                        <TableCell sx={{ color: '#ffffff', fontWeight: 600, fontSize: '0.75rem', fontFamily: fonts.sans, py: 1 }}>Shoulder</TableCell>
+                        <TableCell sx={{ color: '#ffffff', fontWeight: 600, fontSize: '0.75rem', fontFamily: fonts.sans, py: 1 }}>Chest</TableCell>
+                        <TableCell sx={{ color: '#ffffff', fontWeight: 600, fontSize: '0.75rem', fontFamily: fonts.sans, py: 1 }}>Length</TableCell>
+                        <TableCell sx={{ color: '#ffffff', fontWeight: 600, fontSize: '0.75rem', fontFamily: fonts.sans, py: 1 }}>Sleeve</TableCell>
                       </TableRow>
                     </TableHead>
                     <TableBody>
@@ -347,17 +330,58 @@ export default function ProductDetail(props: PropsWithChildren<ProductValue>) {
                         { size: 'XL', shoulder: '16"', chest: '24"', length: '28"', sleeve: '22"' },
                       ].map((row) => (
                         <TableRow key={row.size}>
-                          <TableCell sx={{ fontSize: '0.75rem', fontFamily: fonts.sans, fontWeight: 600, py: 1 }}>{row.size}</TableCell>
-                          <TableCell sx={{ fontSize: '0.75rem', fontFamily: fonts.sans, color: '#555555', py: 1 }}>{row.shoulder}</TableCell>
-                          <TableCell sx={{ fontSize: '0.75rem', fontFamily: fonts.sans, color: '#555555', py: 1 }}>{row.chest}</TableCell>
-                          <TableCell sx={{ fontSize: '0.75rem', fontFamily: fonts.sans, color: '#555555', py: 1 }}>{row.length}</TableCell>
-                          <TableCell sx={{ fontSize: '0.75rem', fontFamily: fonts.sans, color: '#555555', py: 1 }}>{row.sleeve}</TableCell>
+                          <TableCell sx={{ color: '#ffffff', fontSize: '0.75rem', fontFamily: fonts.sans, fontWeight: 600, py: 1 }}>{row.size}</TableCell>
+                          <TableCell sx={{ color: 'rgba(255,255,255,0.8)', fontSize: '0.75rem', fontFamily: fonts.sans, py: 1 }}>{row.shoulder}</TableCell>
+                          <TableCell sx={{ color: 'rgba(255,255,255,0.8)', fontSize: '0.75rem', fontFamily: fonts.sans, py: 1 }}>{row.chest}</TableCell>
+                          <TableCell sx={{ color: 'rgba(255,255,255,0.8)', fontSize: '0.75rem', fontFamily: fonts.sans, py: 1 }}>{row.length}</TableCell>
+                          <TableCell sx={{ color: 'rgba(255,255,255,0.8)', fontSize: '0.75rem', fontFamily: fonts.sans, py: 1 }}>{row.sleeve}</TableCell>
                         </TableRow>
                       ))}
                     </TableBody>
                   </Table>
                 </Box>
               </Box>
+
+              {/* Description Section with Burgundy list items */}
+              {product_description && (
+                <Box sx={{ mt: 4, display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                  <Typography
+                    sx={{
+                      fontFamily: fonts.sans,
+                      fontSize: '0.95rem',
+                      fontWeight: 'bold',
+                      color: '#4A0E17',
+                    }}
+                  >
+                    Description:
+                  </Typography>
+                  <Box
+                    component="ul"
+                    sx={{
+                      m: 0,
+                      pl: 2.5,
+                      fontFamily: fonts.sans,
+                      fontSize: '0.85rem',
+                      color: '#4A0E17',
+                      lineHeight: 1.6,
+                      '& li': {
+                        mb: 0.5,
+                        color: '#4A0E17',
+                      },
+                    }}
+                  >
+                    {product_description.split('\n').map((line, idx) => {
+                      const cleaned = line.replace(/^[-\*\s\•]+/, '').trim();
+                      if (!cleaned) return null;
+                      return (
+                        <li key={idx}>
+                          {cleaned}
+                        </li>
+                      );
+                    })}
+                  </Box>
+                </Box>
+              )}
 
               <ProductUtilityIcons />
               <ProductMaterialDescription />
@@ -413,12 +437,12 @@ export default function ProductDetail(props: PropsWithChildren<ProductValue>) {
                       fontWeight: 600,
                       textTransform: 'uppercase',
                       letterSpacing: '0.12em',
-                      color: brand.ink,
+                      color: '#1d2d14',
                       fontFamily: fonts.sans,
                       mb: 1.5,
                     }}
                   >
-                    Color: <span style={{ color: brand.muted, fontWeight: 400 }}>{CurrentColor}</span>
+                    Color: <span style={{ color: 'rgba(29, 45, 20, 0.6)', fontWeight: 400 }}>{CurrentColor}</span>
                   </Typography>
                   <Box sx={{ display: 'flex', gap: 1.5 }}>
                     {product_color.map((colorItem) => {
@@ -428,12 +452,6 @@ export default function ProductDetail(props: PropsWithChildren<ProductValue>) {
                           key={colorItem.hex}
                           onClick={() => {
                             setCurrentColor(colorItem.hex);
-                            const matchIndex = product_img.findIndex((img) => img.toLowerCase().includes(colorItem.name.toLowerCase()));
-                            if (matchIndex !== -1) {
-                              setIsHovered(true);
-                              setIsSelected(product_img[matchIndex]);
-                              setItemS(matchIndex.toString());
-                            }
                           }}
                           sx={{
                             width: 26,
@@ -441,8 +459,8 @@ export default function ProductDetail(props: PropsWithChildren<ProductValue>) {
                             borderRadius: '50%',
                             bgcolor: colorItem.hex || colorItem.currentColor || '#cccccc',
                             cursor: 'pointer',
-                            border: isHexSelected ? '2px solid #111111' : '1px solid rgba(0,0,0,0.15)',
-                            outline: isHexSelected ? '1px solid #111111' : 'none',
+                            border: isHexSelected ? '2px solid #1d2d14' : '1px solid rgba(0,0,0,0.15)',
+                            outline: isHexSelected ? '1px solid #1d2d14' : 'none',
                             outlineOffset: '2.5px',
                             transition: 'transform 0.2s',
                             '&:hover': { transform: 'scale(1.08)' }
@@ -481,19 +499,19 @@ export default function ProductDetail(props: PropsWithChildren<ProductValue>) {
             </Box>
 
             {/* Inline Size Chart Table for Mobile */}
-            <Box sx={{ mt: 4, border: '1px solid #eaeaea', borderRadius: '8px', overflow: 'hidden' }}>
-              <Typography sx={{ bgcolor: '#000000', color: '#ffffff', px: 2, py: 1.2, fontSize: '0.8rem', fontWeight: 600, fontFamily: fonts.sans, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-                Size Chart (Inches)
+            <Box sx={{ mt: 4, bgcolor: '#000000', border: '1px solid #000000', overflow: 'hidden' }}>
+              <Typography sx={{ bgcolor: '#000000', color: '#ffffff', px: 2, py: 1.5, fontSize: '0.85rem', fontWeight: 600, fontFamily: fonts.sans, letterSpacing: '0.05em' }}>
+                {product_category ? `${product_category} Size Chart (Inches)` : 'Size Chart (Inches)'}
               </Typography>
-              <Box sx={{ overflowX: 'auto' }}>
-                <Table size="small">
-                  <TableHead sx={{ bgcolor: '#f9f9f9' }}>
+              <Box sx={{ overflowX: 'auto', px: 1, pb: 1 }}>
+                <Table size="small" sx={{ '& .MuiTableCell-root': { borderBottom: '1px solid rgba(255,255,255,0.12)' } }}>
+                  <TableHead>
                     <TableRow>
-                      <TableCell sx={{ fontWeight: 600, fontSize: '0.75rem', fontFamily: fonts.sans, py: 1 }}>Size</TableCell>
-                      <TableCell sx={{ fontWeight: 600, fontSize: '0.75rem', fontFamily: fonts.sans, py: 1 }}>Shoulder</TableCell>
-                      <TableCell sx={{ fontWeight: 600, fontSize: '0.75rem', fontFamily: fonts.sans, py: 1 }}>Chest</TableCell>
-                      <TableCell sx={{ fontWeight: 600, fontSize: '0.75rem', fontFamily: fonts.sans, py: 1 }}>Length</TableCell>
-                      <TableCell sx={{ fontWeight: 600, fontSize: '0.75rem', fontFamily: fonts.sans, py: 1 }}>Sleeve</TableCell>
+                      <TableCell sx={{ color: '#ffffff', fontWeight: 600, fontSize: '0.75rem', fontFamily: fonts.sans, py: 1 }}>Size</TableCell>
+                      <TableCell sx={{ color: '#ffffff', fontWeight: 600, fontSize: '0.75rem', fontFamily: fonts.sans, py: 1 }}>Shoulder</TableCell>
+                      <TableCell sx={{ color: '#ffffff', fontWeight: 600, fontSize: '0.75rem', fontFamily: fonts.sans, py: 1 }}>Chest</TableCell>
+                      <TableCell sx={{ color: '#ffffff', fontWeight: 600, fontSize: '0.75rem', fontFamily: fonts.sans, py: 1 }}>Length</TableCell>
+                      <TableCell sx={{ color: '#ffffff', fontWeight: 600, fontSize: '0.75rem', fontFamily: fonts.sans, py: 1 }}>Sleeve</TableCell>
                     </TableRow>
                   </TableHead>
                   <TableBody>
@@ -505,17 +523,58 @@ export default function ProductDetail(props: PropsWithChildren<ProductValue>) {
                       { size: 'XL', shoulder: '16"', chest: '24"', length: '28"', sleeve: '22"' },
                     ].map((row) => (
                       <TableRow key={row.size}>
-                        <TableCell sx={{ fontSize: '0.75rem', fontFamily: fonts.sans, fontWeight: 600, py: 1 }}>{row.size}</TableCell>
-                        <TableCell sx={{ fontSize: '0.75rem', fontFamily: fonts.sans, color: '#555555', py: 1 }}>{row.shoulder}</TableCell>
-                        <TableCell sx={{ fontSize: '0.75rem', fontFamily: fonts.sans, color: '#555555', py: 1 }}>{row.chest}</TableCell>
-                        <TableCell sx={{ fontSize: '0.75rem', fontFamily: fonts.sans, color: '#555555', py: 1 }}>{row.length}</TableCell>
-                        <TableCell sx={{ fontSize: '0.75rem', fontFamily: fonts.sans, color: '#555555', py: 1 }}>{row.sleeve}</TableCell>
+                        <TableCell sx={{ color: '#ffffff', fontSize: '0.75rem', fontFamily: fonts.sans, fontWeight: 600, py: 1 }}>{row.size}</TableCell>
+                        <TableCell sx={{ color: 'rgba(255,255,255,0.8)', fontSize: '0.75rem', fontFamily: fonts.sans, py: 1 }}>{row.shoulder}</TableCell>
+                        <TableCell sx={{ color: 'rgba(255,255,255,0.8)', fontSize: '0.75rem', fontFamily: fonts.sans, py: 1 }}>{row.chest}</TableCell>
+                        <TableCell sx={{ color: 'rgba(255,255,255,0.8)', fontSize: '0.75rem', fontFamily: fonts.sans, py: 1 }}>{row.length}</TableCell>
+                        <TableCell sx={{ color: 'rgba(255,255,255,0.8)', fontSize: '0.75rem', fontFamily: fonts.sans, py: 1 }}>{row.sleeve}</TableCell>
                       </TableRow>
                     ))}
                   </TableBody>
                 </Table>
               </Box>
             </Box>
+
+            {/* Description Section with Burgundy list items for Mobile */}
+            {product_description && (
+              <Box sx={{ mt: 4, display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                <Typography
+                  sx={{
+                    fontFamily: fonts.sans,
+                    fontSize: '0.95rem',
+                    fontWeight: 'bold',
+                    color: '#4A0E17',
+                  }}
+                >
+                  Description:
+                </Typography>
+                <Box
+                  component="ul"
+                  sx={{
+                    m: 0,
+                    pl: 2.5,
+                    fontFamily: fonts.sans,
+                    fontSize: '0.85rem',
+                    color: '#4A0E17',
+                    lineHeight: 1.6,
+                    '& li': {
+                      mb: 0.5,
+                      color: '#4A0E17',
+                    },
+                  }}
+                >
+                  {product_description.split('\n').map((line, idx) => {
+                    const cleaned = line.replace(/^[-\*\s\•]+/, '').trim();
+                    if (!cleaned) return null;
+                    return (
+                      <li key={idx}>
+                        {cleaned}
+                      </li>
+                    );
+                  })}
+                </Box>
+              </Box>
+            )}
 
             <ProductUtilityIcons />
             <ProductMaterialDescription />
@@ -637,6 +696,7 @@ export default function ProductDetail(props: PropsWithChildren<ProductValue>) {
           )}
         </DialogContent>
       </Dialog>
+      <ToastContainer />
     </>
   );
 }

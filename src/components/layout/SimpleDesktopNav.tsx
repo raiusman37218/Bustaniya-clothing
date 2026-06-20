@@ -70,17 +70,36 @@ export default function SimpleDesktopNav({ light = false }: SimpleDesktopNavProp
               <Typography
                 sx={{
                   fontSize: '13px',
-                  fontWeight: isLinkActive ? 700 : 500,
+                  fontWeight: isLinkActive ? 600 : 500,
                   color: isLinkActive 
-                    ? (light ? '#ffffff' : '#111111') 
+                    ? (light ? '#ffffff' : '#1d2d14') 
                     : light 
-                      ? 'rgba(255,255,255,0.85)' 
-                      : '#555555',
-                  letterSpacing: '0.15em',
+                      ? 'rgba(255,255,255,0.8)' 
+                      : 'rgba(29, 45, 20, 0.7)',
+                  letterSpacing: '0.12em',
                   textTransform: 'uppercase',
                   fontFamily: "'Inter', sans-serif",
-                  transition: 'color 0.2s ease',
-                  '&:hover': { color: light ? '#ffffff' : '#111111' },
+                  position: 'relative',
+                  paddingBottom: '4px',
+                  transition: 'color 0.3s ease',
+                  '&::after': {
+                    content: '""',
+                    position: 'absolute',
+                    width: '100%',
+                    height: '1.5px',
+                    bottom: 0,
+                    left: 0,
+                    backgroundColor: light ? '#ffffff' : '#1d2d14',
+                    transform: isLinkActive ? 'scaleX(1)' : 'scaleX(0)',
+                    transformOrigin: 'bottom left',
+                    transition: 'transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
+                  },
+                  '&:hover': {
+                    color: light ? '#ffffff' : '#1d2d14',
+                    '&::after': {
+                      transform: 'scaleX(1)',
+                    },
+                  },
                 }}
               >
                 {label}

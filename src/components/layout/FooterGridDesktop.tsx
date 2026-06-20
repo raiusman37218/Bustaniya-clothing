@@ -34,7 +34,7 @@ function FooterGridDesktop() {
               sx={{
                 fontWeight: "600",
                 fontFamily: fonts.display,
-                color: "#FFFFFF",
+                color: "#1d2d14",
               }}
             >
               Join our club, get 15% off for your Birthday
@@ -47,22 +47,22 @@ function FooterGridDesktop() {
                   width: "100%",
                   maxHeight: "56px",
                   "& .MuiOutlinedInput-root": {
-                    color: "#FFFFFF",
+                    color: "#1d2d14",
                     fontFamily: fonts.sans,
                     borderRadius: "2px",
                     "& fieldset": {
-                      borderColor: "rgba(255, 255, 255, 0.3)",
+                      borderColor: "rgba(29, 45, 20, 0.3)",
                       transition: "border-color 0.3s ease",
                     },
                     "&:hover fieldset": {
-                      borderColor: brand.sageLight,
+                      borderColor: "#1d2d14",
                     },
                     "&.Mui-focused fieldset": {
-                      borderColor: brand.sage,
+                      borderColor: "#1d2d14",
                     },
                   },
                   "& .MuiInputBase-input::placeholder": {
-                    color: "rgba(255, 255, 255, 0.5)",
+                    color: "rgba(29, 45, 20, 0.5)",
                     opacity: 1,
                   },
                 }}
@@ -71,10 +71,10 @@ function FooterGridDesktop() {
                     <InputAdornment position="end">
                       <ArrowForwardIcon 
                         sx={{ 
-                          color: "#FFFFFF", 
+                          color: "#1d2d14", 
                           cursor: "pointer", 
                           transition: "color 0.2s",
-                          "&:hover": { color: brand.sageLight } 
+                          "&:hover": { color: "rgba(29, 45, 20, 0.7)" } 
                         }} 
                       />
                     </InputAdornment>
@@ -86,14 +86,14 @@ function FooterGridDesktop() {
               control={
                 <Checkbox
                   sx={{
-                    color: "rgba(255, 255, 255, 0.6)",
-                    "&.Mui-checked": { color: brand.sageLight },
+                    color: "rgba(29, 45, 20, 0.6)",
+                    "&.Mui-checked": { color: "#1d2d14" },
                   }}
                 />
               }
               label="By submitting your email, you agree to receive advertising emails from Bustaniya."
               sx={{
-                color: "rgba(255, 255, 255, 0.7)",
+                color: "rgba(29, 45, 20, 0.7)",
                 alignItems: "flex-start",
                 mt: -0.5,
                 "& .MuiFormControlLabel-label": {
@@ -116,15 +116,15 @@ function FooterGridDesktop() {
             }}
           >
             <Box sx={{ display: "flex", gap: "16px" }}>
-              <InstagramIcon sx={{ fontSize: "28px", color: "rgba(255, 255, 255, 0.7)", cursor: "pointer", transition: "color 0.2s", "&:hover": { color: brand.sageLight } }} />
-              <FacebookOutlinedIcon sx={{ fontSize: "28px", color: "rgba(255, 255, 255, 0.7)", cursor: "pointer", transition: "color 0.2s", "&:hover": { color: brand.sageLight } }} />
-              <PinterestIcon sx={{ fontSize: "28px", color: "rgba(255, 255, 255, 0.7)", cursor: "pointer", transition: "color 0.2s", "&:hover": { color: brand.sageLight } }} />
-              <TwitterIcon sx={{ fontSize: "28px", color: "rgba(255, 255, 255, 0.7)", cursor: "pointer", transition: "color 0.2s", "&:hover": { color: brand.sageLight } }} />
+              <InstagramIcon sx={{ fontSize: "28px", color: "rgba(29, 45, 20, 0.7)", cursor: "pointer", transition: "color 0.2s", "&:hover": { color: "#1d2d14" } }} />
+              <FacebookOutlinedIcon sx={{ fontSize: "28px", color: "rgba(29, 45, 20, 0.7)", cursor: "pointer", transition: "color 0.2s", "&:hover": { color: "#1d2d14" } }} />
+              <PinterestIcon sx={{ fontSize: "28px", color: "rgba(29, 45, 20, 0.7)", cursor: "pointer", transition: "color 0.2s", "&:hover": { color: "#1d2d14" } }} />
+              <TwitterIcon sx={{ fontSize: "28px", color: "rgba(29, 45, 20, 0.7)", cursor: "pointer", transition: "color 0.2s", "&:hover": { color: "#1d2d14" } }} />
             </Box>
 
             <Box sx={{ display: "flex", gap: "8px", alignItems: "center" }}>
-              <CopyrightIcon sx={{ fontSize: "16px", color: "rgba(255, 255, 255, 0.5)" }} />
-              <Typography sx={{ fontSize: "13px", color: "rgba(255, 255, 255, 0.5)", fontFamily: fonts.sans }}>
+              <CopyrightIcon sx={{ fontSize: "16px", color: "rgba(29, 45, 20, 0.5)" }} />
+              <Typography sx={{ fontSize: "13px", color: "rgba(29, 45, 20, 0.5)", fontFamily: fonts.sans }}>
                 2026 Bustaniya. All Rights Reserved.
               </Typography>
             </Box>
@@ -148,7 +148,7 @@ function FooterGridDesktop() {
               fontSize: "14px",
               textTransform: "uppercase",
               letterSpacing: "0.1em",
-              color: "#FFFFFF",
+              color: "#1d2d14",
               fontFamily: fonts.sans,
               mb: 1,
             }}
@@ -159,13 +159,13 @@ function FooterGridDesktop() {
           <Link href="/shop" passHref style={{ textDecoration: 'none' }}>
             <Typography
               sx={{
-                color: "rgba(255, 255, 255, 0.7)",
+                color: "rgba(29, 45, 20, 0.7)",
                 fontSize: "14px",
                 fontFamily: fonts.sans,
                 transition: "all 0.2s ease",
                 cursor: "pointer",
                 "&:hover": {
-                  color: brand.sageLight,
+                  color: "#1d2d14",
                   transform: "translateX(4px)",
                 },
               }}
@@ -177,13 +177,13 @@ function FooterGridDesktop() {
           <Link href="/wishlist" passHref style={{ textDecoration: 'none' }}>
             <Typography
               sx={{
-                color: "rgba(255, 255, 255, 0.7)",
+                color: "rgba(29, 45, 20, 0.7)",
                 fontSize: "14px",
                 fontFamily: fonts.sans,
                 transition: "all 0.2s ease",
                 cursor: "pointer",
                 "&:hover": {
-                  color: brand.sageLight,
+                  color: "#1d2d14",
                   transform: "translateX(4px)",
                 },
               }}
@@ -195,13 +195,13 @@ function FooterGridDesktop() {
           <Link href="/cart" passHref style={{ textDecoration: 'none' }}>
             <Typography
               sx={{
-                color: "rgba(255, 255, 255, 0.7)",
+                color: "rgba(29, 45, 20, 0.7)",
                 fontSize: "14px",
                 fontFamily: fonts.sans,
                 transition: "all 0.2s ease",
                 cursor: "pointer",
                 "&:hover": {
-                  color: brand.sageLight,
+                  color: "#1d2d14",
                   transform: "translateX(4px)",
                 },
               }}
@@ -228,7 +228,7 @@ function FooterGridDesktop() {
               fontSize: "14px",
               textTransform: "uppercase",
               letterSpacing: "0.1em",
-              color: "#FFFFFF",
+              color: "#1d2d14",
               fontFamily: fonts.sans,
               mb: 1,
             }}
@@ -239,13 +239,13 @@ function FooterGridDesktop() {
           <Link href="/faq" passHref style={{ textDecoration: 'none' }}>
             <Typography
               sx={{
-                color: "rgba(255, 255, 255, 0.7)",
+                color: "rgba(29, 45, 20, 0.7)",
                 fontSize: "14px",
                 fontFamily: fonts.sans,
                 transition: "all 0.2s ease",
                 cursor: "pointer",
                 "&:hover": {
-                  color: brand.sageLight,
+                  color: "#1d2d14",
                   transform: "translateX(4px)",
                 },
               }}
@@ -257,13 +257,13 @@ function FooterGridDesktop() {
           <Link href="/order-track" passHref style={{ textDecoration: 'none' }}>
             <Typography
               sx={{
-                color: "rgba(255, 255, 255, 0.7)",
+                color: "rgba(29, 45, 20, 0.7)",
                 fontSize: "14px",
                 fontFamily: fonts.sans,
                 transition: "all 0.2s ease",
                 cursor: "pointer",
                 "&:hover": {
-                  color: brand.sageLight,
+                  color: "#1d2d14",
                   transform: "translateX(4px)",
                 },
               }}
@@ -275,13 +275,13 @@ function FooterGridDesktop() {
           <Link href="/contact-us" passHref style={{ textDecoration: 'none' }}>
             <Typography
               sx={{
-                color: "rgba(255, 255, 255, 0.7)",
+                color: "rgba(29, 45, 20, 0.7)",
                 fontSize: "14px",
                 fontFamily: fonts.sans,
                 transition: "all 0.2s ease",
                 cursor: "pointer",
                 "&:hover": {
-                  color: brand.sageLight,
+                  color: "#1d2d14",
                   transform: "translateX(4px)",
                 },
               }}
@@ -293,13 +293,13 @@ function FooterGridDesktop() {
           <Link href="mailto:support@bustaniya.com" passHref style={{ textDecoration: 'none' }}>
             <Typography
               sx={{
-                color: "rgba(255, 255, 255, 0.7)",
+                color: "rgba(29, 45, 20, 0.7)",
                 fontSize: "14px",
                 fontFamily: fonts.sans,
                 transition: "all 0.2s ease",
                 cursor: "pointer",
                 "&:hover": {
-                  color: brand.sageLight,
+                  color: "#1d2d14",
                   transform: "translateX(4px)",
                 },
               }}
@@ -326,7 +326,7 @@ function FooterGridDesktop() {
               fontSize: "14px",
               textTransform: "uppercase",
               letterSpacing: "0.1em",
-              color: "#FFFFFF",
+              color: "#1d2d14",
               fontFamily: fonts.sans,
               mb: 1,
             }}
@@ -337,13 +337,13 @@ function FooterGridDesktop() {
           <Link href="/login" passHref style={{ textDecoration: 'none' }}>
             <Typography
               sx={{
-                color: "rgba(255, 255, 255, 0.7)",
+                color: "rgba(29, 45, 20, 0.7)",
                 fontSize: "14px",
                 fontFamily: fonts.sans,
                 transition: "all 0.2s ease",
                 cursor: "pointer",
                 "&:hover": {
-                  color: brand.sageLight,
+                  color: "#1d2d14",
                   transform: "translateX(4px)",
                 },
               }}
@@ -355,13 +355,13 @@ function FooterGridDesktop() {
           <Link href="/register" passHref style={{ textDecoration: 'none' }}>
             <Typography
               sx={{
-                color: "rgba(255, 255, 255, 0.7)",
+                color: "rgba(29, 45, 20, 0.7)",
                 fontSize: "14px",
                 fontFamily: fonts.sans,
                 transition: "all 0.2s ease",
                 cursor: "pointer",
                 "&:hover": {
-                  color: brand.sageLight,
+                  color: "#1d2d14",
                   transform: "translateX(4px)",
                 },
               }}

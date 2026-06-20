@@ -98,16 +98,32 @@ export default function OverlayCategoryNav() {
                 component="span"
                 sx={{
                   fontSize: { md: '13px', lg: '14px' },
-                  fontWeight: isCatActive ? 700 : 600,
-                  letterSpacing: '0.14em',
+                  fontWeight: isCatActive ? 600 : 500,
+                  letterSpacing: '0.12em',
                   textTransform: 'uppercase',
                   color: '#354531',
                   fontFamily: "'Inter', sans-serif",
-                  borderBottom: isCatActive ? '2px solid #354531' : '2px solid transparent',
-                  pb: 0.5,
+                  position: 'relative',
+                  pb: 0.75,
                   lineHeight: 1.2,
-                  transition: 'opacity 0.18s ease, border-color 0.18s ease',
-                  '&:hover': { opacity: 0.8 },
+                  transition: 'color 0.3s ease',
+                  '&::after': {
+                    content: '""',
+                    position: 'absolute',
+                    width: '100%',
+                    height: '1.5px',
+                    bottom: 0,
+                    left: 0,
+                    backgroundColor: '#354531',
+                    transform: isCatActive ? 'scaleX(1)' : 'scaleX(0)',
+                    transformOrigin: 'bottom left',
+                    transition: 'transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
+                  },
+                  '&:hover': {
+                    '&::after': {
+                      transform: 'scaleX(1)',
+                    },
+                  },
                 }}
               >
                 {label}

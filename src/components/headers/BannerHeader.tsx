@@ -15,12 +15,12 @@ function BannerHeader() {
           textTransform: 'uppercase',
           fontSize: { xs: '11px', sm: '12px', md: '13px' },
           lineHeight: 1.4,
-          bgcolor: brand.sage,
-          color: '#ffffff',
+          bgcolor: '#bbe983',
+          color: '#1d2d14',
           fontFamily: fonts.sans,
         }}
       >
-        DISCOVER THE LATEST PIECES — <a href="/shop" style={{ color: '#fff', textDecoration: 'underline' }}>SHOP NOW</a>
+        DISCOVER THE LATEST PIECES — <a href="/shop" style={{ color: '#1d2d14', textDecoration: 'underline' }}>SHOP NOW</a>
       </Typography>
     </Box>
   );

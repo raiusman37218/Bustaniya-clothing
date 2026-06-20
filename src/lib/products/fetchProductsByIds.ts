@@ -8,13 +8,17 @@ export async function fetchProductsByIds(ids: string[]): Promise<Map<string, Pro
   const map = new Map<string, Product>();
   if (!ids.length) return map;
 
-  if (ids.length && process.env.NEXT_PUBLIC_SUPABASE_URL) {
+  // Filter only valid UUID formats to prevent Postgres query errors (e.g. comparing UUID columns with non-UUID mock IDs)
+  const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+  const uuidIds = ids.filter(id => uuidRegex.test(id));
+
+  if (uuidIds.length && process.env.NEXT_PUBLIC_SUPABASE_URL) {
     try {
       const supabase = createCatalogSupabase();
       const { data, error } = await supabase
         .from('products')
         .select('*')
-        .in('id', ids);
+        .in('id', uuidIds);
 
       if (!error && data?.length) {
         for (const row of data) {

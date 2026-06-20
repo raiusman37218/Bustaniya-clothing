@@ -23,7 +23,7 @@ type MainNavBarProps = {
 
 function MainNavBar({ variant = 'default' }: MainNavBarProps) {
   const isOverlay = variant === 'overlay';
-  const iconColor = isOverlay ? '#354531' : brand.ink;
+  const iconColor = isOverlay ? '#354531' : '#1d2d14';
   const shopsItem = useSelector((store: RootState) => store.cart.items);
   const badgetItem = shopsItem.reduce((sum, item) => sum + item.quantity, 0);
 
@@ -52,7 +52,7 @@ function MainNavBar({ variant = 'default' }: MainNavBarProps) {
     justifyContent: 'center',
     transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
     '&:hover': {
-      backgroundColor: isOverlay ? 'rgba(53, 69, 49, 0.08)' : 'rgba(0, 0, 0, 0.05)',
+      backgroundColor: isOverlay ? 'rgba(53, 69, 49, 0.08)' : 'rgba(29, 45, 20, 0.08)',
       transform: 'scale(1.08)',
     },
     '&:active': {
@@ -112,7 +112,7 @@ function MainNavBar({ variant = 'default' }: MainNavBarProps) {
         transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
         borderRadius: '50%',
         '&:hover': {
-          backgroundColor: isOverlay ? 'rgba(53, 69, 49, 0.08)' : 'rgba(0, 0, 0, 0.05)',
+          backgroundColor: isOverlay ? 'rgba(53, 69, 49, 0.08)' : 'rgba(29, 45, 20, 0.08)',
         },
       }}
     >
@@ -165,9 +165,9 @@ function MainNavBar({ variant = 'default' }: MainNavBarProps) {
     <AppBar
       position={isOverlay ? 'static' : 'sticky'}
       sx={{
-        backgroundColor: isOverlay ? 'transparent' : brand.white,
+        backgroundColor: isOverlay ? 'transparent' : '#bbe983',
         boxShadow: isOverlay ? 'none' : '0 1px 0 rgba(0,0,0,0.06)',
-        color: isOverlay ? '#354531' : brand.charcoal,
+        color: isOverlay ? '#354531' : '#1d2d14',
         width: '100%',
       }}
     >

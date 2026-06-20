@@ -21,7 +21,7 @@ import {
   resolveCartImageUrl,
 } from '@/src/lib/products/productImages';
 import Link from 'next/link';
-import { formatPkr } from '@/src/lib/currency/formatCurrency';
+import { formatPkrNishat } from '@/src/lib/currency/formatCurrency';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '@/src/app/store';
 import {
@@ -46,97 +46,114 @@ function CartLineItem({
     <Box
       sx={{
         display: 'flex',
-        gap: 1.5,
-        p: 1.5,
-        bgcolor: '#f4f4f4',
-        borderRadius: '12px',
+        gap: 2,
+        px: 3,
+        py: 2.5,
         position: 'relative',
+        alignItems: 'flex-start',
+        borderBottom: '1px solid rgba(29, 45, 20, 0.1)',
       }}
     >
       <Box
         sx={{
-          width: 88,
-          height: 88,
+          width: 90,
+          height: 110,
           flexShrink: 0,
-          borderRadius: '8px',
+          borderRadius: '4px',
           overflow: 'hidden',
           bgcolor: '#fff',
         }}
       >
         <Image
           src={resolveCartImageUrl(item.image)}
-          width={88}
-          height={88}
+          width={90}
+          height={110}
           alt={item.name}
           style={{ objectFit: 'cover', width: '100%', height: '100%' }}
         />
       </Box>
 
-      <Box sx={{ flex: 1, minWidth: 0, pr: 4 }}>
-        <Typography
-          sx={{
-            fontWeight: 600,
-            fontSize: '0.9rem',
-            lineHeight: 1.3,
-            mb: 0.5,
-          }}
-        >
-          {item.name}
-        </Typography>
-        <Typography sx={{ fontSize: '0.78rem', color: '#666', mb: 0.25 }}>
-          Size: {item.size}
-          {item.color ? ` · ${item.color}` : ''}
-        </Typography>
-        <Typography sx={{ fontWeight: 700, fontSize: '0.95rem', color: '#5A6D57', mb: 1 }}>
-          ${item.price}
+      <Box sx={{ flex: 1, minWidth: 0 }}>
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 0.5 }}>
+          <Typography
+            sx={{
+              fontWeight: 500,
+              fontSize: '1rem',
+              lineHeight: 1.3,
+              color: '#1d2d14',
+            }}
+          >
+            {item.name}
+          </Typography>
+          <Typography
+            sx={{
+              fontWeight: 500,
+              fontSize: '0.95rem',
+              color: '#1d2d14',
+              whiteSpace: 'nowrap',
+              ml: 1,
+            }}
+          >
+            {formatPkrNishat(Number(item.price) * item.quantity)}
+          </Typography>
+        </Box>
+
+        <Typography sx={{ fontSize: '0.85rem', color: 'rgba(29, 45, 20, 0.8)', mb: 0.5 }}>
+          {item.size}
+          {item.color ? ` / ${item.color}` : ''}
         </Typography>
 
-        <Box
-          sx={{
-            display: 'inline-flex',
-            alignItems: 'center',
-            bgcolor: '#D1D9CF',
-            borderRadius: '6px',
-            px: 1.25,
-            py: 0.25,
-            gap: 1.5,
-          }}
-        >
-          <IconButton
-            size="small"
-            onClick={() => onQuantityChange(item.quantity - 1)}
-            sx={{ p: 0.25, color: '#404E3E', fontSize: '1rem' }}
-            aria-label="Decrease quantity"
+        <Typography sx={{ fontSize: '0.85rem', color: 'rgba(29, 45, 20, 0.8)', mb: 2 }}>
+          {formatPkrNishat(Number(item.price))}
+        </Typography>
+
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+          <Box
+            sx={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              bgcolor: '#ffffff',
+              borderRadius: '4px',
+              px: 1,
+              py: 0.5,
+              gap: 1.5,
+            }}
           >
-            −
-          </IconButton>
-          <Typography sx={{ fontSize: '0.85rem', fontWeight: 600, minWidth: 16, textAlign: 'center' }}>
-            {item.quantity}
-          </Typography>
+            <IconButton
+              size="small"
+              onClick={() => onQuantityChange(item.quantity - 1)}
+              sx={{ p: 0.25, color: '#1d2d14', fontSize: '0.9rem', width: 16, height: 16 }}
+              aria-label="Decrease quantity"
+            >
+              −
+            </IconButton>
+            <Typography sx={{ fontSize: '0.85rem', fontWeight: 600, minWidth: 16, textAlign: 'center', color: '#1d2d14' }}>
+              {item.quantity}
+            </Typography>
+            <IconButton
+              size="small"
+              onClick={() => onQuantityChange(item.quantity + 1)}
+              sx={{ p: 0.25, color: '#1d2d14', fontSize: '0.9rem', width: 16, height: 16 }}
+              aria-label="Increase quantity"
+            >
+              +
+            </IconButton>
+          </Box>
+
           <IconButton
+            onClick={onRemove}
             size="small"
-            onClick={() => onQuantityChange(item.quantity + 1)}
-            sx={{ p: 0.25, color: '#404E3E', fontSize: '1rem' }}
-            aria-label="Increase quantity"
+            sx={{
+              color: '#1d2d14',
+              p: 0.5,
+              '&:hover': { bgcolor: 'rgba(0,0,0,0.05)' }
+            }}
+            aria-label="Remove item"
           >
-            +
+            <DeleteOutlineIcon sx={{ fontSize: 20 }} />
           </IconButton>
         </Box>
       </Box>
-
-      <IconButton
-        onClick={onRemove}
-        size="small"
-        sx={{
-          position: 'absolute',
-          top: 8,
-          right: 8,
-          color: '#888',
-        }}
-        aria-label="Remove item"
-      >
-        <DeleteOutlineIcon fontSize="small" />
-      </IconButton>
     </Box>
   );
 }
@@ -158,14 +175,14 @@ function YouMayAlsoLike({
   const goNext = () => setIndex((i) => (i + 1) % products.length);
 
   return (
-    <Box sx={{ mt: 2, pt: 2, borderTop: '1px solid #eee' }}>
+    <Box sx={{ mt: 2, pt: 2, px: 3, borderTop: '1px solid rgba(29, 45, 20, 0.1)' }}>
       <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 1.5 }}>
-        <Typography sx={{ fontWeight: 600, fontSize: '0.95rem' }}>You May Also Like</Typography>
+        <Typography sx={{ fontWeight: 600, fontSize: '0.95rem', color: '#1d2d14' }}>You May Also Like</Typography>
         <Box>
-          <IconButton size="small" onClick={goPrev} aria-label="Previous suggestion">
+          <IconButton size="small" onClick={goPrev} aria-label="Previous suggestion" sx={{ color: '#1d2d14' }}>
             <ChevronLeftIcon fontSize="small" />
           </IconButton>
-          <IconButton size="small" onClick={goNext} aria-label="Next suggestion">
+          <IconButton size="small" onClick={goNext} aria-label="Next suggestion" sx={{ color: '#1d2d14' }}>
             <ChevronRightIcon fontSize="small" />
           </IconButton>
         </Box>
@@ -182,15 +199,16 @@ function YouMayAlsoLike({
           textDecoration: 'none',
           color: 'inherit',
           p: 1,
-          borderRadius: '10px',
-          '&:hover': { bgcolor: '#f8f8f8' },
+          borderRadius: '8px',
+          bgcolor: 'rgba(255, 255, 255, 0.3)',
+          '&:hover': { bgcolor: 'rgba(255, 255, 255, 0.4)' },
         }}
       >
         <Box
           sx={{
             width: 72,
             height: 72,
-            borderRadius: '8px',
+            borderRadius: '6px',
             overflow: 'hidden',
             flexShrink: 0,
           }}
@@ -204,11 +222,11 @@ function YouMayAlsoLike({
           />
         </Box>
         <Box sx={{ flex: 1, minWidth: 0 }}>
-          <Typography sx={{ fontWeight: 600, fontSize: '0.85rem', mb: 0.25 }} noWrap>
+          <Typography sx={{ fontWeight: 600, fontSize: '0.85rem', mb: 0.25, color: '#1d2d14' }} noWrap>
             {product.product_name}
           </Typography>
-          <Typography sx={{ fontWeight: 700, fontSize: '0.9rem', color: '#5A6D57' }}>
-            {formatPkr(Number(product.procuct_price))}
+          <Typography sx={{ fontWeight: 700, fontSize: '0.9rem', color: '#1d2d14' }}>
+            {formatPkrNishat(Number(product.procuct_price))}
           </Typography>
         </Box>
         <Button
@@ -222,10 +240,10 @@ function YouMayAlsoLike({
           sx={{
             textTransform: 'none',
             fontSize: '0.72rem',
-            borderColor: '#5A6D57',
-            color: '#5A6D57',
+            borderColor: '#1d2d14',
+            color: '#1d2d14',
             flexShrink: 0,
-            '&:hover': { borderColor: '#4a5a48', bgcolor: 'rgba(90,109,87,0.08)' },
+            '&:hover': { borderColor: '#000000', bgcolor: 'rgba(0,0,0,0.04)' },
           }}
         >
           Add
@@ -241,6 +259,8 @@ export default function SideCartDrawer() {
   const isOpen = useSelector((state: RootState) => state.cart.isCartOpen);
   const allProducts = useSelector((state: RootState) => state.product.items);
   const [instructions, setInstructions] = useState('');
+  const [showDiscount, setShowDiscount] = useState(false);
+  const [discountCode, setDiscountCode] = useState('');
 
   const itemCount = items.reduce((sum, item) => sum + item.quantity, 0);
   const subtotal = items.reduce(
@@ -286,6 +306,9 @@ export default function SideCartDrawer() {
           width: { xs: '100%', sm: 420 },
           maxWidth: '100vw',
           borderRadius: { xs: 0, sm: '16px 0 0 16px' },
+          bgcolor: '#bbe983',
+          color: '#1d2d14',
+          backgroundImage: 'none',
         },
       }}
       BackdropProps={{
@@ -297,25 +320,45 @@ export default function SideCartDrawer() {
           display: 'flex',
           flexDirection: 'column',
           height: '100%',
-          bgcolor: '#fff',
+          bgcolor: 'transparent',
         }}
       >
+        {/* Header */}
         <Box
           sx={{
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
-            px: 2.5,
-            py: 2,
-            borderBottom: '1px solid #eee',
+            px: 3,
+            pt: 4,
+            pb: 2,
           }}
         >
-          <Typography sx={{ fontWeight: 600, fontSize: '1rem' }}>
-            {itemCount === 0
-              ? 'Your bag'
-              : `${itemCount} ${itemCount === 1 ? 'item' : 'items'}`}
-          </Typography>
-          <IconButton onClick={handleClose} aria-label="Close cart" size="small">
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
+            <Typography sx={{ fontWeight: 600, fontSize: '1.8rem', color: '#1d2d14' }}>
+              Cart
+            </Typography>
+            {itemCount > 0 && (
+              <Box
+                sx={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  minWidth: 24,
+                  height: 24,
+                  px: 0.75,
+                  borderRadius: '50%',
+                  bgcolor: 'rgba(29, 45, 20, 0.15)',
+                  color: '#1d2d14',
+                  fontSize: '0.85rem',
+                  fontWeight: 600,
+                }}
+              >
+                {itemCount}
+              </Box>
+            )}
+          </Box>
+          <IconButton onClick={handleClose} aria-label="Close cart" sx={{ color: '#1d2d14' }}>
             <CloseIcon />
           </IconButton>
         </Box>
@@ -333,10 +376,10 @@ export default function SideCartDrawer() {
               gap: 2,
             }}
           >
-            <Typography variant="h6" fontWeight={600}>
+            <Typography variant="h6" fontWeight={600} sx={{ color: '#1d2d14' }}>
               Your bag is empty
             </Typography>
-            <Typography color="text.secondary">
+            <Typography sx={{ color: 'rgba(29, 45, 20, 0.8)' }}>
               Discover Bustaniya and add pieces you love.
             </Typography>
             <Button
@@ -346,10 +389,13 @@ export default function SideCartDrawer() {
               variant="contained"
               disableElevation
               sx={{
-                bgcolor: '#5A6D57',
+                bgcolor: '#000000',
+                color: '#ffffff',
                 textTransform: 'none',
                 px: 4,
-                '&:hover': { bgcolor: '#4a5a48' },
+                py: 1,
+                borderRadius: '24px',
+                '&:hover': { bgcolor: '#1a1a1a' },
               }}
             >
               Shop now
@@ -357,15 +403,25 @@ export default function SideCartDrawer() {
           </Box>
         ) : (
           <>
+            {/* Scrollable list */}
             <Box
               sx={{
                 flex: 1,
                 overflowY: 'auto',
-                px: 2,
                 py: 2,
                 display: 'flex',
                 flexDirection: 'column',
                 gap: 1.5,
+                '&::-webkit-scrollbar': {
+                  width: '6px',
+                },
+                '&::-webkit-scrollbar-track': {
+                  background: 'transparent',
+                },
+                '&::-webkit-scrollbar-thumb': {
+                  background: 'rgba(29, 45, 20, 0.2)',
+                  borderRadius: '4px',
+                },
               }}
             >
               {items.map((item) => (
@@ -377,37 +433,105 @@ export default function SideCartDrawer() {
                 />
               ))}
 
-              <TextField
-                fullWidth
-                size="small"
-                placeholder="Write special instructions"
-                value={instructions}
-                onChange={(e) => setInstructions(e.target.value)}
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      <StickyNote2OutlinedIcon sx={{ fontSize: 18, color: '#999' }} />
-                    </InputAdornment>
-                  ),
-                }}
-                sx={{
-                  mt: 0.5,
-                  '& .MuiOutlinedInput-root': {
-                    borderRadius: '10px',
-                    bgcolor: '#fafafa',
-                  },
-                }}
-              />
+              {/* Special instructions */}
+              <Box sx={{ px: 3, mt: 1 }}>
+                <TextField
+                  fullWidth
+                  size="small"
+                  placeholder="Write special instructions"
+                  value={instructions}
+                  onChange={(e) => setInstructions(e.target.value)}
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <StickyNote2OutlinedIcon sx={{ fontSize: 18, color: '#1d2d14' }} />
+                      </InputAdornment>
+                    ),
+                  }}
+                  sx={{
+                    '& .MuiOutlinedInput-root': {
+                      borderRadius: '8px',
+                      bgcolor: 'rgba(255, 255, 255, 0.3)',
+                      '& fieldset': { borderColor: 'rgba(29, 45, 20, 0.15)' },
+                      '&:hover fieldset': { borderColor: 'rgba(29, 45, 20, 0.3)' },
+                      '&.Mui-focused fieldset': { borderColor: '#1d2d14' },
+                    },
+                    '& .MuiInputBase-input': {
+                      color: '#1d2d14',
+                    }
+                  }}
+                />
+              </Box>
+
+              {/* Discount Accordion */}
+              <Box sx={{ px: 3, mt: 1 }}>
+                <Box
+                  onClick={() => setShowDiscount(!showDiscount)}
+                  sx={{
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    cursor: 'pointer',
+                    userSelect: 'none',
+                    py: 1,
+                  }}
+                >
+                  <Typography sx={{ color: '#1d2d14', fontSize: '1rem', fontWeight: 500 }}>
+                    Discount
+                  </Typography>
+                  <Typography sx={{ color: '#1d2d14', fontSize: '1.2rem', fontWeight: 500 }}>
+                    {showDiscount ? '−' : '+'}
+                  </Typography>
+                </Box>
+                {showDiscount && (
+                  <Box sx={{ mt: 1, display: 'flex', gap: 1, pb: 1 }}>
+                    <TextField
+                      fullWidth
+                      size="small"
+                      placeholder="Enter discount code"
+                      value={discountCode}
+                      onChange={(e) => setDiscountCode(e.target.value)}
+                      sx={{
+                        '& .MuiOutlinedInput-root': {
+                          borderRadius: '8px',
+                          bgcolor: 'rgba(255, 255, 255, 0.3)',
+                          '& fieldset': { borderColor: 'rgba(29, 45, 20, 0.15)' },
+                          '&:hover fieldset': { borderColor: 'rgba(29, 45, 20, 0.3)' },
+                          '&.Mui-focused fieldset': { borderColor: '#1d2d14' },
+                        },
+                        '& .MuiInputBase-input': {
+                          color: '#1d2d14',
+                        }
+                      }}
+                    />
+                    <Button
+                      variant="contained"
+                      disableElevation
+                      sx={{
+                        bgcolor: '#000000',
+                        color: '#ffffff',
+                        textTransform: 'none',
+                        borderRadius: '8px',
+                        '&:hover': { bgcolor: '#1a1a1a' }
+                      }}
+                    >
+                      Apply
+                    </Button>
+                  </Box>
+                )}
+              </Box>
 
               <YouMayAlsoLike products={suggestions} onClose={handleClose} />
             </Box>
 
+            {/* Footer */}
             <Box
               sx={{
-                px: 2.5,
-                py: 2,
-                borderTop: '1px solid #eee',
-                bgcolor: '#fff',
+                px: 3,
+                pt: 2,
+                pb: 4,
+                borderTop: '1px solid rgba(29, 45, 20, 0.1)',
+                bgcolor: 'transparent',
               }}
             >
               <Box
@@ -415,53 +539,41 @@ export default function SideCartDrawer() {
                   display: 'flex',
                   justifyContent: 'space-between',
                   alignItems: 'baseline',
-                  mb: 2,
+                  mb: 1,
                 }}
               >
-                <Typography sx={{ fontWeight: 500, color: '#666' }}>Subtotal</Typography>
-                <Typography sx={{ fontWeight: 700, fontSize: '1.35rem' }}>
-                  ${subtotal.toFixed(0)}
+                <Typography sx={{ fontWeight: 500, color: '#1d2d14', fontSize: '1.1rem' }}>
+                  Estimated total
+                </Typography>
+                <Typography sx={{ fontWeight: 700, fontSize: '1.2rem', color: '#1d2d14' }}>
+                  {formatPkrNishat(subtotal)} PKR
                 </Typography>
               </Box>
 
-              <Box sx={{ display: 'flex', gap: 1.5 }}>
-                <Button
-                  component={Link}
-                  href="/checkout"
-                  onClick={handleClose}
-                  fullWidth
-                  variant="contained"
-                  disableElevation
-                  sx={{
-                    bgcolor: '#2d2d2d',
-                    textTransform: 'none',
-                    fontWeight: 600,
-                    py: 1.25,
-                    borderRadius: '8px',
-                    '&:hover': { bgcolor: '#1a1a1a' },
-                  }}
-                >
-                  Checkout
-                </Button>
-                <Button
-                  component={Link}
-                  href="/shop"
-                  onClick={handleClose}
-                  fullWidth
-                  variant="outlined"
-                  sx={{
-                    textTransform: 'none',
-                    fontWeight: 600,
-                    py: 1.25,
-                    borderRadius: '8px',
-                    borderColor: '#2d2d2d',
-                    color: '#2d2d2d',
-                    '&:hover': { borderColor: '#1a1a1a', bgcolor: 'rgba(0,0,0,0.04)' },
-                  }}
-                >
-                  Shop more
-                </Button>
-              </Box>
+              <Typography sx={{ color: 'rgba(29, 45, 20, 0.8)', fontSize: '0.82rem', mb: 3 }}>
+                Taxes and shipping calculated at checkout.
+              </Typography>
+
+              <Button
+                component={Link}
+                href="/checkout"
+                onClick={handleClose}
+                fullWidth
+                variant="contained"
+                disableElevation
+                sx={{
+                  bgcolor: '#000000',
+                  color: '#ffffff',
+                  textTransform: 'none',
+                  fontWeight: 600,
+                  py: 1.5,
+                  borderRadius: '24px',
+                  fontSize: '1rem',
+                  '&:hover': { bgcolor: '#1a1a1a' },
+                }}
+              >
+                Check out
+              </Button>
             </Box>
           </>
         )}

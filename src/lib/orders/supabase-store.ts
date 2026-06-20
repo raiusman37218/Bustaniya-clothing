@@ -150,7 +150,9 @@ export async function createSupabaseOrder(
   const { error: itemsError } = await supabase.from('order_items').insert(
     input.items.map((item) => ({
       order_id: orderId,
-      product_id: item.product_id,
+      product_id: item.product_id && /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(item.product_id)
+        ? item.product_id
+        : null,
       title: item.title,
       unit_price_pkr: item.unit_price_pkr,
       quantity: item.quantity,
@@ -211,7 +213,9 @@ export async function createAdminSupabaseOrder(
   const { error: itemsError } = await supabase.from('order_items').insert(
     input.items.map((item) => ({
       order_id: orderId,
-      product_id: item.product_id,
+      product_id: item.product_id && /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(item.product_id)
+        ? item.product_id
+        : null,
       title: item.title,
       unit_price_pkr: item.unit_price_pkr,
       quantity: item.quantity,
