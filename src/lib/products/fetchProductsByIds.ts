@@ -31,10 +31,12 @@ export async function fetchProductsByIds(ids: string[]): Promise<Map<string, Pro
     }
   }
 
-  for (const id of ids) {
-    if (map.has(String(id))) continue;
-    const mock = MOCK_PRODUCTS.find((p) => String(p.id) === String(id));
-    if (mock) map.set(String(id), normalizeProduct(mock));
+  if (!process.env.NEXT_PUBLIC_SUPABASE_URL) {
+    for (const id of ids) {
+      if (map.has(String(id))) continue;
+      const mock = MOCK_PRODUCTS.find((p) => String(p.id) === String(id));
+      if (mock) map.set(String(id), normalizeProduct(mock));
+    }
   }
 
   return map;

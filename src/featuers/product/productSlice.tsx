@@ -37,7 +37,7 @@ export const productSlice = createSlice({
       .addCase(getProduct.rejected, (state, action) => {
         state.error = action.error.message || null;
         state.loading = false;
-        state.items = normalizeProducts(MOCK_PRODUCTS);
+        state.items = process.env.NEXT_PUBLIC_SUPABASE_URL ? [] : normalizeProducts(MOCK_PRODUCTS);
       });
   },
 });

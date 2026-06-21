@@ -320,5 +320,73 @@ export async function trackSupabaseOrder(
   ) || null;
 }
 
+export async function updateSupabaseOrder(
+  id: string,
+  updates: {
+    guest_name?: string;
+    shipping_full_name?: string;
+    guest_email?: string;
+    customer_email?: string;
+    guest_phone?: string;
+    shipping_phone?: string;
+    shipping_line1?: string;
+    shipping_line2?: string | null;
+    shipping_city?: string;
+    shipping_postal_code?: string | null;
+    shipping_country?: string;
+    notes?: string | null;
+    payment_method?: string;
+    status?: OrderStatus;
+    discount_amount_pkr?: number;
+    discount_code?: string | null;
+    shipping_fee_pkr?: number;
+    subtotal_pkr?: number;
+    total_pkr?: number;
+  }
+): Promise<AdminOrder | null> {
+  if (useServiceRoleForAdmin()) {
+    const supabase = createAdminDataSupabase();
+    const { error: updateError } = await supabase
+      .from('orders')
+      .update(updates)
+      .eq('id', id);
+
+    if (updateError) throw updateError;
+    return getSupabaseOrder(id);
+  }
+
+  if (updates.status && Object.keys(updates).length === 1) {
+    return updateOrderStatusViaRpc(id, updates.status);
+  }
+
+  throw new Error('Full order update is not supported without admin credentials.');
+}
+
+export async function deleteSupabaseOrder(id: string): Promise<boolean> {
+  if (useServiceRoleForAdmin()) {
+    const supabase = createAdminDataSupabase();
+    
+    // Delete order items first to satisfy foreign keys
+    const { error: itemsError } = await supabase
+      .from('order_items')
+      .delete()
+      .eq('order_id', id);
+
+    if (itemsError) throw itemsError;
+
+    // Delete the order
+    const { error: orderError } = await supabase
+      .from('orders')
+      .delete()
+      .eq('id', id);
+
+    if (orderError) throw orderError;
+
+    return true;
+  }
+
+  throw new Error('Order deletion is not supported without admin credentials.');
+}
+
 export { AdminSupabaseConfigError };
 

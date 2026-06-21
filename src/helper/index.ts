@@ -6,7 +6,7 @@ export const getSingleproduct = async (id: string) => {
   const data = await getImages();
   const singleProduct =
     data.find((product) => product.id.toString() === id) ??
-    MOCK_PRODUCTS.find((product) => product.id.toString() === id) ??
+    (process.env.NEXT_PUBLIC_SUPABASE_URL ? null : MOCK_PRODUCTS.find((product) => product.id.toString() === id)) ??
     null;
 
   if (singleProduct) {

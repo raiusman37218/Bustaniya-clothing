@@ -30,7 +30,8 @@ export async function fetchAllProductsFromSupabase(): Promise<Product[]> {
 }
 
 export async function fetchProductsWithFallback(): Promise<Product[]> {
-  const fromDb = await fetchAllProductsFromSupabase();
-  if (fromDb.length > 0) return fromDb;
+  if (isSupabaseConfigured()) {
+    return await fetchAllProductsFromSupabase();
+  }
   return normalizeProducts(MOCK_PRODUCTS);
 }

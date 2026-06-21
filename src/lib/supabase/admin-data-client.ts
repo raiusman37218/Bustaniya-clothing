@@ -17,7 +17,8 @@ export class AdminSupabaseConfigError extends Error {
 export function createAdminDataSupabase(): SupabaseClient<Database> {
   try {
     return createServiceSupabase();
-  } catch {
+  } catch (err: any) {
+    console.error('Failed to initialize admin Supabase client:', err);
     throw new AdminSupabaseConfigError();
   }
 }
